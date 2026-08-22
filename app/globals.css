@@ -1,9 +1,16 @@
 @layer reset, theme, base, astryx-base, astryx-theme, components, utilities;
 
-@import 'tailwindcss/theme.css' layer(theme);
-@import 'tailwindcss/preflight.css' layer(base);
-@import '@astryxdesign/core/reset.css';
-@import '@astryxdesign/core/astryx.css';
-@import '@astryxdesign/theme-neutral/theme.css';
-@import '@astryxdesign/core/tailwind-theme.css';
-@import 'tailwindcss/utilities.css' layer(utilities);
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "@astryxdesign/core/reset.css";
+@import "@astryxdesign/core/astryx.css";
+@import "@astryxdesign/theme-neutral/theme.css";
+@import "@astryxdesign/core/tailwind-theme.css";
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* Bridge self-hosted Geist into Astryx font tokens */
+:root {
+  --font-family-body: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-family-heading: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-family-code: var(--font-geist-mono), ui-monospace, monospace;
+}
