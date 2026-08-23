@@ -14,8 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "pkd-smm",
-  description: "pkd-smm app",
+  title: "PKD-SMM Panel — Affordable Social Media Boost Platform",
+  description:
+    "Affordable SMM panel for individuals and marketing teams. Boost Instagram, Telegram, TikTok, YouTube, X and Facebook from one dashboard with live tracking.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

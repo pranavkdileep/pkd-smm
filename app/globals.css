@@ -14,3 +14,56 @@
   --font-family-heading: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-family-code: var(--font-geist-mono), ui-monospace, monospace;
 }
+
+/* Hero background wash — brand-blue radial glows on the body surface */
+.landing-hero-wash {
+  background:
+    radial-gradient(circle at -6% 18%, color-mix(in srgb, var(--color-text-blue) 14%, transparent), transparent 34%),
+    radial-gradient(circle at 104% 78%, color-mix(in srgb, var(--color-text-cyan) 10%, transparent), transparent 30%),
+    var(--color-background-body);
+}
+
+/* Final CTA banner — accent gradient with soft corner circles */
+.landing-cta-banner {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 88% -20%, rgba(255, 255, 255, 0.22), transparent 42%),
+    radial-gradient(circle at 4% 110%, rgba(255, 255, 255, 0.16), transparent 40%),
+    linear-gradient(135deg, var(--color-text-blue), var(--color-cyan-vivid));
+  color: #ffffff;
+}
+.landing-cta-banner :is(h2) {
+  color: inherit;
+}
+/* High-contrast buttons on the dark banner (WCAG AA/AAA) */
+.landing-cta-banner :is(.astryx-button)[data-variant='secondary'],
+.landing-cta-banner :is(.astryx-button)[data-variant='ghost'] {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.landing-cta-banner :is(.astryx-button)[data-variant='secondary']:hover,
+.landing-cta-banner :is(.astryx-button)[data-variant='ghost']:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Platform marquee — pauses on hover, static under reduced motion */
+@keyframes landing-marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+.landing-marquee-track {
+  animation: landing-marquee-scroll 32s linear infinite;
+}
+.landing-marquee:hover .landing-marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-marquee-track {
+    animation: none;
+  }
+}
