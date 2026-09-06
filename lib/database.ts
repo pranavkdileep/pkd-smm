@@ -43,12 +43,24 @@ export interface Transaction {
   createdAt: string;
 }
 
+export type DepositStatus = 'pending' | 'completed' | 'failed' | 'cancelled';
+
 export interface Deposit {
   id: string;
   userId: string;
-  transactionId: string;
+  amount: number;
+  currency: string;
+  status: DepositStatus;
   gateway: string;
-  gatewayTransactionId: string;
+  transactionId?: string;
+  gatewayTransactionId?: string;
+  sessionId?: string;
+  checkoutUrl?: string;
+  errorMessage?: string;
+  /** ISO date string */
+  createdAt: string;
+  /** ISO date string */
+  completedAt?: string;
 }
 
 export interface AdminUser {

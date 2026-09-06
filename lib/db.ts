@@ -1,5 +1,5 @@
 import {MongoClient, type Db} from 'mongodb';
-import type {AdminUser, Service, UpstreamProvider, User} from './database';
+import type {AdminUser, Deposit, Service, Transaction, UpstreamProvider, User} from './database';
 
 const MONGODB_URI = process.env.MONGODB_URI;
 const MONGODB_DB = process.env.MONGODB_DB ?? 'pkd-smm';
@@ -40,4 +40,6 @@ export const collections = {
   adminUsers: getDb().collection<AdminUser>('admin_users'),
   upstreamProviders: getDb().collection<UpstreamProvider>('upstream_providers'),
   services: getDb().collection<Service>('services'),
+  deposits: getDb().collection<Deposit>('deposits'),
+  transactions: getDb().collection<Transaction>('transactions'),
 };
