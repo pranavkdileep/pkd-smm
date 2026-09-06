@@ -2,7 +2,7 @@
 
 import {useState} from 'react';
 import {usePathname, useRouter} from 'next/navigation';
-import {TopNav, TopNavHeading, TopNavItem} from '@astryxdesign/core/TopNav';
+import {TopNav, TopNavItem} from '@astryxdesign/core/TopNav';
 import {HStack} from '@astryxdesign/core/HStack';
 import {Text} from '@astryxdesign/core/Text';
 import {Icon} from '@astryxdesign/core/Icon';
