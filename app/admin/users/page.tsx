@@ -41,7 +41,7 @@ export default async function AdminUsersPage({searchParams}: {searchParams: Sear
   const isFiltered = Boolean(search.trim());
 
   return (
-    <VStack gap={5} className="w-full pt-6">
+    <VStack gap={5} className="w-full pt-6 px-6">
       <VStack gap={1}>
         <Heading level={1}>Users</Heading>
         <Text color="secondary">

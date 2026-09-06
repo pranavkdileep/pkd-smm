@@ -5,6 +5,15 @@ export type UserStatus = 'active' | 'banned';
 /** Page size options offered in the admin users list. */
 export const USER_PAGE_SIZES = [10, 25, 50] as const;
 
+/** Page size options offered in the admin services list. */
+export const SERVICE_PAGE_SIZES = [10, 25, 50] as const;
+
+/** Page size options offered in the admin upstream providers list. */
+export const UPSTREAM_PAGE_SIZES = [10, 25, 50] as const;
+
+/** Maximum custom input fields a service can collect on the order form. */
+export const SERVICE_MAX_INPUTS = 10;
+
 export interface User {
   id: string;
   username: string;

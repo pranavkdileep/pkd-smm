@@ -2,12 +2,12 @@ import {Heading} from '@astryxdesign/core/Heading';
 import {Text} from '@astryxdesign/core/Text';
 import {VStack} from '@astryxdesign/core/VStack';
 
-import {listServices} from '@/actions/admin/services';
-import {SERVICE_PAGE_SIZES} from '@/lib/database';
-import {ServicesManager} from './ServicesManager';
+import {listUpstreams} from '@/actions/admin/upstreams';
+import {UPSTREAM_PAGE_SIZES} from '@/lib/database';
+import {UpstreamsManager} from './UpstreamsManager';
 
 export const metadata = {
-  title: 'Services · PKD-SMM Admin',
+  title: 'Upstream Providers · PKD-SMM Admin',
 };
 
 type SearchParams = Promise<{[key: string]: string | string[] | undefined}>;
@@ -24,29 +24,29 @@ function parsePositiveInt(value: string | undefined): number | undefined {
   return Number.isFinite(parsed) && parsed >= 1 ? parsed : undefined;
 }
 
-export default async function AdminServicesPage({searchParams}: {searchParams: SearchParams}) {
+export default async function AdminUpstreamsPage({searchParams}: {searchParams: SearchParams}) {
   const params = await searchParams;
   const search = firstParam(params.q) ?? '';
   const page = parsePositiveInt(firstParam(params.page));
   const pageSizeParam = parsePositiveInt(firstParam(params.pageSize));
-  const pageSize = pageSizeParam && (SERVICE_PAGE_SIZES as readonly number[]).includes(pageSizeParam)
+  const pageSize = pageSizeParam && (UPSTREAM_PAGE_SIZES as readonly number[]).includes(pageSizeParam)
     ? pageSizeParam
     : undefined;
 
-  const result = await listServices({page, pageSize, search});
+  const result = await listUpstreams({page, pageSize, search});
   const isFiltered = Boolean(search.trim());
 
   return (
     <VStack gap={5} className="w-full pt-6 px-6">
       <VStack gap={1}>
-        <Heading level={1}>Services</Heading>
+        <Heading level={1}>Upstream Providers</Heading>
         <Text color="secondary">
-          {result.total.toLocaleString()} {result.total === 1 ? 'service' : 'services'} in the catalog.
+          {result.total.toLocaleString()} {result.total === 1 ? 'provider' : 'providers'} configured.
         </Text>
       </VStack>
 
-      <ServicesManager
-        services={result.services}
+      <UpstreamsManager
+        upstreams={result.upstreams}
         initialSearch={search}
         page={result.page}
         pageSize={result.pageSize}

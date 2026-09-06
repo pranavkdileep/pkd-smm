@@ -21,7 +21,7 @@ export default async function AdminDashboardPage() {
   ]);
 
   return (
-    <VStack gap={6} className="w-full pt-6">
+    <VStack gap={6} className="w-full pt-6 px-6">
       <VStack gap={1}>
         <Heading level={1}>Dashboard</Heading>
         <Text color="secondary">
