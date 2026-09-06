@@ -19,11 +19,33 @@ export interface User {
   username: string;
   email: string;
   passwordHash: string;
+  balance : number;
   language: Language;
   /** Defaults to 'active' for legacy documents created before this field existed. */
   status?: UserStatus;
   /** ISO date string. Missing on legacy documents. */
   createdAt?: string;
+}
+
+export const TransactionTypes = ['deposit', 'withdrawal', 'order', 'refund'] as const;
+
+export type TransactionType = (typeof TransactionTypes)[number];
+
+export interface Transaction {
+  id: string;
+  userId: string;
+  type: TransactionType;
+  amount: number;
+  /** ISO date string. */
+  createdAt: string;
+}
+
+export interface Deposit {
+  id: string;
+  userId: string;
+  TransactionId: string;
+  gateway: string;
+  gatewayTransactionId: string;
 }
 
 export interface AdminUser {
