@@ -4,7 +4,10 @@ import {SESSION_COOKIE, verifySessionToken} from '@/actions/auth/jwt';
 export async function proxy(request: NextRequest) {
   const {pathname} = request.nextUrl;
 
-  if (!pathname.startsWith('/admin')) {
+  const isAdminRoute = pathname.startsWith('/admin');
+  const isUserRoute = pathname.startsWith('/user');
+
+  if (!isAdminRoute && !isUserRoute) {
     return NextResponse.next();
   }
 
@@ -15,13 +18,19 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/login?error=unauthenticated', request.url));
   }
 
-  if (session.role !== 'admin') {
+  if (isAdminRoute && session.role !== 'admin') {
     return NextResponse.redirect(new URL('/login?error=forbidden', request.url));
+  }
+
+  // Admins have no business in the customer dashboard — send them home.
+  if (isUserRoute && session.role === 'admin') {
+    return NextResponse.redirect(new URL('/admin', request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/admin', '/admin/:path*'],
+  matcher: ['/admin', '/admin/:path*', '/user', '/user/:path*'],
 };
+

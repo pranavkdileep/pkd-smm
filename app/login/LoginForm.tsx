@@ -25,13 +25,11 @@ export function LoginForm() {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(SEARCH_PARAM_ERRORS[searchParams.get('error') ?? ''] ?? null);
-  const [success, setSuccess] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
-    setSuccess(false);
     setIsPending(true);
     try {
       const result = await login({username: identifier, password});
@@ -45,26 +43,12 @@ export function LoginForm() {
         router.push('/admin');
         return;
       }
-      setSuccess(true);
+      router.push('/user');
     } catch {
       setError('Something went wrong. Please try again.');
     } finally {
       setIsPending(false);
     }
-  }
-
-  if (success) {
-    return (
-      <Card padding={6} elevation="low" maxWidth={420}>
-        <VStack gap={4} align="center">
-          <Heading level={2}>Signed in</Heading>
-          <Banner status="success" title="Login successful" description={`Welcome back, ${identifier}. Your dashboard is coming soon.`} />
-          <Text size="sm" color="secondary">
-            You are signed in to your account.
-          </Text>
-        </VStack>
-      </Card>
-    );
   }
 
   return (
