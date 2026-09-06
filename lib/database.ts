@@ -18,6 +18,9 @@ export interface User {
   id: string;
   username: string;
   email: string;
+  emailVerified: boolean;
+  emailVerificationToken?: string; // jwt token for email verification the experation is in the token itself
+  passwordResetToken?: string; // jwt token for password reset the experation is in the token itself
   passwordHash: string;
   balance : number;
   language: Language;
@@ -43,7 +46,7 @@ export interface Transaction {
 export interface Deposit {
   id: string;
   userId: string;
-  TransactionId: string;
+  transactionId: string;
   gateway: string;
   gatewayTransactionId: string;
 }

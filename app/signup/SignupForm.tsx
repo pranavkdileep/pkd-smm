@@ -44,7 +44,11 @@ export function SignupForm() {
       <Card padding={6} elevation="low" maxWidth={420}>
         <VStack gap={4} align="center">
           <Heading level={2}>Account created</Heading>
-          <Banner status="success" title="Welcome to PKD-SMM Panel" description={`Your account ${username} is ready. You are signed in.`} />
+          <Banner
+            status="success"
+            title="Welcome to PKD-SMM Panel"
+            description={`Your account ${username} is ready and you are signed in. We sent a verification email to ${email} — please confirm your address.`}
+          />
         </VStack>
       </Card>
     );

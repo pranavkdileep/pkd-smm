@@ -47,3 +47,39 @@ export async function verifySessionToken(token: string): Promise<SessionPayload 
     return null;
   }
 }
+
+export const EMAIL_VERIFICATION_MAX_AGE = 60 * 60 * 24; // 24 hours
+
+export interface EmailVerificationPayload {
+  userId: string;
+  email: string;
+}
+
+const EMAIL_VERIFICATION_PURPOSE = 'email-verification';
+
+/**
+ * Signs the email-verification JWT stored on the user document. The
+ * expiration travels inside the token itself, so no separate expiry field
+ * is needed on the user.
+ */
+export async function signEmailVerificationToken(payload: EmailVerificationPayload): Promise<string> {
+  return new SignJWT({email: payload.email, purpose: EMAIL_VERIFICATION_PURPOSE})
+    .setProtectedHeader({alg: 'HS256'})
+    .setSubject(payload.userId)
+    .setIssuedAt()
+    .setExpirationTime(`${EMAIL_VERIFICATION_MAX_AGE}s`)
+    .sign(secretKey);
+}
+
+export async function verifyEmailVerificationToken(token: string): Promise<EmailVerificationPayload | null> {
+  try {
+    const {payload} = await jwtVerify(token, secretKey);
+    const {sub, email, purpose} = payload;
+    if (typeof sub !== 'string' || typeof email !== 'string' || purpose !== EMAIL_VERIFICATION_PURPOSE) {
+      return null;
+    }
+    return {userId: sub, email};
+  } catch {
+    return null;
+  }
+}

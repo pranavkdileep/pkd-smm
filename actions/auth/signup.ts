@@ -1,7 +1,9 @@
 'use server';
 
 import {randomUUID} from 'node:crypto';
+import {start} from 'workflow/api';
 import {collections} from '@/lib/db';
+import {handleUserSignup} from '@/workflows/user-signup';
 import {hashPassword} from './password';
 import {createSession} from './session';
 
@@ -45,11 +47,18 @@ export async function signupUser(input: SignupInput): Promise<{success: true} | 
     id: userId,
     username,
     email,
+    emailVerified: false,
     passwordHash,
+    balance: 0,
     language: 'en',
     status: 'active',
     createdAt: new Date().toISOString(),
   });
+
+  // Kick off the email-verification pipeline in the background. `start`
+  // enqueues the workflow run and returns immediately, so it never blocks
+  // signup or the session cookie below.
+  await start(handleUserSignup, [{id: userId, username, email}]);
 
   await createSession({userId, username, role: 'user'});
   return {success: true};
