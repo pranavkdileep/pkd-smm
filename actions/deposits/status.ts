@@ -58,37 +58,83 @@ export async function checkDepositStatus(depositId: string): Promise<DepositStat
   };
 }
 
+export interface DepositPageInput {
+  /** 1-based page number. Out-of-range values are clamped. */
+  page?: number;
+  /** Items per page (1–100). */
+  pageSize?: number;
+}
+
+export interface DepositsPage {
+  items: Deposit[];
+  page: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
+}
+
+const MAX_PAGE_SIZE = 100;
+const DEFAULT_PAGE_SIZE = 10;
+
 /**
- * Server action to retrieve recent deposits for the signed-in user.
+ * Server action to retrieve a paginated page of deposits for the signed-in
+ * user, newest first. The total count is returned alongside the items so the
+ * UI can render pagination controls without a second round-trip.
  */
-export async function getUserDeposits(limit = 20): Promise<Deposit[]> {
+export async function getUserDepositsPage(
+  input: DepositPageInput = {}
+): Promise<DepositsPage> {
+  const empty: DepositsPage = {
+    items: [],
+    page: 1,
+    pageSize: DEFAULT_PAGE_SIZE,
+    totalItems: 0,
+    totalPages: 0,
+  };
+
   const user = await getCurrentUser();
   if (!user) {
-    return [];
+    return empty;
   }
 
-  const safeLimit = Math.min(Math.max(1, limit), 100);
-  const items = await collections.deposits
+  const pageSize = Math.min(Math.max(1, input.pageSize ?? DEFAULT_PAGE_SIZE), MAX_PAGE_SIZE);
+  const totalItems = await collections.deposits.countDocuments({userId: user.id});
+  const totalPages = Math.ceil(totalItems / pageSize);
+
+  if (totalItems === 0) {
+    return {...empty, pageSize};
+  }
+
+  // Clamp the requested page into the valid range (1..totalPages).
+  const page = Math.min(Math.max(1, input.page ?? 1), totalPages);
+  const docs = await collections.deposits
     .find({userId: user.id})
     .sort({createdAt: -1})
-    .limit(safeLimit)
+    .skip((page - 1) * pageSize)
+    .limit(pageSize)
     .toArray();
 
-  return items.map((doc) => ({
-    id: doc.id,
-    userId: doc.userId,
-    amount: doc.amount,
-    currency: doc.currency,
-    status: doc.status,
-    gateway: doc.gateway,
-    gatewayTransactionId: doc.gatewayTransactionId,
-    sessionId: doc.sessionId,
-    transactionId: doc.transactionId,
-    checkoutUrl: doc.checkoutUrl,
-    errorMessage: doc.errorMessage,
-    createdAt: doc.createdAt,
-    completedAt: doc.completedAt,
-  }));
+  return {
+    items: docs.map((doc) => ({
+      id: doc.id,
+      userId: doc.userId,
+      amount: doc.amount,
+      currency: doc.currency,
+      status: doc.status,
+      gateway: doc.gateway,
+      gatewayTransactionId: doc.gatewayTransactionId,
+      sessionId: doc.sessionId,
+      transactionId: doc.transactionId,
+      checkoutUrl: doc.checkoutUrl,
+      errorMessage: doc.errorMessage,
+      createdAt: doc.createdAt,
+      completedAt: doc.completedAt,
+    })),
+    page,
+    pageSize,
+    totalItems,
+    totalPages,
+  };
 }
 
 /**

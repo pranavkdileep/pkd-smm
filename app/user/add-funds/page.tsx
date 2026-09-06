@@ -4,7 +4,7 @@ import {Text} from '@astryxdesign/core/Text';
 import {Card} from '@astryxdesign/core/Card';
 import {Divider} from '@astryxdesign/core/Divider';
 
-import {getUserDeposits} from '@/actions/deposits/status';
+import {getUserDepositsPage} from '@/actions/deposits/status';
 
 import {AddFundsForm} from './AddFundsForm';
 import {DepositHistory} from './DepositHistory';
@@ -25,7 +25,9 @@ function firstParam(value: string | string[] | undefined): string | undefined {
 export default async function AddFundsPage({searchParams}: AddFundsPageProps) {
   const params = await searchParams;
   const payment = firstParam(params.payment);
-  const deposits = await getUserDeposits();
+  // First page is rendered on the server; DepositHistory fetches further
+  // pages through the paginated status.ts server action.
+  const initialPage = await getUserDepositsPage();
 
   return (
     // Deposit page per the Astryx settings/forms archetype: one self-contained
@@ -64,7 +66,7 @@ export default async function AddFundsPage({searchParams}: AddFundsPageProps) {
             re-checked against the gateway at any time.
           </Text>
         </VStack>
-        <DepositHistory deposits={deposits} />
+        <DepositHistory initialPage={initialPage} />
       </VStack>
     </VStack>
   );

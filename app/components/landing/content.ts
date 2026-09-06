@@ -1,7 +1,7 @@
 export const SITE = {
   name: "PKD-SMM Panel",
   tagline: "Affordable social media boost platform for individuals and marketing teams",
-  fromPrice: "$0.02/1K",
+  fromPrice: "₹0.02/1K",
 };
 
 export type PlatformId =
@@ -71,7 +71,7 @@ export const HERO_BENEFITS = [
   { text: "24/7 live customer support", icon: "headphones" as const, tint: "purple" as const },
   { text: "Secure payments, cards & crypto", icon: "shield-check" as const, tint: "orange" as const },
   { text: "Transparent quality tiers", icon: "star" as const, tint: "pink" as const },
-  { text: `From ${SITE.fromPrice} per order`, icon: "badge-dollar-sign" as const, tint: "cyan" as const },
+  { text: `From ${SITE.fromPrice} per order`, icon: "badge-indian-rupee" as const, tint: "cyan" as const },
 ];
 
 export interface ServiceCard {
@@ -82,20 +82,20 @@ export interface ServiceCard {
 }
 
 export const SERVICES: ServiceCard[] = [
-  { platform: "instagram", name: "Instagram Followers", blurb: "Real and premium tiers with refill windows up to 60 days.", fromPrice: "from $0.49/1K" },
-  { platform: "instagram", name: "Instagram Likes", blurb: "Fast likes spread naturally across your posts.", fromPrice: "from $0.09/1K" },
-  { platform: "instagram", name: "Reels Views", blurb: "Video views that push your reach on explore.", fromPrice: "from $0.05/1K" },
-  { platform: "telegram", name: "Telegram Members", blurb: "Real, online and premium members for channels & groups.", fromPrice: "from $0.15/1K" },
-  { platform: "telegram", name: "Post Views", blurb: "Views on every post with auto options for new drops.", fromPrice: "from $0.02/1K" },
-  { platform: "telegram", name: "Emoji Reactions", blurb: "Any emoji you pick, premium set included.", fromPrice: "from $0.10/1K" },
-  { platform: "tiktok", name: "TikTok Followers", blurb: "Followers that hold, with drip-feed pacing.", fromPrice: "from $0.30/1K" },
-  { platform: "tiktok", name: "TikTok Views", blurb: "High-retention views for videos and lives.", fromPrice: "from $0.04/1K" },
-  { platform: "youtube", name: "YouTube Subscribers", blurb: "Channel subs with gradual, safe delivery.", fromPrice: "from $4.50/1K" },
-  { platform: "youtube", name: "YouTube Views", blurb: "Monetization-safe views with watch time.", fromPrice: "from $0.60/1K" },
-  { platform: "x", name: "X Followers", blurb: "Grow a credible audience around your handle.", fromPrice: "from $1.20/1K" },
-  { platform: "x", name: "X Impressions", blurb: "Push posts into more feeds and searches.", fromPrice: "from $0.08/1K" },
-  { platform: "facebook", name: "Facebook Page Likes", blurb: "Page likes that strengthen social proof.", fromPrice: "from $0.80/1K" },
-  { platform: "facebook", name: "Facebook Video Views", blurb: "Views for reels and native video posts.", fromPrice: "from $0.12/1K" },
+  { platform: "instagram", name: "Instagram Followers", blurb: "Real and premium tiers with refill windows up to 60 days.", fromPrice: "from ₹0.49/1K" },
+  { platform: "instagram", name: "Instagram Likes", blurb: "Fast likes spread naturally across your posts.", fromPrice: "from ₹0.09/1K" },
+  { platform: "instagram", name: "Reels Views", blurb: "Video views that push your reach on explore.", fromPrice: "from ₹0.05/1K" },
+  { platform: "telegram", name: "Telegram Members", blurb: "Real, online and premium members for channels & groups.", fromPrice: "from ₹0.15/1K" },
+  { platform: "telegram", name: "Post Views", blurb: "Views on every post with auto options for new drops.", fromPrice: "from ₹0.02/1K" },
+  { platform: "telegram", name: "Emoji Reactions", blurb: "Any emoji you pick, premium set included.", fromPrice: "from ₹0.10/1K" },
+  { platform: "tiktok", name: "TikTok Followers", blurb: "Followers that hold, with drip-feed pacing.", fromPrice: "from ₹0.30/1K" },
+  { platform: "tiktok", name: "TikTok Views", blurb: "High-retention views for videos and lives.", fromPrice: "from ₹0.04/1K" },
+  { platform: "youtube", name: "YouTube Subscribers", blurb: "Channel subs with gradual, safe delivery.", fromPrice: "from ₹4.50/1K" },
+  { platform: "youtube", name: "YouTube Views", blurb: "Monetization-safe views with watch time.", fromPrice: "from ₹0.60/1K" },
+  { platform: "x", name: "X Followers", blurb: "Grow a credible audience around your handle.", fromPrice: "from ₹1.20/1K" },
+  { platform: "x", name: "X Impressions", blurb: "Push posts into more feeds and searches.", fromPrice: "from ₹0.08/1K" },
+  { platform: "facebook", name: "Facebook Page Likes", blurb: "Page likes that strengthen social proof.", fromPrice: "from ₹0.80/1K" },
+  { platform: "facebook", name: "Facebook Video Views", blurb: "Views for reels and native video posts.", fromPrice: "from ₹0.12/1K" },
 ];
 
 export const FREE_SERVICES = [
@@ -114,42 +114,42 @@ export interface PricingRow {
 
 export const PRICING: Record<PlatformId, PricingRow[]> = {
   instagram: [
-    { service: "Real Followers", rate: "$0.49 / 1K", quantity: "100 – 100,000", guarantee: "30-day refill" },
-    { service: "Premium Followers", rate: "$1.20 / 1K", quantity: "100 – 50,000", guarantee: "60-day refill" },
-    { service: "Post Likes", rate: "$0.09 / 1K", quantity: "50 – 50,000", guarantee: "Lifetime guarantee" },
-    { service: "Reels Views", rate: "$0.05 / 1K", quantity: "500 – 1,000,000", guarantee: "Delivery in 24h" },
-    { service: "Story Views", rate: "$0.15 / 1K", quantity: "100 – 50,000", guarantee: "Delivery before expiry" },
+    { service: "Real Followers", rate: "₹0.49 / 1K", quantity: "100 – 100,000", guarantee: "30-day refill" },
+    { service: "Premium Followers", rate: "₹1.20 / 1K", quantity: "100 – 50,000", guarantee: "60-day refill" },
+    { service: "Post Likes", rate: "₹0.09 / 1K", quantity: "50 – 50,000", guarantee: "Lifetime guarantee" },
+    { service: "Reels Views", rate: "₹0.05 / 1K", quantity: "500 – 1,000,000", guarantee: "Delivery in 24h" },
+    { service: "Story Views", rate: "₹0.15 / 1K", quantity: "100 – 50,000", guarantee: "Delivery before expiry" },
   ],
   telegram: [
-    { service: "Real Members", rate: "$0.15 / 1K", quantity: "500 – 50,000", guarantee: "30-day refill" },
-    { service: "Online Members", rate: "$0.35 / 1K", quantity: "500 – 20,000", guarantee: "7-day refill" },
-    { service: "Post Views", rate: "$0.02 / 1K", quantity: "500 – 25,000", guarantee: "365-day refill" },
-    { service: "Emoji Reactions", rate: "$0.10 / 1K", quantity: "100 – 25,000", guarantee: "1-year guarantee" },
-    { service: "Comments", rate: "$1.00 / 1K", quantity: "10 – 2,500", guarantee: "Custom or smart random" },
+    { service: "Real Members", rate: "₹0.15 / 1K", quantity: "500 – 50,000", guarantee: "30-day refill" },
+    { service: "Online Members", rate: "₹0.35 / 1K", quantity: "500 – 20,000", guarantee: "7-day refill" },
+    { service: "Post Views", rate: "₹0.02 / 1K", quantity: "500 – 25,000", guarantee: "365-day refill" },
+    { service: "Emoji Reactions", rate: "₹0.10 / 1K", quantity: "100 – 25,000", guarantee: "1-year guarantee" },
+    { service: "Comments", rate: "₹1.00 / 1K", quantity: "10 – 2,500", guarantee: "Custom or smart random" },
   ],
   tiktok: [
-    { service: "Followers", rate: "$0.30 / 1K", quantity: "100 – 100,000", guarantee: "30-day refill" },
-    { service: "Likes", rate: "$0.06 / 1K", quantity: "100 – 250,000", guarantee: "Lifetime guarantee" },
-    { service: "Video Views", rate: "$0.04 / 1K", quantity: "1,000 – 5,000,000", guarantee: "Delivery in 12h" },
-    { service: "Live Stream Views", rate: "$0.90 / 1K", quantity: "50 – 20,000", guarantee: "Live-minute based" },
+    { service: "Followers", rate: "₹0.30 / 1K", quantity: "100 – 100,000", guarantee: "30-day refill" },
+    { service: "Likes", rate: "₹0.06 / 1K", quantity: "100 – 250,000", guarantee: "Lifetime guarantee" },
+    { service: "Video Views", rate: "₹0.04 / 1K", quantity: "1,000 – 5,000,000", guarantee: "Delivery in 12h" },
+    { service: "Live Stream Views", rate: "₹0.90 / 1K", quantity: "50 – 20,000", guarantee: "Live-minute based" },
   ],
   youtube: [
-    { service: "Subscribers", rate: "$4.50 / 1K", quantity: "50 – 20,000", guarantee: "60-day refill" },
-    { service: "Views", rate: "$0.60 / 1K", quantity: "1,000 – 500,000", guarantee: "Monetization-safe" },
-    { service: "Likes", rate: "$0.40 / 1K", quantity: "50 – 50,000", guarantee: "Lifetime guarantee" },
-    { service: "Watch Hours", rate: "$8.00 / 1K hrs", quantity: "1,000 – 4,000 hrs", guarantee: "Gradual delivery" },
+    { service: "Subscribers", rate: "₹4.50 / 1K", quantity: "50 – 20,000", guarantee: "60-day refill" },
+    { service: "Views", rate: "₹0.60 / 1K", quantity: "1,000 – 500,000", guarantee: "Monetization-safe" },
+    { service: "Likes", rate: "₹0.40 / 1K", quantity: "50 – 50,000", guarantee: "Lifetime guarantee" },
+    { service: "Watch Hours", rate: "₹8.00 / 1K hrs", quantity: "1,000 – 4,000 hrs", guarantee: "Gradual delivery" },
   ],
   x: [
-    { service: "Followers", rate: "$1.20 / 1K", quantity: "100 – 50,000", guarantee: "30-day refill" },
-    { service: "Likes", rate: "$0.25 / 1K", quantity: "50 – 50,000", guarantee: "Lifetime guarantee" },
-    { service: "Reposts", rate: "$0.45 / 1K", quantity: "50 – 25,000", guarantee: "Lifetime guarantee" },
-    { service: "Impressions", rate: "$0.08 / 1K", quantity: "1,000 – 1,000,000", guarantee: "Delivery in 24h" },
+    { service: "Followers", rate: "₹1.20 / 1K", quantity: "100 – 50,000", guarantee: "30-day refill" },
+    { service: "Likes", rate: "₹0.25 / 1K", quantity: "50 – 50,000", guarantee: "Lifetime guarantee" },
+    { service: "Reposts", rate: "₹0.45 / 1K", quantity: "50 – 25,000", guarantee: "Lifetime guarantee" },
+    { service: "Impressions", rate: "₹0.08 / 1K", quantity: "1,000 – 1,000,000", guarantee: "Delivery in 24h" },
   ],
   facebook: [
-    { service: "Page Likes", rate: "$0.80 / 1K", quantity: "100 – 50,000", guarantee: "30-day refill" },
-    { service: "Page Followers", rate: "$0.55 / 1K", quantity: "100 – 100,000", guarantee: "30-day refill" },
-    { service: "Post Likes", rate: "$0.10 / 1K", quantity: "50 – 50,000", guarantee: "Lifetime guarantee" },
-    { service: "Video Views", rate: "$0.12 / 1K", quantity: "1,000 – 500,000", guarantee: "3-second+ retention" },
+    { service: "Page Likes", rate: "₹0.80 / 1K", quantity: "100 – 50,000", guarantee: "30-day refill" },
+    { service: "Page Followers", rate: "₹0.55 / 1K", quantity: "100 – 100,000", guarantee: "30-day refill" },
+    { service: "Post Likes", rate: "₹0.10 / 1K", quantity: "50 – 50,000", guarantee: "Lifetime guarantee" },
+    { service: "Video Views", rate: "₹0.12 / 1K", quantity: "1,000 – 500,000", guarantee: "3-second+ retention" },
   ],
 };
 

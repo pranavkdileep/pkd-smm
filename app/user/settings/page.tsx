@@ -74,7 +74,7 @@ export default async function SettingsPage() {
               />
             </HStack>
           </MetadataListItem>
-          <MetadataListItem label="Balance">${user.balance.toFixed(2)}</MetadataListItem>
+          <MetadataListItem label="Balance">₹{user.balance.toFixed(2)}</MetadataListItem>
           <MetadataListItem label="Language">{LANGUAGE_LABELS[user.language]}</MetadataListItem>
           <MetadataListItem label="Member since">{formatDate(user.createdAt)}</MetadataListItem>
         </MetadataList>

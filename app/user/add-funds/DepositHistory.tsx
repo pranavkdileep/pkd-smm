@@ -1,15 +1,15 @@
 'use client';
 
-import {useState} from 'react';
+import {useCallback, useRef, useState} from 'react';
 import {useRouter} from 'next/navigation';
 import {Wallet} from 'lucide-react';
 
-import {Table, proportional, pixel, type TableColumn} from '@astryxdesign/core/Table';
+import {Table, useTablePagination, proportional, pixel, type TableColumn} from '@astryxdesign/core/Table';
 import {StatusDot} from '@astryxdesign/core/StatusDot';
 import {Button} from '@astryxdesign/core/Button';
 import {EmptyState} from '@astryxdesign/core/EmptyState';
 
-import {checkDepositStatus} from '@/actions/deposits/status';
+import {checkDepositStatus, getUserDepositsPage, type DepositsPage} from '@/actions/deposits/status';
 import type {Deposit, DepositStatus} from '@/lib/database';
 
 import {formatAmount, formatDateTime} from './format';
@@ -36,21 +36,62 @@ interface DepositRow extends Record<string, unknown> {
   status: DepositStatus;
 }
 
+interface DepositHistoryProps {
+  /** Page 1 of the history, fetched on the server for the first render. */
+  initialPage: DepositsPage;
+}
+
 /**
- * Dense deposit history table. Pending rows expose a manual "Check status"
- * action that re-verifies against the gateway via status.ts.
+ * Dense paginated deposit history. The server owns the data (status.ts
+ * returns one page plus the total count); this component owns the current
+ * page and fetches new pages through the server action. Pending rows expose
+ * a manual "Check status" action that re-verifies against the gateway.
  */
-export function DepositHistory({deposits}: {deposits: Deposit[]}) {
+export function DepositHistory({initialPage}: DepositHistoryProps) {
   const router = useRouter();
+  const [pageData, setPageData] = useState<DepositsPage>(initialPage);
   const [checkingId, setCheckingId] = useState<string | null>(null);
+  // Guards against out-of-order responses when pages are clicked quickly.
+  const requestSeqRef = useRef(0);
+
+  const fetchPage = useCallback(
+    async (page: number) => {
+      const seq = ++requestSeqRef.current;
+      const result = await getUserDepositsPage({page, pageSize: pageData.pageSize});
+      if (seq !== requestSeqRef.current) {
+        return; // A newer request superseded this one.
+      }
+      setPageData(result);
+    },
+    [pageData.pageSize]
+  );
+
+  const handlePageChange = useCallback(
+    (page: number) => {
+      if (page !== pageData.page) {
+        void fetchPage(page);
+      }
+    },
+    [pageData.page, fetchPage]
+  );
+
+  const paginationPlugin = useTablePagination<DepositRow>({
+    page: pageData.page,
+    onPageChange: handlePageChange,
+    totalItems: pageData.totalItems,
+    pageSize: pageData.pageSize,
+  });
 
   async function handleCheck(depositId: string) {
     setCheckingId(depositId);
     await checkDepositStatus(depositId);
     setCheckingId(null);
-    // History rows and the top-bar balance reflect the latest status.
+    // Refresh the rows on the current page, plus the top-bar balance.
+    await fetchPage(pageData.page);
     router.refresh();
   }
+
+  const {items: deposits} = pageData;
 
   if (deposits.length === 0) {
     return (
@@ -62,7 +103,7 @@ export function DepositHistory({deposits}: {deposits: Deposit[]}) {
     );
   }
 
-  const rows: DepositRow[] = deposits.map((deposit) => ({
+  const rows: DepositRow[] = deposits.map((deposit: Deposit) => ({
     id: deposit.id,
     date: formatDateTime(deposit.createdAt),
     amount: formatAmount(deposit.amount, deposit.currency),
@@ -115,6 +156,10 @@ export function DepositHistory({deposits}: {deposits: Deposit[]}) {
       density="compact"
       dividers="rows"
       textOverflow="truncate"
+      plugins={{pagination: paginationPlugin}}
+      // Windowed view: aria indices reflect position across all pages.
+      rowIndexStart={(pageData.page - 1) * pageData.pageSize + 1}
+      rowCount={pageData.totalItems}
     />
   );
 }

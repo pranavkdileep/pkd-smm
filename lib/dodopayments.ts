@@ -1,15 +1,26 @@
 import DodoPayments from 'dodopayments';
 
+export function getDodoPaymentsEnvironment(): 'live_mode' | 'test_mode' {
+  return (process.env.DODO_PAYMENTS_ENVIRONMENT as 'live_mode' | 'test_mode') || 'live_mode';
+}
+
 /**
  * Returns a configured instance of the DodoPayments SDK client.
  */
 export function getDodoPaymentsClient(): DodoPayments {
-  const apiKey = process.env.DODO_PAYMENTS_API_KEY;
-  if (!apiKey) {
-    throw new Error('DODO_PAYMENTS_API_KEY is not configured in environment variables');
-  }
+  const environment = getDodoPaymentsEnvironment();
+  const apiKey =
+    environment === 'test_mode'
+      ? process.env.DODO_PAYMENTS_TEST_API_KEY || process.env.DODO_PAYMENTS_API_KEY
+      : process.env.DODO_PAYMENTS_LIVE_API_KEY || process.env.DODO_PAYMENTS_API_KEY;
 
-  const environment = (process.env.DODO_PAYMENTS_ENVIRONMENT as 'live_mode' | 'test_mode') || 'live_mode';
+  if (!apiKey) {
+    throw new Error(
+      `Dodo Payments API key is missing. Set ${
+        environment === 'test_mode' ? 'DODO_PAYMENTS_TEST_API_KEY or DODO_PAYMENTS_API_KEY' : 'DODO_PAYMENTS_API_KEY'
+      } in .env.local`
+    );
+  }
 
   return new DodoPayments({
     bearerToken: apiKey,
@@ -22,6 +33,10 @@ export function getDodoPaymentsClient(): DodoPayments {
  * Should point to a Pay-What-You-Want product in the merchant dashboard.
  */
 export function getDefaultProductId(): string {
+  const environment = getDodoPaymentsEnvironment();
+  if (environment === 'test_mode' && process.env.DODO_PAYMENTS_TEST_PRODUCT_ID) {
+    return process.env.DODO_PAYMENTS_TEST_PRODUCT_ID;
+  }
   return process.env.DODO_PAYMENTS_PRODUCT_ID || 'pdt_pPiLDyez8FmSVX7IEfUEG';
 }
 

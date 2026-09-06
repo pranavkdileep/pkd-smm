@@ -63,9 +63,9 @@ export async function createDepositSession(params: CreateDepositParams): Promise
     return {success: false, error: 'Deposit amount must be greater than zero.'};
   }
 
-  // Minimum deposit check (e.g. $1.00 / ₹1.00)
+  // Minimum deposit check (e.g. ₹1.00)
   if (amount < 1) {
-    return {success: false, error: 'Minimum deposit amount is 1.00.'};
+    return {success: false, error: 'Minimum deposit amount is ₹1.00.'};
   }
 
   const depositId = randomUUID();

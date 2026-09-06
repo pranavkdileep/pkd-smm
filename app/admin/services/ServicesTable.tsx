@@ -14,7 +14,7 @@ import {AlertDialog} from '@astryxdesign/core/AlertDialog';
 import {deleteService, setServiceStatus, type AdminServiceRow} from '@/actions/admin/services';
 
 function formatPrice(value: number): string {
-  return value.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  return `₹${value.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
 }
 
 function formatCount(value: number): string {

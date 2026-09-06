@@ -112,7 +112,7 @@ function MockPayment() {
           <Text size="xsm">Balance credited instantly</Text>
         </HStack>
         <Text size="xsm" weight="bold" className="text-green-vivid">
-          +$25.00
+          +₹25.00
         </Text>
       </HStack>
     </VStack>
@@ -135,10 +135,10 @@ function MockOrderForm() {
       <FieldRow iconName="link" value="https://instagram.com/yourprofile" />
       <HStack justify="between" vAlign="center" className="rounded-md bg-body px-3 py-2">
         <Text size="xsm" color="secondary">
-          1,000 × $0.49 / 1K
+          1,000 × ₹0.49 / 1K
         </Text>
         <Text size="xsm" weight="bold">
-          $0.49 total
+          ₹0.49 total
         </Text>
       </HStack>
     </VStack>

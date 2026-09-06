@@ -16,7 +16,7 @@ interface UserTopBarProps {
 }
 
 function formatMoney(amount: number): string {
-  return `$${amount.toFixed(2)}`;
+  return `₹${amount.toFixed(2)}`;
 }
 
 export function UserTopBar({balance}: UserTopBarProps) {

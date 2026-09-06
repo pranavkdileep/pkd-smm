@@ -44,14 +44,14 @@ export async function createDepositOrder(
   if (amount < 1) {
     return {
       success: false,
-      error: 'Minimum deposit amount is 1.00.',
+      error: 'Minimum deposit amount is ₹1.00.',
     };
   }
 
   if (amount > 50000) {
     return {
       success: false,
-      error: 'Deposit amount exceeds the single transaction limit (50,000.00).',
+      error: 'Deposit amount exceeds the single transaction limit (₹50,000.00).',
     };
   }
 
