@@ -1,0 +1,135 @@
+'use server';
+
+import {revalidatePath} from 'next/cache';
+
+import {collections} from '@/lib/db';
+import type {User, UserStatus} from '@/lib/database';
+import {getSession} from '@/actions/auth/session';
+
+const DEFAULT_PAGE_SIZE = 10;
+const MAX_PAGE_SIZE = 100;
+
+/** Sanitized user row sent to the admin UI — never contains the password hash. */
+export interface AdminUserRow extends Record<string, unknown> {
+  id: string;
+  username: string;
+  email: string;
+  language: string;
+  status: UserStatus;
+  createdAt: string | null;
+}
+
+export interface ListUsersResult {
+  users: AdminUserRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+export type MutationResult = {success: true} | {success: false; error: string};
+
+async function isAdmin(): Promise<boolean> {
+  const session = await getSession();
+  return session?.role === 'admin';
+}
+
+function escapeRegex(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function buildFilter(search: string): Record<string, unknown> {
+  const trimmed = search.trim();
+  if (!trimmed) {
+    return {};
+  }
+  const pattern = new RegExp(escapeRegex(trimmed), 'i');
+  return {$or: [{username: pattern}, {email: pattern}]};
+}
+
+function clampPage(value: number | undefined, totalPages: number): number {
+  if (!Number.isFinite(value) || (value ?? 1) < 1) {
+    return 1;
+  }
+  return Math.min(value as number, totalPages);
+}
+
+function clampPageSize(value: number | undefined): number {
+  if (!Number.isFinite(value) || (value ?? 0) < 1) {
+    return DEFAULT_PAGE_SIZE;
+  }
+  return Math.min(value as number, MAX_PAGE_SIZE);
+}
+
+function toRow(user: User): AdminUserRow {
+  return {
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    language: user.language,
+    status: user.status ?? 'active',
+    createdAt: user.createdAt ?? null,
+  };
+}
+
+export async function listUsers(input: {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+}): Promise<ListUsersResult> {
+  const filter = buildFilter(input.search ?? '');
+  const pageSize = clampPageSize(input.pageSize);
+
+  const total = await collections.users.countDocuments(filter);
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const page = clampPage(input.page, totalPages);
+
+  const users = await collections.users
+    .find(filter, {
+      sort: {createdAt: -1, username: 1},
+      skip: (page - 1) * pageSize,
+      limit: pageSize,
+    })
+    .toArray();
+
+  return {
+    users: users.map(toRow),
+    total,
+    page,
+    pageSize,
+    totalPages,
+  };
+}
+
+export async function setUserStatus(userId: string, status: UserStatus): Promise<MutationResult> {
+  if (!(await isAdmin())) {
+    return {success: false, error: 'Admin session required.'};
+  }
+  if (status !== 'active' && status !== 'banned') {
+    return {success: false, error: 'Invalid status.'};
+  }
+
+  const result = await collections.users.updateOne({id: userId}, {$set: {status}});
+  if (result.matchedCount === 0) {
+    return {success: false, error: 'User not found.'};
+  }
+
+  revalidatePath('/admin/users');
+  revalidatePath('/admin');
+  return {success: true};
+}
+
+export async function deleteUser(userId: string): Promise<MutationResult> {
+  if (!(await isAdmin())) {
+    return {success: false, error: 'Admin session required.'};
+  }
+
+  const result = await collections.users.deleteOne({id: userId});
+  if (result.deletedCount === 0) {
+    return {success: false, error: 'User not found.'};
+  }
+
+  revalidatePath('/admin/users');
+  revalidatePath('/admin');
+  return {success: true};
+}

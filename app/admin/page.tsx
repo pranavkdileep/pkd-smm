@@ -2,37 +2,45 @@ import {VStack} from '@astryxdesign/core/VStack';
 import {HStack} from '@astryxdesign/core/HStack';
 import {Heading} from '@astryxdesign/core/Heading';
 import {Text} from '@astryxdesign/core/Text';
-import {Badge} from '@astryxdesign/core/Badge';
+import {StatusDot} from '@astryxdesign/core/StatusDot';
 
+import {collections} from '@/lib/db';
 import {getSession} from '@/actions/auth/session';
-import {LogoutButton} from './LogoutButton';
+import {StatGrid} from './StatGrid';
 
 export const metadata = {
-  title: 'Admin · PKD-SMM Panel',
+  title: 'Dashboard · PKD-SMM Admin',
 };
 
-export default async function AdminPage() {
+export default async function AdminDashboardPage() {
   const session = await getSession();
+  const [totalUsers, bannedUsers, totalServices] = await Promise.all([
+    collections.users.countDocuments({}),
+    collections.users.countDocuments({status: 'banned'}),
+    collections.services.countDocuments({}),
+  ]);
 
   return (
-    <main className="min-h-screen bg-body">
-      <section aria-label="Admin area" className="py-16 md:py-24">
-        <VStack maxWidth={720} gap={6} className="mx-auto w-full px-6">
-          <HStack justify="between" vAlign="center" wrap="wrap">
-            <VStack gap={2} align="start">
-              <Badge variant="blue" label="Demo admin area" />
-              <Heading level={1}>
-                Hello Admin{session ? `, ${session.username}` : ''}
-              </Heading>
-              <Text color="secondary">
-                You are signed in with an administrator session. This page is protected by
-                middleware — only valid admin JWT cookies get through.
-              </Text>
-            </VStack>
-            <LogoutButton />
-          </HStack>
-        </VStack>
-      </section>
-    </main>
+    <VStack gap={6} className="w-full pt-6">
+      <VStack gap={1}>
+        <Heading level={1}>Dashboard</Heading>
+        <Text color="secondary">
+          Welcome back{session ? `, ${session.username}` : ''}. Here is the current state of the panel.
+        </Text>
+      </VStack>
+
+      <StatGrid
+        stats={[
+          {iconKey: 'users', label: 'Total users', value: totalUsers},
+          {iconKey: 'services', label: 'Total services', value: totalServices},
+          {iconKey: 'banned', label: 'Banned users', value: bannedUsers},
+        ]}
+      />
+
+      <HStack gap={2} vAlign="center">
+        <StatusDot variant="success" label="Panel status: operational" />
+        <Text size="sm" color="secondary">Panel operational — middleware is protecting admin routes.</Text>
+      </HStack>
+    </VStack>
   );
 }

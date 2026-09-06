@@ -47,6 +47,8 @@ export async function signupUser(input: SignupInput): Promise<{success: true} | 
     email,
     passwordHash,
     language: 'en',
+    status: 'active',
+    createdAt: new Date().toISOString(),
   });
 
   await createSession({userId, username, role: 'user'});

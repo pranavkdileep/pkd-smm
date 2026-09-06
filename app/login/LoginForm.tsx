@@ -9,11 +9,10 @@ import {Text} from '@astryxdesign/core/Text';
 import {Button} from '@astryxdesign/core/Button';
 import {Card} from '@astryxdesign/core/Card';
 import {TextInput} from '@astryxdesign/core/TextInput';
-import {SegmentedControl, SegmentedControlItem} from '@astryxdesign/core/SegmentedControl';
 import {Banner} from '@astryxdesign/core/Banner';
 import Link from 'next/link';
 
-import {loginAdmin, loginUser} from '@/actions/auth/login';
+import {login} from '@/actions/auth/login';
 
 const SEARCH_PARAM_ERRORS: Record<string, string> = {
   unauthenticated: 'Please sign in to continue.',
@@ -23,7 +22,6 @@ const SEARCH_PARAM_ERRORS: Record<string, string> = {
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [role, setRole] = useState<'user' | 'admin'>('user');
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(SEARCH_PARAM_ERRORS[searchParams.get('error') ?? ''] ?? null);
@@ -36,17 +34,14 @@ export function LoginForm() {
     setSuccess(false);
     setIsPending(true);
     try {
-      const result =
-        role === 'admin'
-          ? await loginAdmin({username: identifier, password})
-          : await loginUser({username: identifier, password});
+      const result = await login({username: identifier, password});
 
       if (!result.success) {
         setError(result.error);
         return;
       }
 
-      if (role === 'admin') {
+      if (result.role === 'admin') {
         router.push('/admin');
         return;
       }
@@ -65,7 +60,7 @@ export function LoginForm() {
           <Heading level={2}>Signed in</Heading>
           <Banner status="success" title="Login successful" description={`Welcome back, ${identifier}. Your dashboard is coming soon.`} />
           <Text size="sm" color="secondary">
-            You are signed in as a regular user.
+            You are signed in to your account.
           </Text>
         </VStack>
       </Card>
@@ -76,36 +71,19 @@ export function LoginForm() {
     <Card padding={6} elevation="low" maxWidth={420}>
       <VStack gap={4}>
         <VStack gap={1} align="center">
-          <Heading level={2}>{role === 'admin' ? 'Admin sign in' : 'Sign in'}</Heading>
-          <Text color="secondary">
-            {role === 'admin'
-              ? 'Restricted access for panel administrators.'
-              : 'Access your PKD-SMM Panel account.'}
-          </Text>
+          <Heading level={2}>Sign in</Heading>
+          <Text color="secondary">Access your PKD-SMM Panel account.</Text>
         </VStack>
-
-        <SegmentedControl
-          label="Account type"
-          value={role}
-          onChange={(value) => {
-            setRole(value as 'user' | 'admin');
-            setError(null);
-          }}
-          layout="fill"
-        >
-          <SegmentedControlItem value="user" label="User" />
-          <SegmentedControlItem value="admin" label="Admin" />
-        </SegmentedControl>
 
         {error ? <Banner status="error" title={error} /> : null}
 
         <form onSubmit={handleSubmit}>
           <VStack gap={3}>
             <TextInput
-              label={role === 'admin' ? 'Username' : 'Username or email'}
+              label="Username or email"
               value={identifier}
               onChange={setIdentifier}
-              placeholder={role === 'admin' ? 'admin username' : 'you@example.com'}
+              placeholder="you@example.com"
               htmlName="username"
               isRequired
             />

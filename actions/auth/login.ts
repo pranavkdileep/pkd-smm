@@ -3,34 +3,38 @@
 import {collections} from '@/lib/db';
 import {verifyPassword} from './password';
 import {createSession} from './session';
+import type {SessionRole} from './jwt';
 
 interface LoginInput {
   username: string;
   password: string;
 }
 
-export async function loginUser(input: LoginInput): Promise<{success: true} | {success: false; error: string}> {
+export type LoginResult =
+  | {success: true; role: SessionRole}
+  | {success: false; error: string};
+
+/**
+ * Unified login. The role (user vs admin) is detected automatically on the
+ * server: the admin collection is checked first, then the user collection.
+ * The client never needs to pick a role.
+ */
+export async function login(input: LoginInput): Promise<LoginResult> {
   const identifier = input.username.trim();
+
+  const admin = await collections.adminUsers.findOne({username: identifier});
+  if (admin && (await verifyPassword(input.password, admin.passwordHash))) {
+    await createSession({userId: admin.id, username: admin.username, role: 'admin'});
+    return {success: true, role: 'admin'};
+  }
+
   const user = await collections.users.findOne({
     $or: [{username: identifier}, {email: identifier.toLowerCase()}],
   });
-
-  if (!user || !(await verifyPassword(input.password, user.passwordHash))) {
-    return {success: false, error: 'Invalid credentials.'};
+  if (user && (await verifyPassword(input.password, user.passwordHash))) {
+    await createSession({userId: user.id, username: user.username, role: 'user'});
+    return {success: true, role: 'user'};
   }
 
-  await createSession({userId: user.id, username: user.username, role: 'user'});
-  return {success: true};
-}
-
-export async function loginAdmin(input: LoginInput): Promise<{success: true} | {success: false; error: string}> {
-  const username = input.username.trim();
-  const admin = await collections.adminUsers.findOne({username});
-
-  if (!admin || !(await verifyPassword(input.password, admin.passwordHash))) {
-    return {success: false, error: 'Invalid admin credentials.'};
-  }
-
-  await createSession({userId: admin.id, username: admin.username, role: 'admin'});
-  return {success: true};
+  return {success: false, error: 'Invalid credentials.'};
 }
