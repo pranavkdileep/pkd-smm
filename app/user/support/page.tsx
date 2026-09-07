@@ -10,7 +10,7 @@ import {SUPPORT_PAGE_SIZES} from '@/lib/database';
 
 import {SupportToolbar} from './SupportToolbar';
 import {TicketsTable} from './TicketsTable';
-import {UrlPagination} from './UrlPagination';
+import {UrlPagination} from '@/app/components/support/UrlPagination';
 
 export const metadata = {
   title: 'Support · PKD-SMM Panel',

@@ -16,7 +16,7 @@ import {Banner} from '@astryxdesign/core/Banner';
 import {SUPPORT_TICKET_CATEGORIES, SUPPORT_TICKET_PRIORITIES} from '@/lib/database';
 import {createSupportTicket} from '@/actions/support/create';
 
-import {CATEGORY_LABELS, PRIORITY_LABELS} from './ticketMeta';
+import {CATEGORY_LABELS, PRIORITY_LABELS} from '@/app/components/support/ticketMeta';
 
 const TITLE_MIN_LENGTH = 3; // Mirrors the limit enforced in actions/support/create.ts.
 const TITLE_MAX_LENGTH = 120;

@@ -5,9 +5,9 @@ import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 import {Pagination} from '@astryxdesign/core/Pagination';
 
 /**
- * URL-driven pagination shared by the support ticket list and a ticket's
- * conversation. Page and page-size live in the query string (`?page=&pageSize=`)
- * so server components re-render with the requested slice.
+ * URL-driven pagination shared by the support ticket lists and ticket
+ * conversations (user and admin). Page and page-size live in the query string
+ * (`?page=&pageSize=`) so server components re-render with the requested slice.
  */
 export function UrlPagination({
   label,

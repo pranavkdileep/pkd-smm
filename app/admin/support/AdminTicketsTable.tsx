@@ -8,8 +8,7 @@ import {Text} from '@astryxdesign/core/Text';
 import {StatusDot} from '@astryxdesign/core/StatusDot';
 import {Token} from '@astryxdesign/core/Token';
 
-import type {SupportTicketRow} from '@/actions/support/list';
-
+import type {AdminSupportTicketRow} from '@/actions/admin/support';
 import {
   CATEGORY_LABELS,
   CATEGORY_TOKEN_COLORS,
@@ -20,25 +19,38 @@ import {
 } from '@/app/components/support/ticketMeta';
 
 /**
- * Dense ticket rows — title links into the conversation; category and priority
- * read as tokens, status as a labeled dot.
+ * Dense admin ticket rows — title links into the conversation, the requester
+ * is resolved inline, and category/priority read as tokens, status as a dot.
  */
-export function TicketsTable({tickets}: {tickets: SupportTicketRow[]}) {
-  const columns: TableColumn<SupportTicketRow>[] = [
+export function AdminTicketsTable({tickets}: {tickets: AdminSupportTicketRow[]}) {
+  const columns: TableColumn<AdminSupportTicketRow>[] = [
     {
       key: 'title',
       header: 'Ticket',
-      width: proportional(1),
+      width: proportional(2),
       renderCell: (ticket) => (
         <VStack gap={0.5}>
           <Link
-            href={`/user/support/${ticket.id}`}
+            href={`/admin/support/${ticket.id}`}
             className="text-sm font-medium text-primary hover:text-blue-vivid"
           >
             {ticket.title}
           </Link>
           <Text size="sm" color="secondary">
             {ticketRef(ticket.id)}
+          </Text>
+        </VStack>
+      ),
+    },
+    {
+      key: 'requester',
+      header: 'Requester',
+      width: proportional(1),
+      renderCell: (ticket) => (
+        <VStack gap={0.5}>
+          <Text weight="semibold">{ticket.requesterUsername}</Text>
+          <Text size="sm" color="secondary">
+            {ticket.requesterEmail}
           </Text>
         </VStack>
       ),

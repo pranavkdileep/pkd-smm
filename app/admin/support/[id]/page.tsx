@@ -11,11 +11,8 @@ import {StatusDot} from '@astryxdesign/core/StatusDot';
 import {Token} from '@astryxdesign/core/Token';
 import {Banner} from '@astryxdesign/core/Banner';
 
-import {getSupportTicketDetail} from '@/actions/support/list';
+import {getAdminSupportTicketDetail} from '@/actions/admin/support';
 import {SUPPORT_COMMENT_PAGE_SIZES} from '@/lib/database';
-
-import {CloseTicketButton} from './CloseTicketButton';
-import {ReplyForm} from './ReplyForm';
 import {UrlPagination} from '@/app/components/support/UrlPagination';
 import {
   CATEGORY_LABELS,
@@ -27,8 +24,11 @@ import {
   ticketRef,
 } from '@/app/components/support/ticketMeta';
 
+import {AdminCloseTicketButton} from './AdminCloseTicketButton';
+import {AdminReplyForm} from './AdminReplyForm';
+
 export const metadata = {
-  title: 'Support ticket · PKD-SMM Panel',
+  title: 'Support ticket · PKD-SMM Admin',
 };
 
 type Params = Promise<{id: string}>;
@@ -60,7 +60,7 @@ function MessageBody({message}: {message: string}) {
   );
 }
 
-export default async function SupportTicketPage({
+export default async function AdminSupportTicketPage({
   params,
   searchParams,
 }: {
@@ -76,7 +76,7 @@ export default async function SupportTicketPage({
       ? pageSizeParam
       : undefined;
 
-  const result = await getSupportTicketDetail(id, {page, pageSize});
+  const result = await getAdminSupportTicketDetail(id, {page, pageSize});
   if (!result) {
     notFound();
   }
@@ -91,14 +91,16 @@ export default async function SupportTicketPage({
   } = result;
   const isOpen = ticket.status === 'open';
   const closedDescription = ticket.closedAt
-    ? `Closed ${formatTicketDate(ticket.closedAt)}. Open a new ticket if you still need help.`
-    : 'Open a new ticket if you still need help.';
+    ? `Closed ${formatTicketDate(ticket.closedAt)} by ${
+        ticket.closedBy === 'admin' ? 'staff' : 'the customer'
+      }. The conversation is locked for both sides.`
+    : 'The conversation is locked for both sides.';
 
   return (
     <VStack gap={5} className="w-full pt-6 px-6">
       <HStack justify="between" vAlign="start" wrap="wrap" gap={3} width="100%">
         <VStack gap={2}>
-          <Link href="/user/support" className="text-sm text-secondary hover:text-blue-vivid">
+          <Link href="/admin/support" className="text-sm text-secondary hover:text-blue-vivid">
             <HStack gap={1} vAlign="center">
               <ArrowLeft size={14} aria-hidden="true" />
               All tickets
@@ -106,10 +108,21 @@ export default async function SupportTicketPage({
           </Link>
           <VStack gap={1}>
             <Heading level={1}>{ticket.title}</Heading>
-            <HStack gap={2} vAlign="center" wrap="wrap">
+            <HStack gap={1.5} vAlign="center" wrap="wrap">
               <Text size="sm" color="secondary">
                 {ticketRef(ticket.id)}
               </Text>
+              <Text size="sm" color="secondary">
+                ·
+              </Text>
+              <Text size="sm" weight="semibold">
+                {ticket.requesterUsername}
+              </Text>
+              <Text size="sm" color="secondary">
+                ({ticket.requesterEmail})
+              </Text>
+            </HStack>
+            <HStack gap={2} vAlign="center" wrap="wrap">
               <Token
                 label={CATEGORY_LABELS[ticket.category] ?? ticket.category}
                 color={CATEGORY_TOKEN_COLORS[ticket.category] ?? 'gray'}
@@ -134,7 +147,7 @@ export default async function SupportTicketPage({
             </HStack>
           </VStack>
         </VStack>
-        {isOpen ? <CloseTicketButton ticketId={ticket.id} /> : null}
+        {isOpen ? <AdminCloseTicketButton ticketId={ticket.id} /> : null}
       </HStack>
 
       <List
@@ -154,7 +167,12 @@ export default async function SupportTicketPage({
           comments.map((comment) => (
             <ListItem
               key={comment.id}
-              label={comment.authorType === 'admin' ? 'Support team' : 'You'}
+              label={comment.authorName}
+              startContent={
+                comment.authorType === 'admin' ? (
+                  <Token label="Staff" color="blue" size="sm" />
+                ) : null
+              }
               description={<MessageBody message={comment.message} />}
               endContent={
                 <Text size="sm" color="secondary">
@@ -180,7 +198,7 @@ export default async function SupportTicketPage({
       ) : null}
 
       {isOpen ? (
-        <ReplyForm
+        <AdminReplyForm
           ticketId={ticket.id}
           page={commentPage}
           pageSize={commentPageSize}
@@ -192,3 +210,4 @@ export default async function SupportTicketPage({
     </VStack>
   );
 }
+
