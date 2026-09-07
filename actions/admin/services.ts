@@ -5,7 +5,7 @@ import {randomUUID} from 'node:crypto';
 
 import {collections} from '@/lib/db';
 import type {Service} from '@/lib/database';
-import {SERVICE_MAX_INPUTS} from '@/lib/database';
+import {PLATFORM_TYPES, SERVICE_MAX_INPUTS} from '@/lib/database';
 import {getSession} from '@/actions/auth/session';
 
 const DEFAULT_PAGE_SIZE = 10;
@@ -13,9 +13,12 @@ const MAX_PAGE_SIZE = 100;
 
 export type ServiceStatus = 'active' | 'inactive';
 
+export type ServicePlatform = (typeof PLATFORM_TYPES)[number];
+
 /** Sanitized service row sent to the admin UI. */
 export interface AdminServiceRow extends Record<string, unknown> {
   id: string;
+  platform: ServicePlatform;
   name: string;
   description: string;
   status: ServiceStatus;
@@ -41,6 +44,7 @@ export interface ListServicesResult {
 
 /** Create/update payload accepted from the admin UI. */
 export interface ServiceInput {
+  platform: ServicePlatform;
   name: string;
   description: string;
   status: ServiceStatus;
@@ -93,6 +97,8 @@ function clampPageSize(value: number | undefined): number {
 function toRow(service: Service, upstreamName: string): AdminServiceRow {
   return {
     id: service.id,
+    // Legacy documents created before this field existed fall back to the first platform.
+    platform: service.platform ?? PLATFORM_TYPES[0],
     name: service.name,
     description: service.description,
     status: service.status,
@@ -130,6 +136,9 @@ function normalizeInputs(inputs: Record<string, string>): Record<string, string>
 }
 
 function validateServiceInput(input: ServiceInput): string | null {
+  if (!PLATFORM_TYPES.includes(input.platform)) {
+    return 'Invalid platform.';
+  }
   if (!input.name || !input.name.trim()) {
     return 'Service name is required.';
   }
@@ -225,6 +234,7 @@ export async function createService(input: ServiceInput): Promise<MutationResult
 
   const service: Service = {
     id: randomUUID(),
+    platform: input.platform,
     name: input.name.trim(),
     description: input.description.trim(),
     status: input.status,
@@ -261,6 +271,7 @@ export async function updateService(serviceId: string, input: ServiceInput): Pro
     {id: serviceId},
     {
       $set: {
+        platform: input.platform,
         name: input.name.trim(),
         description: input.description.trim(),
         status: input.status,

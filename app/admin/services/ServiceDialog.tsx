@@ -13,6 +13,7 @@ import {TextArea} from '@astryxdesign/core/TextArea';
 import {CheckboxInput} from '@astryxdesign/core/CheckboxInput';
 import {Banner} from '@astryxdesign/core/Banner';
 import {Typeahead} from '@astryxdesign/core/Typeahead';
+import {Selector} from '@astryxdesign/core/Selector';
 import {Plus, X} from 'lucide-react';
 
 import {
@@ -20,9 +21,10 @@ import {
   updateService,
   type AdminServiceRow,
   type ServiceInput,
+  type ServicePlatform,
 } from '@/actions/admin/services';
 import {searchUpstreams, type UpstreamOption} from '@/actions/admin/upstreams';
-import {SERVICE_MAX_INPUTS} from '@/lib/database';
+import {PLATFORM_TYPES, SERVICE_MAX_INPUTS} from '@/lib/database';
 
 /** One order-form input row in the dialog: key = machine name, label = customer text. */
 interface InputFieldRow {
@@ -48,6 +50,7 @@ export function ServiceDialog({
   onClose: () => void;
 }) {
   const router = useRouter();
+  const [platform, setPlatform] = useState<ServicePlatform>(service?.platform ?? PLATFORM_TYPES[0]);
   const [name, setName] = useState(service?.name ?? '');
   const [description, setDescription] = useState(service?.description ?? '');
   const [priceText, setPriceText] = useState(service ? String(service.price) : '');
@@ -154,6 +157,7 @@ export function ServiceDialog({
       inputs[row.key.trim()] = row.label.trim();
     }
     const payload: ServiceInput = {
+      platform,
       name: name.trim(),
       description: description.trim(),
       status: service?.status ?? 'active',
@@ -205,6 +209,15 @@ export function ServiceDialog({
           <LayoutContent>
             <VStack gap={4}>
               {serverError ? <Banner status="error" title={serverError} /> : null}
+
+              <Selector
+                label="Platform"
+                options={PLATFORM_TYPES.slice()}
+                value={platform}
+                onChange={(next) => setPlatform(next as ServicePlatform)}
+                isRequired
+                isDisabled={isSaving}
+              />
 
               <TextInput
                 label="Service name"

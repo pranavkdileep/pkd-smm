@@ -76,8 +76,11 @@ export interface UpstreamProvider {
   apiKey: string;
 }
 
+export const PLATFORM_TYPES = ['INSTAGRAM', 'TELEGRAM' , 'YOUTUBE', 'TIKTOK', 'FACEBOOK','X'] as const;
+
 export interface Service {
   id: string;
+  platform: (typeof PLATFORM_TYPES)[number];
   name: string;
   description: string;
   status: 'active' | 'inactive';
