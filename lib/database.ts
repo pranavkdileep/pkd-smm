@@ -90,3 +90,55 @@ export interface Service {
   upstreamId: string;
   upstreamServiceId: string;
 }
+
+/** Categories a support ticket can be filed under. */
+export const SUPPORT_TICKET_CATEGORIES = [
+  'order',
+  'payment',
+  'refund',
+  'account',
+  'technical',
+  'other',
+] as const;
+
+export type SupportTicketCategory = (typeof SUPPORT_TICKET_CATEGORIES)[number];
+
+export const SUPPORT_TICKET_PRIORITIES = ['low', 'medium', 'high'] as const;
+
+export type SupportTicketPriority = (typeof SUPPORT_TICKET_PRIORITIES)[number];
+
+export type SupportTicketStatus = 'open' | 'closed';
+
+/** Page size options offered in the user support ticket list. */
+export const SUPPORT_PAGE_SIZES = [10, 25, 50] as const;
+
+/** Page size options offered in a support ticket conversation. */
+export const SUPPORT_COMMENT_PAGE_SIZES = [10, 25, 50] as const;
+
+export interface SupportTicket {
+  id: string;
+  userId: string;
+  title: string;
+  category: SupportTicketCategory;
+  priority: SupportTicketPriority;
+  status: SupportTicketStatus;
+  /** ISO date string. */
+  createdAt: string;
+  /** ISO date string — bumped on every new comment. */
+  updatedAt: string;
+  /** ISO date string — set when the ticket was closed. */
+  closedAt?: string;
+  /** Who closed the ticket. */
+  closedBy?: 'user' | 'admin';
+}
+
+export interface SupportTicketComment {
+  id: string;
+  ticketId: string;
+  authorType: 'user' | 'admin';
+  authorId: string;
+  message: string;
+  /** ISO date string. */
+  createdAt: string;
+}
+
