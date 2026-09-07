@@ -78,6 +78,13 @@ export interface UpstreamProvider {
 
 export const PLATFORM_TYPES = ['INSTAGRAM', 'TELEGRAM' , 'YOUTUBE', 'TIKTOK', 'FACEBOOK','X'] as const;
 
+export type ServicePlatform = (typeof PLATFORM_TYPES)[number];
+
+/** Sort options offered in the user services catalog. */
+export const SERVICE_SORT_OPTIONS = ['name-asc', 'name-desc', 'price-asc', 'price-desc'] as const;
+
+export type ServiceSortOption = (typeof SERVICE_SORT_OPTIONS)[number];
+
 export interface Service {
   id: string;
   platform: (typeof PLATFORM_TYPES)[number];

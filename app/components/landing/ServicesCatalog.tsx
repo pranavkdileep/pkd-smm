@@ -11,15 +11,7 @@ import {FREE_SERVICES, SERVICES} from './content';
 import {NamedIcon} from './NamedIcon';
 import {BrandIcon} from './BrandIcon';
 import {SectionIntro} from './SectionIntro';
-
-const CARD_TINTS: Record<string, string> = {
-  instagram: 'bg-pink-subtle text-pink-vivid',
-  telegram: 'bg-blue-subtle text-blue-vivid',
-  tiktok: 'bg-gray-subtle text-gray-vivid',
-  youtube: 'bg-red-subtle text-red-vivid',
-  x: 'bg-purple-subtle text-purple-vivid',
-  facebook: 'bg-blue-subtle text-blue-vivid',
-};
+import {PLATFORM_TINTS} from '@/app/components/platformMeta';
 
 export function ServicesCatalog() {
   return (
@@ -50,7 +42,7 @@ export function ServicesCatalog() {
                   height={10}
                   hAlign="center"
                   vAlign="center"
-                  className={`rounded-lg ${CARD_TINTS[service.platform]}`}
+                  className={`rounded-lg ${PLATFORM_TINTS[service.platform]}`}
                 >
                   <BrandIcon platform={service.platform} size="md" />
                 </HStack>

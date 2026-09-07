@@ -4,7 +4,7 @@ import {revalidatePath} from 'next/cache';
 import {randomUUID} from 'node:crypto';
 
 import {collections} from '@/lib/db';
-import type {Service} from '@/lib/database';
+import type {Service, ServicePlatform} from '@/lib/database';
 import {PLATFORM_TYPES, SERVICE_MAX_INPUTS} from '@/lib/database';
 import {getSession} from '@/actions/auth/session';
 
@@ -13,7 +13,7 @@ const MAX_PAGE_SIZE = 100;
 
 export type ServiceStatus = 'active' | 'inactive';
 
-export type ServicePlatform = (typeof PLATFORM_TYPES)[number];
+export type {ServicePlatform};
 
 /** Sanitized service row sent to the admin UI. */
 export interface AdminServiceRow extends Record<string, unknown> {
