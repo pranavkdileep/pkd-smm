@@ -4,7 +4,7 @@ import type {Order, Transaction} from '@/lib/database';
 
 export interface UpstreamOrderResult {
   success: boolean;
-  status: 'processing' | 'refunded';
+  status: Order['status'];
   upstreamOrderId?: string;
   error?: string;
 }
@@ -20,6 +20,12 @@ export async function callUpstreamOrderApi(
 
   if (!order) {
     return {success: false, status: 'refunded', error: 'Order not found.'};
+  }
+
+  // Idempotency guard: only pending orders are submitted, so a workflow step
+  // retry after a partial failure can't double-submit or refund a settled order.
+  if (order.status !== 'pending') {
+    return {success: false, status: order.status, error: 'Order is not pending.'};
   }
 
   const markRefunded = async (error: string): Promise<UpstreamOrderResult> => {

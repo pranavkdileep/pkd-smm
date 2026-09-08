@@ -116,3 +116,76 @@ export async function listCatalogServices(input: {
     totalPages,
   };
 }
+
+const ORDER_SEARCH_LIMIT = 8;
+
+/** Never let upstream linkage leak into client-bound order data. */
+const ORDER_SERVICE_PROJECTION = {upstreamId: 0, upstreamServiceId: 0};
+
+/** Sanitized service for the new-order form — includes the order-form field config. */
+export interface OrderServiceDetails extends Record<string, unknown> {
+  id: string;
+  platform: ServicePlatform;
+  name: string;
+  description: string;
+  price: number;
+  minOrder: number;
+  maxOrder: number;
+  refill: boolean;
+  cancel: boolean;
+  /** Order-form fields the buyer must fill in (slug -> label). */
+  inputs: Record<string, string>;
+}
+
+function toOrderDetails(service: Service): OrderServiceDetails {
+  return {
+    id: service.id,
+    // Legacy documents created before this field existed fall back to the first platform.
+    platform: service.platform ?? PLATFORM_TYPES[0],
+    name: service.name,
+    description: service.description ?? '',
+    price: service.price,
+    minOrder: service.minOrder,
+    maxOrder: service.maxOrder,
+    refill: service.refill,
+    cancel: service.cancel,
+    inputs: service.inputs ?? {},
+  };
+}
+
+/**
+ * Fast typeahead search for the new-order form. An empty query returns the
+ * first few active services (dropdown bootstrap); otherwise a case-insensitive
+ * substring match on name/description, capped at a handful of rows so the
+ * response stays small. Public catalog data — the /user layout already
+ * redirects unauthenticated visitors.
+ */
+export async function searchOrderServices(query: string): Promise<OrderServiceDetails[]> {
+  const filter: Record<string, unknown> = {status: 'active'};
+
+  const trimmed = query.trim();
+  if (trimmed) {
+    const pattern = new RegExp(escapeRegex(trimmed), 'i');
+    filter.$or = [{name: pattern}, {description: pattern}];
+  }
+
+  const services = await collections.services
+    .find(filter, {
+      projection: ORDER_SERVICE_PROJECTION,
+      // id tiebreak keeps result order stable when names collide.
+      sort: {name: 1, id: 1},
+      limit: ORDER_SEARCH_LIMIT,
+    })
+    .toArray();
+
+  return services.map(toOrderDetails);
+}
+
+/** First active service in catalog order — the default selection on the new-order form. */
+export async function getDefaultOrderService(): Promise<OrderServiceDetails | null> {
+  const service = await collections.services.findOne(
+    {status: 'active'},
+    {projection: ORDER_SERVICE_PROJECTION, sort: {name: 1, id: 1}}
+  );
+  return service ? toOrderDetails(service) : null;
+}
