@@ -189,3 +189,20 @@ export async function getDefaultOrderService(): Promise<OrderServiceDetails | nu
   );
   return service ? toOrderDetails(service) : null;
 }
+
+/**
+ * Resolves one active service by id for deep links into the new-order form
+ * (e.g. /user?service=<id>). Returns null for unknown or inactive services so
+ * the caller can fall back to the default selection.
+ */
+export async function getOrderServiceById(id: string): Promise<OrderServiceDetails | null> {
+  const trimmed = id.trim();
+  if (!trimmed) {
+    return null;
+  }
+  const service = await collections.services.findOne(
+    {id: trimmed, status: 'active'},
+    {projection: ORDER_SERVICE_PROJECTION}
+  );
+  return service ? toOrderDetails(service) : null;
+}

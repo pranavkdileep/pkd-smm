@@ -19,6 +19,7 @@ import {BrandIcon, type PlatformKey} from '@/app/components/landing/BrandIcon';
 import {UrlPagination} from '@/app/components/support/UrlPagination';
 import {formatAmount} from '@/app/user/add-funds/format';
 
+import {OrderNowButton} from './OrderNowButton';
 import {ServicesToolbar} from './ServicesToolbar';
 
 export const metadata = {
@@ -73,16 +74,19 @@ function ServiceCard({service}: {service: CatalogServiceRow}) {
       </VStack>
       <VStack gap={1} className="mt-3 border-t border-border pt-3">
         <HStack justify="between" vAlign="center" width="100%">
-          <Text weight="bold">{formatAmount(service.price, 'USD')} / 1K</Text>
+          <Text weight="bold">{formatAmount(service.price, 'INR')} / 1K</Text>
           {perks ? (
             <Text size="sm" color="secondary">
               {perks}
             </Text>
           ) : null}
         </HStack>
-        <Text size="sm" color="secondary">
-          Min {service.minOrder.toLocaleString()} · Max {service.maxOrder.toLocaleString()}
-        </Text>
+        <HStack justify="between" vAlign="center" width="100%">
+          <Text size="sm" color="secondary">
+            Min {service.minOrder.toLocaleString()} · Max {service.maxOrder.toLocaleString()}
+          </Text>
+          <OrderNowButton serviceId={service.id} />
+        </HStack>
       </VStack>
     </Card>
   );
