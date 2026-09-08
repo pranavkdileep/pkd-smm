@@ -101,6 +101,20 @@ export interface Service {
   upstreamServiceId: string;
 }
 
+export interface Order {
+  id: string;
+  upstreamOrderId: string;
+  userId: string;
+  serviceId: string;
+  quantity: number;
+  totalPrice: number;
+  status: 'pending' | 'processing' | 'completed' | 'cancelled' | 'refunded';
+  /** ISO date string. */
+  createdAt: string;
+  /** ISO date string. */
+  updatedAt: string;
+}
+
 /** Categories a support ticket can be filed under. */
 export const SUPPORT_TICKET_CATEGORIES = [
   'order',
