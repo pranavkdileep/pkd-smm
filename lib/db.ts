@@ -2,6 +2,7 @@ import {MongoClient, type Db} from 'mongodb';
 import type {
   AdminUser,
   Deposit,
+  Order,
   Service,
   SupportTicket,
   SupportTicketComment,
@@ -49,6 +50,7 @@ export const collections = {
   adminUsers: getDb().collection<AdminUser>('admin_users'),
   upstreamProviders: getDb().collection<UpstreamProvider>('upstream_providers'),
   services: getDb().collection<Service>('services'),
+  orders: getDb().collection<Order>('orders'),
   deposits: getDb().collection<Deposit>('deposits'),
   transactions: getDb().collection<Transaction>('transactions'),
   supportTickets: getDb().collection<SupportTicket>('support_tickets'),

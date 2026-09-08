@@ -103,12 +103,13 @@ export interface Service {
 
 export interface Order {
   id: string;
-  upstreamOrderId: string;
+  upstreamOrderId?: string;
   userId: string;
   serviceId: string;
   quantity: number;
   totalPrice: number;
   status: 'pending' | 'processing' | 'completed' | 'cancelled' | 'refunded';
+  inputs?: Record<string, string>;
   /** ISO date string. */
   createdAt: string;
   /** ISO date string. */
