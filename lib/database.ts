@@ -185,3 +185,12 @@ export interface SupportTicketComment {
   createdAt: string;
 }
 
+export interface LoginEvent {
+  id: string;
+  userId: string;
+  ip?: string;
+  userAgent?: string;
+  /** ISO date string. */
+  createdAt: string;
+}
+

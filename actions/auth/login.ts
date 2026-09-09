@@ -1,5 +1,8 @@
 'use server';
 
+import {randomUUID} from 'node:crypto';
+import {headers} from 'next/headers';
+
 import {collections} from '@/lib/db';
 import {verifyPassword} from './password';
 import {createSession} from './session';
@@ -33,6 +36,17 @@ export async function login(input: LoginInput): Promise<LoginResult> {
   });
   if (user && (await verifyPassword(input.password, user.passwordHash))) {
     await createSession({userId: user.id, username: user.username, role: 'user'});
+
+    // ponytail: login_events grows unbounded — add a TTL index (e.g. 90 days)
+    // when the collection gets large.
+    const headerList = await headers();
+    await collections.loginEvents.insertOne({
+      id: randomUUID(),
+      userId: user.id,
+      ip: headerList.get('x-forwarded-for')?.split(',')[0].trim() || undefined,
+      userAgent: headerList.get('user-agent') || undefined,
+      createdAt: new Date().toISOString(),
+    });
     return {success: true, role: 'user'};
   }
 

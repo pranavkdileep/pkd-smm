@@ -1,6 +1,7 @@
 'use client';
 
 import {useState, useTransition} from 'react';
+import Link from 'next/link';
 import {useRouter} from 'next/navigation';
 import {Table, proportional, pixel, type TableColumn} from '@astryxdesign/core/Table';
 import {HStack} from '@astryxdesign/core/HStack';
@@ -79,7 +80,11 @@ export function UsersTable({users}: {users: AdminUserRow[]}) {
       key: 'username',
       header: 'Username',
       width: proportional(1),
-      renderCell: (user) => <Text weight="semibold">{user.username}</Text>,
+      renderCell: (user) => (
+        <Link href={`/admin/users/${user.id}`} className="text-accent">
+          <Text weight="semibold">{user.username}</Text>
+        </Link>
+      ),
     },
     {
       key: 'email',
