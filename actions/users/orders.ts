@@ -7,6 +7,7 @@ import {collections} from '@/lib/db';
 import type {Order, OrderStatus, Service, Transaction} from '@/lib/database';
 import {ORDER_STATUSES} from '@/lib/database';
 import {processOrderUpstream} from '@/workflows/order-upstream';
+import {refreshOrderStatusUpstream} from '@/workflows/order-status-sync';
 
 export interface CreateOrderInput {
   serviceId: string;
@@ -85,8 +86,7 @@ export async function createOrder(input: CreateOrderInput): Promise<CreateOrderR
     userId: user.id,
     serviceId: service.id,
     quantity,
-    // ponytail: seeded to full quantity; nothing updates it until an upstream
-    // status-sync is built. Add a sync/refresh action when progress tracking matters.
+    // Remaining is refreshed by the order status-sync workflow.
     remaining: quantity,
     totalPrice,
     status: 'pending',
@@ -114,6 +114,34 @@ export async function createOrder(input: CreateOrderInput): Promise<CreateOrderR
   await start(processOrderUpstream, [orderId]);
 
   return {success: true, orderId};
+}
+
+/**
+ * Triggers an upstream status sync for the given orders. Only the caller's
+ * own pending/processing orders are enqueued — completed, cancelled and
+ * refunded orders are never touched. Returns the live order ids accepted.
+ */
+export async function refreshOrderStatuses(orderIds: string[]): Promise<{
+  started: boolean;
+  orderIds: string[];
+}> {
+  const user = await getCurrentUser();
+  if (!user || !Array.isArray(orderIds) || orderIds.length === 0) {
+    return {started: false, orderIds: []};
+  }
+  const ids = [...new Set(orderIds.filter((id) => typeof id === 'string' && id))].slice(0, 100);
+  if (ids.length === 0) {
+    return {started: false, orderIds: []};
+  }
+  const live = await collections.orders
+    .find({id: {$in: ids}, userId: user.id, status: {$in: ['pending', 'processing']}})
+    .toArray();
+  if (live.length === 0) {
+    return {started: false, orderIds: []};
+  }
+  const liveIds = live.map((order) => order.id);
+  await start(refreshOrderStatusUpstream, [liveIds]);
+  return {started: true, orderIds: liveIds};
 }
 
 const DEFAULT_PAGE_SIZE = 10;

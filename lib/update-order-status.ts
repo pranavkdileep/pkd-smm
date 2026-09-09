@@ -58,7 +58,7 @@ async function syncChunk(provider: UpstreamProvider, orders: Order[]): Promise<v
   const params = new URLSearchParams({
     key: provider.apiKey,
     action: 'status',
-    order: orders.map((order) => order.upstreamOrderId as string).join(','),
+    orders: orders.map((order) => order.upstreamOrderId as string).join(','),
   });
 
   let data: Record<string, UpstreamStatusEntry> | null;

@@ -11,6 +11,7 @@ import {ORDER_STATUS_LABELS} from '@/app/components/orders/orderMeta';
 
 import {OrdersToolbar} from './OrdersToolbar';
 import {OrdersTable} from './OrdersTable';
+import {OrdersAutoRefresh} from './OrdersAutoRefresh';
 import {UrlPagination} from '@/app/components/support/UrlPagination';
 
 export const metadata = {
@@ -76,6 +77,13 @@ export default async function OrdersPage({searchParams}: {searchParams: SearchPa
         />
       ) : (
         <>
+          <OrdersAutoRefresh
+            orders={result.orders}
+            page={result.page}
+            pageSize={result.pageSize}
+            status={status}
+            pageKey={`${result.page}-${result.pageSize}-${status ?? 'all'}`}
+          />
           <OrdersTable
             orders={result.orders}
             rowIndexStart={(result.page - 1) * result.pageSize + 1}
