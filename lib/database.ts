@@ -30,7 +30,7 @@ export interface User {
   createdAt?: string;
 }
 
-export const TransactionTypes = ['deposit', 'withdrawal', 'order', 'refund'] as const;
+export const TransactionTypes = ['deposit', 'withdrawal', 'order', 'refund', 'adjustment'] as const;
 
 export type TransactionType = (typeof TransactionTypes)[number];
 
@@ -39,6 +39,8 @@ export interface Transaction {
   userId: string;
   type: TransactionType;
   amount: number;
+  /** Admin-supplied reason — only set on manual 'adjustment' records. */
+  note?: string;
   /** ISO date string. */
   createdAt: string;
 }

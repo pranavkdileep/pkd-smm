@@ -1,9 +1,10 @@
 'use server';
 
+import {randomUUID} from 'node:crypto';
 import {revalidatePath} from 'next/cache';
 
 import {collections} from '@/lib/db';
-import type {User, UserStatus} from '@/lib/database';
+import type {Transaction, User, UserStatus} from '@/lib/database';
 import {getSession} from '@/actions/auth/session';
 
 const DEFAULT_PAGE_SIZE = 10;
@@ -16,6 +17,7 @@ export interface AdminUserRow extends Record<string, unknown> {
   email: string;
   language: string;
   status: UserStatus;
+  balance: number;
   createdAt: string | null;
 }
 
@@ -68,6 +70,7 @@ function toRow(user: User): AdminUserRow {
     email: user.email,
     language: user.language,
     status: user.status ?? 'active',
+    balance: user.balance ?? 0,
     createdAt: user.createdAt ?? null,
   };
 }
@@ -113,6 +116,67 @@ export async function setUserStatus(userId: string, status: UserStatus): Promise
   if (result.matchedCount === 0) {
     return {success: false, error: 'User not found.'};
   }
+
+  revalidatePath('/admin/users');
+  revalidatePath('/admin');
+  return {success: true};
+}
+
+const REASON_MAX_LENGTH = 200;
+
+/**
+ * Manually credits (positive amount) or debits (negative amount) a user's
+ * balance, recording an 'adjustment' transaction with the admin's reason.
+ * Debits are atomic — the balance guard makes an overdraw fail cleanly.
+ */
+export async function adjustUserBalance(
+  userId: string,
+  amount: number,
+  reason: string,
+): Promise<MutationResult> {
+  if (!(await isAdmin())) {
+    return {success: false, error: 'Admin session required.'};
+  }
+
+  // Round to the paisa, same convention as order pricing.
+  const rounded = Math.round(amount * 100) / 100;
+  if (!Number.isFinite(rounded) || rounded === 0) {
+    return {success: false, error: 'Enter a non-zero amount.'};
+  }
+  const note = (reason ?? '').trim();
+  if (!note) {
+    return {success: false, error: 'A reason is required.'};
+  }
+  if (note.length > REASON_MAX_LENGTH) {
+    return {success: false, error: `Reason must be ${REASON_MAX_LENGTH} characters or fewer.`};
+  }
+
+  const updated = await collections.users.findOneAndUpdate(
+    rounded < 0 ? {id: userId, balance: {$gte: -rounded}} : {id: userId},
+    {$inc: {balance: rounded}},
+  );
+  if (!updated) {
+    return {
+      success: false,
+      error:
+        rounded < 0
+          ? 'User not found or balance is too low for this debit.'
+          : 'User not found.',
+    };
+  }
+
+  // ponytail: balance update + ledger insert are not one Mongo transaction; a
+  // crash between them can move balance without a ledger line. Reconcile
+  // manually, or wrap in a session/transaction when money paths demand it.
+  const transaction: Transaction = {
+    id: randomUUID(),
+    userId,
+    type: 'adjustment',
+    amount: rounded,
+    note,
+    createdAt: new Date().toISOString(),
+  };
+  await collections.transactions.insertOne(transaction);
 
   revalidatePath('/admin/users');
   revalidatePath('/admin');

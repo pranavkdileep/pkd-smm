@@ -11,6 +11,7 @@ import {Banner} from '@astryxdesign/core/Banner';
 import {AlertDialog} from '@astryxdesign/core/AlertDialog';
 
 import {deleteUser, setUserStatus, type AdminUserRow} from '@/actions/admin/users';
+import {AdjustBalanceDialog} from './AdjustBalanceDialog';
 
 const LANGUAGE_LABELS: Record<string, string> = {
   en: 'English',
@@ -38,6 +39,7 @@ export function UsersTable({users}: {users: AdminUserRow[]}) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<AdminUserRow | null>(null);
+  const [adjustTarget, setAdjustTarget] = useState<AdminUserRow | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   function handleStatusToggle(user: AdminUserRow) {
@@ -118,11 +120,18 @@ export function UsersTable({users}: {users: AdminUserRow[]}) {
     {
       key: 'actions',
       header: 'Actions',
-      width: pixel(170),
+      width: pixel(250),
       align: 'end',
       resizable: false,
       renderCell: (user) => (
         <HStack gap={2} vAlign="center" justify="end">
+          <Button
+            label="Adjust"
+            variant="secondary"
+            size="sm"
+            isDisabled={isPending}
+            onClick={() => setAdjustTarget(user)}
+          />
           <Button
             label={user.status === 'banned' ? 'Unban' : 'Ban'}
             variant="secondary"
@@ -153,6 +162,9 @@ export function UsersTable({users}: {users: AdminUserRow[]}) {
         hasHover
         textOverflow="truncate"
       />
+      {adjustTarget ? (
+        <AdjustBalanceDialog user={adjustTarget} onClose={() => setAdjustTarget(null)} />
+      ) : null}
       <AlertDialog
         isOpen={deleteTarget !== null}
         onOpenChange={(isOpen) => {
