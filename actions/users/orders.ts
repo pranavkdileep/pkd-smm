@@ -4,7 +4,8 @@ import {randomUUID} from 'node:crypto';
 import {start} from 'workflow/api';
 import {getCurrentUser} from '@/actions/auth/session';
 import {collections} from '@/lib/db';
-import type {Order, Transaction} from '@/lib/database';
+import type {Order, OrderStatus, Service, Transaction} from '@/lib/database';
+import {ORDER_STATUSES} from '@/lib/database';
 import {processOrderUpstream} from '@/workflows/order-upstream';
 
 export interface CreateOrderInput {
@@ -84,6 +85,9 @@ export async function createOrder(input: CreateOrderInput): Promise<CreateOrderR
     userId: user.id,
     serviceId: service.id,
     quantity,
+    // ponytail: seeded to full quantity; nothing updates it until an upstream
+    // status-sync is built. Add a sync/refresh action when progress tracking matters.
+    remaining: quantity,
     totalPrice,
     status: 'pending',
     inputs,
@@ -110,4 +114,118 @@ export async function createOrder(input: CreateOrderInput): Promise<CreateOrderR
   await start(processOrderUpstream, [orderId]);
 
   return {success: true, orderId};
+}
+
+const DEFAULT_PAGE_SIZE = 10;
+const MAX_PAGE_SIZE = 100;
+
+/** Sanitized order row for the user dashboard — no upstream ids, no userId. */
+export interface OrderRow extends Record<string, unknown> {
+  id: string;
+  /** Service display name; 'Unknown service' if the service was deleted. */
+  serviceName: string;
+  quantity: number;
+  remaining: number;
+  totalPrice: number;
+  status: OrderStatus;
+  /** Order-form fields as the user filled them, with display labels. */
+  inputs: {label: string; value: string}[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ListOrdersResult {
+  orders: OrderRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+function clampPageSize(value: number | undefined): number {
+  if (!Number.isFinite(value) || (value ?? 0) < 1) {
+    return DEFAULT_PAGE_SIZE;
+  }
+  return Math.min(value as number, MAX_PAGE_SIZE);
+}
+
+function clampPage(value: number | undefined, totalPages: number): number {
+  if (!Number.isFinite(value) || (value ?? 1) < 1) {
+    return 1;
+  }
+  return Math.min(value as number, totalPages);
+}
+
+/**
+ * Lists the signed-in user's orders, newest first, with pagination and an
+ * optional status filter. Returns an empty result when unauthenticated (the
+ * layout redirects to /login). An unknown status matches nothing, so a stale
+ * client filter shows an empty page instead of leaking other users' orders.
+ */
+export async function listOrders(input: {
+  page?: number;
+  pageSize?: number;
+  status?: OrderStatus;
+}): Promise<ListOrdersResult> {
+  const user = await getCurrentUser();
+  if (!user) {
+    return {orders: [], total: 0, page: 1, pageSize: DEFAULT_PAGE_SIZE, totalPages: 1};
+  }
+
+  // ponytail: status is validated against ORDER_STATUSES via the TS type, but
+  // server actions accept any runtime payload — reject unknowns at runtime too.
+  const filter: Record<string, unknown> = {userId: user.id};
+  if (input.status !== undefined) {
+    if (!ORDER_STATUSES.includes(input.status)) {
+      return {orders: [], total: 0, page: 1, pageSize: DEFAULT_PAGE_SIZE, totalPages: 1};
+    }
+    filter.status = input.status;
+  }
+
+  const pageSize = clampPageSize(input.pageSize);
+  const total = await collections.orders.countDocuments(filter);
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const page = clampPage(input.page, totalPages);
+
+  const orders = await collections.orders
+    .find(filter, {
+      sort: {createdAt: -1, id: -1},
+      skip: (page - 1) * pageSize,
+      limit: pageSize,
+    })
+    .toArray();
+
+  // One query for the page's service names instead of a $lookup per row.
+  const serviceIds = [...new Set(orders.map((order) => order.serviceId))];
+  const services = serviceIds.length
+    ? await collections.services.find({id: {$in: serviceIds}}).toArray()
+    : ([] as Service[]);
+  const serviceById = new Map(services.map((service) => [service.id, service]));
+
+  return {
+    orders: orders.map((order) => {
+      const service = serviceById.get(order.serviceId);
+      // Slug -> display label, straight from the service's form declaration.
+      const inputs = Object.entries(order.inputs ?? {}).map(([slug, value]) => ({
+        label: service?.inputs?.[slug] ?? slug,
+        value,
+      }));
+      return {
+        id: order.id,
+        serviceName: service?.name ?? 'Unknown service',
+        quantity: order.quantity,
+        // ponytail: ?? guards legacy docs created before `remaining` was seeded.
+        remaining: order.remaining ?? order.quantity,
+        totalPrice: order.totalPrice,
+        status: order.status,
+        inputs,
+        createdAt: order.createdAt,
+        updatedAt: order.updatedAt,
+      };
+    }),
+    total,
+    page,
+    pageSize,
+    totalPages,
+  };
 }

@@ -101,14 +101,22 @@ export interface Service {
   upstreamServiceId: string;
 }
 
+export const ORDER_STATUSES = ['pending', 'processing', 'completed', 'cancelled', 'refunded'] as const;
+
+export type OrderStatus = (typeof ORDER_STATUSES)[number];
+
+/** Status filter options offered in the user orders list. */
+export const ORDER_PAGE_SIZES = [10, 25, 50] as const;
+
 export interface Order {
   id: string;
   upstreamOrderId?: string;
   userId: string;
   serviceId: string;
   quantity: number;
+  remaining: number;
   totalPrice: number;
-  status: 'pending' | 'processing' | 'completed' | 'cancelled' | 'refunded';
+  status: OrderStatus;
   inputs?: Record<string, string>;
   /** ISO date string. */
   createdAt: string;
