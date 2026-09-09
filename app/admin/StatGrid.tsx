@@ -5,19 +5,23 @@ import {Card} from '@astryxdesign/core/Card';
 import {HStack} from '@astryxdesign/core/HStack';
 import {Text} from '@astryxdesign/core/Text';
 import {Icon} from '@astryxdesign/core/Icon';
-import {Users, Layers, Ban, type LucideIcon} from 'lucide-react';
+import {Users, Layers, Ban, IndianRupee, TrendingUp, Wallet, type LucideIcon} from 'lucide-react';
 
 const ICONS: Record<string, LucideIcon> = {
   users: Users,
   services: Layers,
   banned: Ban,
+  revenue: IndianRupee,
+  revenueTotal: TrendingUp,
+  deposits: Wallet,
 };
 
 export interface StatItem {
   /** Key into the icon registry above — keeps props serializable from server components. */
   iconKey: keyof typeof ICONS | string;
   label: string;
-  value: number;
+  /** Pre-formatted display value. */
+  value: string;
 }
 
 export function StatGrid({stats}: {stats: StatItem[]}) {
@@ -32,7 +36,7 @@ export function StatGrid({stats}: {stats: StatItem[]}) {
                 {IconComponent ? <Icon icon={IconComponent} size="sm" className="text-secondary" /> : null}
                 <Text size="sm" color="secondary">{stat.label}</Text>
               </HStack>
-              <Text size="lg" weight="semibold">{stat.value.toLocaleString()}</Text>
+              <Text size="lg" weight="semibold">{stat.value}</Text>
             </HStack>
           </Card>
         );
