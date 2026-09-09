@@ -147,6 +147,102 @@ export async function refreshOrderStatuses(orderIds: string[]): Promise<{
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 100;
 
+/**
+ * POSTs one action call to an upstream panel API (form-urlencoded).
+ * Success is HTTP 200 with no `error` field — response shapes vary by action.
+ */
+async function callUpstreamAction(
+  provider: {apiUrl: string; apiKey: string},
+  params: Record<string, string>,
+): Promise<{success: boolean; error?: string}> {
+  try {
+    const res = await fetch(provider.apiUrl, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({key: provider.apiKey, ...params}).toString(),
+    });
+    const data = await res.json().catch(() => null);
+    if (!res.ok || data?.error) {
+      return {
+        success: false,
+        error: data?.error ? String(data.error) : `Upstream request failed (HTTP ${res.status}).`,
+      };
+    }
+    return {success: true};
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Network error calling upstream API.',
+    };
+  }
+}
+
+interface OrderActionTarget {
+  upstreamOrderId: string;
+  provider: {apiUrl: string; apiKey: string};
+}
+
+/** Guards shared by refill/cancel: own order, live status, service flag, submitted upstream. */
+async function loadOrderActionTarget(
+  orderId: unknown,
+  flag: 'refill' | 'cancel',
+): Promise<{target?: OrderActionTarget; error?: string}> {
+  const user = await getCurrentUser();
+  if (!user) {
+    return {error: 'You must be signed in.'};
+  }
+  if (typeof orderId !== 'string' || !orderId) {
+    return {error: 'Invalid order.'};
+  }
+  const order = await collections.orders.findOne({id: orderId, userId: user.id});
+  if (!order) {
+    return {error: 'Order not found.'};
+  }
+  if (order.status !== 'pending' && order.status !== 'processing') {
+    return {error: 'Only pending or processing orders support this action.'};
+  }
+  const service = await collections.services.findOne({id: order.serviceId});
+  if (!service?.[flag]) {
+    return {
+      error:
+        flag === 'refill'
+          ? 'Refills are not available for this service.'
+          : 'Cancellation is not available for this service.',
+    };
+  }
+  if (!order.upstreamOrderId) {
+    return {error: 'This order has not been sent upstream yet.'};
+  }
+  const provider = await collections.upstreamProviders.findOne({id: service.upstreamId});
+  if (!provider?.apiUrl || !provider?.apiKey) {
+    return {error: 'Upstream provider not configured.'};
+  }
+  return {target: {upstreamOrderId: order.upstreamOrderId, provider}};
+}
+
+/** Asks upstream to refill a live order (`action=refill&order=<upstream id>`). */
+export async function requestOrderRefill(orderId: string): Promise<{success: boolean; error?: string}> {
+  const {target, error} = await loadOrderActionTarget(orderId, 'refill');
+  if (!target) {
+    return {success: false, error};
+  }
+  // ponytail: no local state change — a refill only tops up upstream; progress
+  // surfaces via the existing status-sync on next page load.
+  return callUpstreamAction(target.provider, {action: 'refill', order: target.upstreamOrderId});
+}
+
+/** Asks upstream to cancel a live order (`action=cancel&orders=<upstream id>`). */
+export async function requestOrderCancel(orderId: string): Promise<{success: boolean; error?: string}> {
+  const {target, error} = await loadOrderActionTarget(orderId, 'cancel');
+  if (!target) {
+    return {success: false, error};
+  }
+  // ponytail: local status untouched — an upstream Canceled flows to refunded
+  // via updateOrderStatus on the next sync; mark locally only if cancel
+  // latency ever matters.
+  return callUpstreamAction(target.provider, {action: 'cancel', orders: target.upstreamOrderId});
+}
+
 /** Sanitized order row for the user dashboard — no upstream ids, no userId. */
 export interface OrderRow extends Record<string, unknown> {
   id: string;
@@ -156,6 +252,10 @@ export interface OrderRow extends Record<string, unknown> {
   remaining: number;
   totalPrice: number;
   status: OrderStatus;
+  /** Raw service flag — the table combines it with a live-status check. */
+  serviceRefill: boolean;
+  /** Raw service flag — the table combines it with a live-status check. */
+  serviceCancel: boolean;
   /** Order-form fields as the user filled them, with display labels. */
   inputs: {label: string; value: string}[];
   createdAt: string;
@@ -246,6 +346,8 @@ export async function listOrders(input: {
         remaining: order.remaining ?? order.quantity,
         totalPrice: order.totalPrice,
         status: order.status,
+        serviceRefill: service?.refill === true,
+        serviceCancel: service?.cancel === true,
         inputs,
         createdAt: order.createdAt,
         updatedAt: order.updatedAt,

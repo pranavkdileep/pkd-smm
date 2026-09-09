@@ -1,6 +1,7 @@
 'use client';
 
 import {useState} from 'react';
+import {useRouter} from 'next/navigation';
 import {
   Table,
   proportional,
@@ -13,8 +14,12 @@ import {VStack} from '@astryxdesign/core/VStack';
 import {Text} from '@astryxdesign/core/Text';
 import {StatusDot} from '@astryxdesign/core/StatusDot';
 import {ProgressBar} from '@astryxdesign/core/ProgressBar';
+import {Button} from '@astryxdesign/core/Button';
+import {AlertDialog} from '@astryxdesign/core/AlertDialog';
+import {Banner} from '@astryxdesign/core/Banner';
 
 import type {OrderRow} from '@/actions/users/orders';
+import {requestOrderCancel, requestOrderRefill} from '@/actions/users/orders';
 import {formatAmount} from '@/app/user/add-funds/format';
 import {formatTicketDate, ticketRef} from '@/app/components/support/ticketMeta';
 import {ORDER_STATUS_DOT, ORDER_STATUS_LABELS} from '@/app/components/orders/orderMeta';
@@ -82,6 +87,76 @@ function OrderDetails({order}: {order: OrderRow}) {
         ))
       )}
     </VStack>
+  );
+}
+
+/** Live statuses that support refill/cancel — terminal orders show no actions. */
+function isLiveActionStatus(status: OrderRow['status']): boolean {
+  return status === 'pending' || status === 'processing';
+}
+
+/** Per-row Refill/Cancel buttons, gated on service flags + live status. */
+function OrderActions({order}: {order: OrderRow}) {
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isCancelling, setIsCancelling] = useState(false);
+
+  const showRefill = order.serviceRefill && isLiveActionStatus(order.status);
+  const showCancel = order.serviceCancel && isLiveActionStatus(order.status);
+  if (!showRefill && !showCancel) {
+    return null;
+  }
+
+  async function handleRefill() {
+    setError(null);
+    const result = await requestOrderRefill(order.id);
+    if (!result.success) {
+      setError(result.error ?? 'Refill request failed.');
+      return;
+    }
+    router.refresh();
+  }
+
+  async function handleCancel() {
+    setIsCancelling(true);
+    const result = await requestOrderCancel(order.id);
+    setIsCancelling(false);
+    if (!result.success) {
+      setIsConfirmOpen(false);
+      setError(result.error ?? 'Cancel request failed.');
+      return;
+    }
+    setIsConfirmOpen(false);
+    router.refresh();
+  }
+
+  return (
+    <HStack gap={2} vAlign="center" wrap="wrap">
+      {error ? <Banner status="error" title={error} /> : null}
+      {showRefill ? (
+        <Button label="Refill" variant="secondary" size="sm" clickAction={handleRefill} />
+      ) : null}
+      {showCancel ? (
+        <Button
+          label="Cancel"
+          variant="destructive"
+          size="sm"
+          onClick={() => setIsConfirmOpen(true)}
+        />
+      ) : null}
+      <AlertDialog
+        isOpen={isConfirmOpen}
+        onOpenChange={setIsConfirmOpen}
+        title="Cancel this order?"
+        description="The remaining delivery will be stopped. This can't be undone."
+        actionLabel="Cancel order"
+        isActionLoading={isCancelling}
+        onAction={() => {
+          void handleCancel();
+        }}
+      />
+    </HStack>
   );
 }
 
@@ -179,6 +254,12 @@ export function OrdersTable({
           <Text size="sm">{ORDER_STATUS_LABELS[order.status]}</Text>
         </HStack>
       ),
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      width: pixel(190),
+      renderCell: (order) => <OrderActions order={order} />,
     },
   ];
 
