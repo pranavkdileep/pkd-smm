@@ -2,6 +2,43 @@ import {randomUUID} from 'node:crypto';
 import {collections} from '@/lib/db';
 import type {Order, Transaction} from '@/lib/database';
 
+/**
+ * Mark an order refunded and credit the user's balance.
+ * Returns false when the order was already refunded (no double credit).
+ */
+export async function refundOrder(order: Order): Promise<boolean> {
+  const updatedAt = new Date().toISOString();
+  // Guard on status prevents double-crediting if this runs twice for the same order.
+  const refunded = await collections.orders.findOneAndUpdate(
+    {id: order.id, status: {$ne: 'refunded'}},
+    {$set: {status: 'refunded', updatedAt}},
+  );
+
+  if (!refunded) {
+    return false;
+  }
+
+  // ponytail: order update + credit are not one transaction; a crash between
+  // them can strand a refunded order without credit. Reconcile manually, or
+  // wrap in a Mongo session/transaction when money paths demand it.
+  const transaction: Transaction = {
+    id: randomUUID(),
+    userId: order.userId,
+    type: 'refund',
+    amount: order.totalPrice,
+    createdAt: updatedAt,
+  };
+  await collections.transactions.insertOne(transaction);
+  await collections.users.updateOne(
+    {id: order.userId},
+    {$inc: {balance: order.totalPrice}},
+  );
+
+  order.status = 'refunded';
+  order.updatedAt = updatedAt;
+  return true;
+}
+
 export interface UpstreamOrderResult {
   success: boolean;
   status: Order['status'];
@@ -29,33 +66,8 @@ export async function callUpstreamOrderApi(
   }
 
   const markRefunded = async (error: string): Promise<UpstreamOrderResult> => {
-    const updatedAt = new Date().toISOString();
-    // Guard on status prevents double-crediting if this runs twice for the same order.
-    const refunded = await collections.orders.findOneAndUpdate(
-      {id: order.id, status: {$ne: 'refunded'}},
-      {$set: {status: 'refunded', updatedAt}},
-    );
-
-    if (refunded) {
-      // ponytail: order update + credit are not one transaction; a crash between
-      // them can strand a refunded order without credit. Reconcile manually, or
-      // wrap in a Mongo session/transaction when money paths demand it.
-      const transaction: Transaction = {
-        id: randomUUID(),
-        userId: order.userId,
-        type: 'refund',
-        amount: order.totalPrice,
-        createdAt: updatedAt,
-      };
-      await collections.transactions.insertOne(transaction);
-      await collections.users.updateOne(
-        {id: order.userId},
-        {$inc: {balance: order.totalPrice}},
-      );
-    }
-
+    await refundOrder(order);
     order.status = 'refunded';
-    order.updatedAt = updatedAt;
     return {success: false, status: 'refunded', error};
   };
 
