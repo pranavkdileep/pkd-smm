@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
 import {SideNav, SideNavHeading, SideNavSection, SideNavItem} from '@astryxdesign/core/SideNav';
-import {LayoutDashboard, Users, Layers, Server, ShieldCheck, LifeBuoy, ClipboardList, Wallet} from 'lucide-react';
+import {LayoutDashboard, Users, Layers, Server, ShieldCheck, LifeBuoy, ClipboardList, Wallet, Receipt} from 'lucide-react';
 
 import {LogoutButton} from './LogoutButton';
 
@@ -75,6 +75,14 @@ export function AdminSideNav() {
           icon={Wallet}
           selectedIcon={Wallet}
           isSelected={pathname.startsWith('/admin/deposits')}
+        />
+        <SideNavItem
+          as={Link}
+          href="/admin/transactions"
+          label="Transactions"
+          icon={Receipt}
+          selectedIcon={Receipt}
+          isSelected={pathname.startsWith('/admin/transactions')}
         />
         <SideNavItem
           as={Link}

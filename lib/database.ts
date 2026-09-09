@@ -34,6 +34,9 @@ export const TransactionTypes = ['deposit', 'withdrawal', 'order', 'refund', 'ad
 
 export type TransactionType = (typeof TransactionTypes)[number];
 
+/** Page size options offered in the admin transactions ledger. */
+export const TRANSACTION_PAGE_SIZES = [10, 25, 50] as const;
+
 export interface Transaction {
   id: string;
   userId: string;
