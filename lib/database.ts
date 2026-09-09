@@ -45,7 +45,12 @@ export interface Transaction {
   createdAt: string;
 }
 
-export type DepositStatus = 'pending' | 'completed' | 'failed' | 'cancelled';
+export const DEPOSIT_STATUSES = ['pending', 'completed', 'failed', 'cancelled'] as const;
+
+export type DepositStatus = (typeof DEPOSIT_STATUSES)[number];
+
+/** Page size options offered in the admin deposits list. */
+export const DEPOSIT_PAGE_SIZES = [10, 25, 50] as const;
 
 export interface Deposit {
   id: string;
