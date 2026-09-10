@@ -11,15 +11,21 @@ import {Button} from '@astryxdesign/core/Button';
 import {Card} from '@astryxdesign/core/Card';
 import {Divider} from '@astryxdesign/core/Divider';
 import {TextInput} from '@astryxdesign/core/TextInput';
-import {CheckboxInput} from '@astryxdesign/core/CheckboxInput';
+import {Banner} from '@astryxdesign/core/Banner';
 
+import {useLogin} from '@/app/login/useLogin';
 import {STATS} from './content';
 
-/** Compact sign-in card shown in the hero (presentational until auth ships). */
+/** Compact sign-in card shown in the hero. */
 export function HeroSignInCard() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [remember, setRemember] = useState(false);
+  const {error, isPending, submit} = useLogin();
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    submit(username, password);
+  }
 
   return (
     <Card padding={4} elevation="low" maxWidth={460}>
@@ -41,7 +47,9 @@ export function HeroSignInCard() {
           </HStack>
         </Grid>
 
-        <form action="/login">
+        {error ? <Banner status="error" title={error} /> : null}
+
+        <form onSubmit={handleSubmit}>
           <VStack gap={2}>
             <TextInput
               label="Username or email"
@@ -49,6 +57,7 @@ export function HeroSignInCard() {
               onChange={setUsername}
               placeholder="you@example.com"
               htmlName="username"
+              isRequired
             />
             <TextInput
               label="Password"
@@ -57,15 +66,10 @@ export function HeroSignInCard() {
               onChange={setPassword}
               placeholder="Your password"
               htmlName="password"
+              isRequired
             />
 
-            <HStack gap={3} vAlign="center" justify="between">
-              <CheckboxInput
-                label="Remember me"
-                value={remember}
-                onChange={setRemember}
-                htmlName="remember"
-              />
+            <HStack gap={3} vAlign="center" justify="end">
               <Link
                 href="/login"
                 className="text-xs font-medium text-blue-vivid hover:underline"
@@ -75,10 +79,12 @@ export function HeroSignInCard() {
             </HStack>
 
             <Button
-              label="Sign in"
+              label={isPending ? 'Signing in…' : 'Sign in'}
               variant="primary"
               width="100%"
               type="submit"
+              isDisabled={isPending}
+              isLoading={isPending}
             />
           </VStack>
         </form>

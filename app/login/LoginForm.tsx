@@ -1,7 +1,7 @@
 'use client';
 
 import {useState} from 'react';
-import {useRouter, useSearchParams} from 'next/navigation';
+import {useSearchParams} from 'next/navigation';
 import {VStack} from '@astryxdesign/core/VStack';
 import {HStack} from '@astryxdesign/core/HStack';
 import {Heading} from '@astryxdesign/core/Heading';
@@ -12,7 +12,7 @@ import {TextInput} from '@astryxdesign/core/TextInput';
 import {Banner} from '@astryxdesign/core/Banner';
 import Link from 'next/link';
 
-import {login} from '@/actions/auth/login';
+import {useLogin} from './useLogin';
 
 const SEARCH_PARAM_ERRORS: Record<string, string> = {
   unauthenticated: 'Please sign in to continue.',
@@ -20,35 +20,14 @@ const SEARCH_PARAM_ERRORS: Record<string, string> = {
 };
 
 export function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(SEARCH_PARAM_ERRORS[searchParams.get('error') ?? ''] ?? null);
-  const [isPending, setIsPending] = useState(false);
+  const {error, isPending, submit} = useLogin(SEARCH_PARAM_ERRORS[searchParams.get('error') ?? ''] ?? null);
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setError(null);
-    setIsPending(true);
-    try {
-      const result = await login({username: identifier, password});
-
-      if (!result.success) {
-        setError(result.error);
-        return;
-      }
-
-      if (result.role === 'admin') {
-        router.push('/admin');
-        return;
-      }
-      router.push('/user');
-    } catch {
-      setError('Something went wrong. Please try again.');
-    } finally {
-      setIsPending(false);
-    }
+    submit(identifier, password);
   }
 
   return (
