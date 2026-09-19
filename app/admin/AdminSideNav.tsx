@@ -6,6 +6,7 @@ import {SideNav, SideNavHeading, SideNavSection, SideNavItem} from '@astryxdesig
 import {LayoutDashboard, Users, Layers, Server, ShieldCheck, LifeBuoy, ClipboardList, Wallet, Receipt} from 'lucide-react';
 
 import {LogoutButton} from './LogoutButton';
+import {siteConfig} from '@/lib/config';
 
 // Responsive contract: handled by AppShell — the side nav collapses into the
 // mobile drawer below the md breakpoint and supports inline collapse above it.
@@ -17,7 +18,7 @@ export function AdminSideNav() {
       aria-label="Admin navigation"
       header={
         <SideNavHeading
-          heading="PKD-SMM"
+          heading={siteConfig.shortName}
           subheading="Admin panel"
           icon={<ShieldCheck size={18} aria-hidden="true" />}
         />

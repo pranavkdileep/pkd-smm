@@ -10,7 +10,9 @@ import {Button} from '@astryxdesign/core/Button';
 import {Card} from '@astryxdesign/core/Card';
 import {TextInput} from '@astryxdesign/core/TextInput';
 import {Banner} from '@astryxdesign/core/Banner';
+import {PasswordInput} from '@/app/components/forms/PasswordInput';
 import Link from 'next/link';
+import {siteConfig} from '@/lib/config';
 
 import {useLogin} from './useLogin';
 
@@ -35,7 +37,7 @@ export function LoginForm() {
       <VStack gap={4}>
         <VStack gap={1} align="center">
           <Heading level={2}>Sign in</Heading>
-          <Text color="secondary">Access your PKD-SMM Panel account.</Text>
+          <Text color="secondary">Access your {siteConfig.name} account.</Text>
         </VStack>
 
         {error ? <Banner status="error" title={error} /> : null}
@@ -50,9 +52,8 @@ export function LoginForm() {
               htmlName="username"
               isRequired
             />
-            <TextInput
+            <PasswordInput
               label="Password"
-              type="password"
               value={password}
               onChange={setPassword}
               placeholder="Your password"

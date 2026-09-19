@@ -42,6 +42,14 @@ function isBarDisabled(status: OrderRow['status']): boolean {
 
 /** Compact bar + counts: delivery = quantity − remaining. */
 function DeliveryCell({order}: {order: OrderRow}) {
+  // Terminal financial states have no meaningful delivery progress.
+  if (order.status === 'cancelled' || order.status === 'refunded') {
+    return (
+      <Text size="sm" color="secondary">
+        —
+      </Text>
+    );
+  }
   const delivered = Math.max(0, order.quantity - order.remaining);
   return (
     <VStack gap={1} width="100%">
@@ -255,12 +263,21 @@ export function OrdersTable({
         </HStack>
       ),
     },
-    {
-      key: 'actions',
-      header: 'Actions',
-      width: pixel(190),
-      renderCell: (order) => <OrderActions order={order} />,
-    },
+    // Omit the column entirely when no row on this page has a live action —
+    // an empty "Actions" header with blank cells is clutter.
+    ...(orders.some(
+      (order) =>
+        (order.serviceRefill || order.serviceCancel) && isLiveActionStatus(order.status)
+    )
+      ? [
+          {
+            key: 'actions',
+            header: 'Actions',
+            width: pixel(190),
+            renderCell: (order: OrderRow) => <OrderActions order={order} />,
+          } satisfies TableColumn<OrderRow>,
+        ]
+      : []),
   ];
 
   return (

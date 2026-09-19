@@ -13,9 +13,10 @@ import {OrdersToolbar} from './OrdersToolbar';
 import {OrdersTable} from './OrdersTable';
 import {OrdersAutoRefresh} from './OrdersAutoRefresh';
 import {UrlPagination} from '@/app/components/support/UrlPagination';
+import {siteConfig} from '@/lib/config';
 
 export const metadata = {
-  title: 'Orders · PKD-SMM Panel',
+  title: `Orders · ${siteConfig.name}`,
 };
 
 type SearchParams = Promise<{[key: string]: string | string[] | undefined}>;
@@ -45,8 +46,9 @@ export default async function OrdersPage({searchParams}: {searchParams: SearchPa
     statusParam && (ORDER_STATUSES as readonly string[]).includes(statusParam)
       ? (statusParam as OrderStatus)
       : undefined;
+  const search = firstParam(params.q)?.trim() ?? '';
 
-  const result = await listOrders({page, pageSize, status});
+  const result = await listOrders({page, pageSize, status, q: search});
 
   return (
     <VStack gap={5} className="w-full pt-6 px-6">
@@ -61,18 +63,26 @@ export default async function OrdersPage({searchParams}: {searchParams: SearchPa
                 : `${result.total.toLocaleString()} ${result.total === 1 ? 'order' : 'orders'} · newest first.`}
           </Text>
         </VStack>
-        <OrdersToolbar status={status ?? ''} />
+        <OrdersToolbar status={status ?? ''} search={search} />
       </HStack>
 
       {result.orders.length === 0 ? (
         <EmptyState
           headingLevel={2}
           icon={<ClipboardList size={28} className="text-secondary" aria-hidden="true" />}
-          title={status ? `No ${ORDER_STATUS_LABELS[status].toLowerCase()} orders` : 'No orders yet'}
+          title={
+            search
+              ? 'No orders match your search'
+              : status
+                ? `No ${ORDER_STATUS_LABELS[status].toLowerCase()} orders`
+                : 'No orders yet'
+          }
           description={
-            status
-              ? 'Orders with this status will appear here when there are any.'
-              : 'When you place an order, it will appear here with its status and delivery progress.'
+            search
+              ? 'Try a different Order ID or link.'
+              : status
+                ? 'Orders with this status will appear here when there are any.'
+                : 'When you place an order, it will appear here with its status and delivery progress.'
           }
         />
       ) : (
@@ -82,7 +92,8 @@ export default async function OrdersPage({searchParams}: {searchParams: SearchPa
             page={result.page}
             pageSize={result.pageSize}
             status={status}
-            pageKey={`${result.page}-${result.pageSize}-${status ?? 'all'}`}
+            search={search}
+            pageKey={`${result.page}-${result.pageSize}-${status ?? 'all'}-${search}`}
           />
           <OrdersTable
             orders={result.orders}

@@ -1,8 +1,8 @@
 'use client';
 
-import {useState} from 'react';
-import {useRouter} from 'next/navigation';
-import {Plus} from 'lucide-react';
+import {useEffect, useRef, useState, useTransition} from 'react';
+import {usePathname, useRouter, useSearchParams} from 'next/navigation';
+import {Plus, Search} from 'lucide-react';
 import {Dialog, DialogHeader} from '@astryxdesign/core/Dialog';
 import {Layout, LayoutContent, LayoutFooter} from '@astryxdesign/core/Layout';
 import {VStack} from '@astryxdesign/core/VStack';
@@ -11,6 +11,7 @@ import {Button} from '@astryxdesign/core/Button';
 import {TextInput} from '@astryxdesign/core/TextInput';
 import {TextArea} from '@astryxdesign/core/TextArea';
 import {Selector} from '@astryxdesign/core/Selector';
+import {SegmentedControl, SegmentedControlItem} from '@astryxdesign/core/SegmentedControl';
 import {Banner} from '@astryxdesign/core/Banner';
 
 import {SUPPORT_TICKET_CATEGORIES, SUPPORT_TICKET_PRIORITIES} from '@/lib/database';
@@ -32,12 +33,118 @@ const PRIORITY_OPTIONS = SUPPORT_TICKET_PRIORITIES.map((value) => ({
   label: PRIORITY_LABELS[value],
 }));
 
-/** "Open a ticket" action: primary button that opens the new-ticket dialog. */
-export function SupportToolbar() {
+const CATEGORY_FILTER_OPTIONS = [
+  {value: '', label: 'All categories'},
+  ...SUPPORT_TICKET_CATEGORIES.map((value) => ({
+    value,
+    label: CATEGORY_LABELS[value],
+  })),
+];
+
+const SEARCH_DEBOUNCE_MS = 300;
+
+/**
+ * URL-driven ticket filters (`?q=&status=&category=`) + "Open a ticket" action.
+ * Any filter change drops `page` so the server re-renders the first slice.
+ */
+export function SupportToolbar({
+  search,
+  status,
+  category,
+}: {
+  search: string;
+  status: string;
+  category: string;
+}) {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
+  const [value, setValue] = useState(search);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  function navigate(next: {q?: string; status?: string; category?: string}) {
+    const params = new URLSearchParams(searchParams.toString());
+    // Fall back to URL props (not local state) so control changes don't echo
+    // a stale debounced keystroke.
+    const nextQ = next.q ?? search;
+    if (nextQ.trim()) {
+      params.set('q', nextQ.trim());
+    } else {
+      params.delete('q');
+    }
+    const nextStatus = next.status ?? status;
+    if (nextStatus) {
+      params.set('status', nextStatus);
+    } else {
+      params.delete('status');
+    }
+    const nextCategory = next.category ?? category;
+    if (nextCategory) {
+      params.set('category', nextCategory);
+    } else {
+      params.delete('category');
+    }
+    params.delete('page');
+
+    const query = params.toString();
+    startTransition(() => {
+      router.push(query ? `${pathname}?${query}` : pathname);
+    });
+  }
+
+  function handleSearchChange(next: string) {
+    setValue(next);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => {
+      navigate({q: next});
+    }, SEARCH_DEBOUNCE_MS);
+  }
 
   return (
-    <HStack gap={2} vAlign="center">
+    <HStack gap={2} wrap="wrap" vAlign="center">
+      <TextInput
+        label="Search tickets"
+        isLabelHidden
+        value={value}
+        onChange={handleSearchChange}
+        placeholder="Search subject or ID…"
+        htmlName="q"
+        startIcon={Search}
+        hasClear
+        width={220}
+        isDisabled={isPending}
+      />
+      <SegmentedControl
+        label="Ticket status"
+        value={status}
+        onChange={(next) => navigate({status: next})}
+        isDisabled={isPending}
+      >
+        <SegmentedControlItem value="" label="All" />
+        <SegmentedControlItem value="open" label="Open" />
+        <SegmentedControlItem value="closed" label="Closed" />
+      </SegmentedControl>
+      <Selector
+        label="Category"
+        isLabelHidden
+        options={CATEGORY_FILTER_OPTIONS}
+        value={category}
+        onChange={(next) => navigate({category: next})}
+        width={160}
+        isDisabled={isPending}
+      />
       <Button
         label="Open a ticket"
         variant="primary"

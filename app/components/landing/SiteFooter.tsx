@@ -7,6 +7,7 @@ import Link from 'next/link';
 
 import {FOOTER_COLUMNS, PLATFORMS, SITE} from './content';
 import {BrandIcon} from './BrandIcon';
+import {siteConfig} from '@/lib/config';
 
 export function SiteFooter() {
   return (
@@ -22,7 +23,7 @@ export function SiteFooter() {
                 vAlign="center"
                 className="rounded-lg bg-accent-bg text-xs font-bold text-blue-vivid"
               >
-                PKD
+                {siteConfig.brandInitials}
               </HStack>
               <Text weight="bold">{SITE.name}</Text>
             </HStack>

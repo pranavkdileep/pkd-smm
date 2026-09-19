@@ -83,13 +83,28 @@ function toTicketRow(ticket: SupportTicket): SupportTicketRow {
 export async function listSupportTickets(input: {
   page?: number;
   pageSize?: number;
+  /** Substring match on title or ticket ID. */
+  q?: string;
+  status?: SupportTicketStatus;
+  category?: SupportTicketCategory;
 }): Promise<ListSupportTicketsResult> {
   const user = await getCurrentUser();
   if (!user) {
     return {tickets: [], total: 0, page: 1, pageSize: DEFAULT_PAGE_SIZE, totalPages: 1};
   }
 
-  const filter = {userId: user.id};
+  const filter: Record<string, unknown> = {userId: user.id};
+  if (input.status === 'open' || input.status === 'closed') {
+    filter.status = input.status;
+  }
+  if (input.category) {
+    filter.category = input.category;
+  }
+  const q = (input.q ?? '').trim();
+  if (q) {
+    const pattern = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+    filter.$or = [{title: pattern}, {id: pattern}];
+  }
   const pageSize = clampPageSize(input.pageSize);
 
   const total = await collections.supportTickets.countDocuments(filter);

@@ -9,9 +9,10 @@ import {listUsers} from '@/actions/admin/users';
 import {USER_PAGE_SIZES} from '@/lib/database';
 import {UsersTable} from './UsersTable';
 import {UsersToolbar, UsersPagination} from './UsersToolbar';
+import {siteConfig} from '@/lib/config';
 
 export const metadata = {
-  title: 'Users · PKD-SMM Admin',
+  title: `Users · ${siteConfig.adminName}`,
 };
 
 type SearchParams = Promise<{[key: string]: string | string[] | undefined}>;

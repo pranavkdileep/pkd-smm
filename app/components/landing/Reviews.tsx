@@ -9,6 +9,7 @@ import {Badge} from '@astryxdesign/core/Badge';
 import {REVIEWS} from './content';
 import {NamedIcon} from './NamedIcon';
 import {SectionIntro} from './SectionIntro';
+import {siteConfig} from '@/lib/config';
 
 const RATING = 4.6;
 
@@ -111,7 +112,7 @@ export function Reviews() {
       <VStack maxWidth={1280} gap={8} className="mx-auto w-full px-6">
         <SectionIntro
           eyebrow="Customer reviews"
-          title="Real feedback from PKD-SMM customers"
+          title={`Real feedback from ${siteConfig.shortName} customers`}
           lead="Individuals and teams use the panel for followers, views and engagement across six platforms — this feedback focuses on what every order shares: setup, clarity, support and tracking."
         />
 

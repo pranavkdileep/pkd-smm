@@ -3,9 +3,9 @@
 import {useState} from 'react';
 import {VStack} from '@astryxdesign/core/VStack';
 import {HStack} from '@astryxdesign/core/HStack';
-import {TextInput} from '@astryxdesign/core/TextInput';
 import {Button} from '@astryxdesign/core/Button';
 import {Banner} from '@astryxdesign/core/Banner';
+import {PasswordInput} from '@/app/components/forms/PasswordInput';
 
 import {changePassword} from '@/actions/users/password';
 
@@ -94,9 +94,8 @@ export function ChangePasswordForm() {
           />
         ) : null}
 
-        <TextInput
+        <PasswordInput
           label="Current password"
-          type="password"
           value={currentPassword}
           onChange={(next) => {
             setCurrentPassword(next);
@@ -107,9 +106,8 @@ export function ChangePasswordForm() {
           isDisabled={isSaving}
           status={fieldErrors.currentPassword ? {type: 'error', message: fieldErrors.currentPassword} : undefined}
         />
-        <TextInput
+        <PasswordInput
           label="New password"
-          type="password"
           value={newPassword}
           onChange={(next) => {
             setNewPassword(next);
@@ -120,9 +118,8 @@ export function ChangePasswordForm() {
           isDisabled={isSaving}
           status={fieldErrors.newPassword ? {type: 'error', message: fieldErrors.newPassword} : undefined}
         />
-        <TextInput
+        <PasswordInput
           label="Confirm new password"
-          type="password"
           value={confirmPassword}
           onChange={(next) => {
             setConfirmPassword(next);

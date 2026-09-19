@@ -1,6 +1,7 @@
 'use client';
 
 import {useState} from 'react';
+import {usePathname} from 'next/navigation';
 import {TopNav, TopNavItem} from '@astryxdesign/core/TopNav';
 import {MobileNav, MobileNavToggle} from '@astryxdesign/core/MobileNav';
 import {AppShellMobileContext} from '@astryxdesign/core/AppShell';
@@ -8,6 +9,7 @@ import {SideNavItem, SideNavSection} from '@astryxdesign/core/SideNav';
 import {HStack} from '@astryxdesign/core/HStack';
 import {Text} from '@astryxdesign/core/Text';
 import {Button} from '@astryxdesign/core/Button';
+import {siteConfig} from '@/lib/config';
 
 const NAV_LINKS = [
   {label: 'Services', href: '#services'},
@@ -19,6 +21,10 @@ const NAV_LINKS = [
 export function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const closeMenu = () => setIsMenuOpen(false);
+  const pathname = usePathname();
+  // Don't offer the page the visitor is already on.
+  const isLogin = pathname === '/login';
+  const isSignup = pathname === '/signup';
 
   return (
     <AppShellMobileContext.Provider
@@ -34,7 +40,7 @@ export function SiteHeader() {
     >
       <HStack className="sticky top-0 z-50 bg-surface shadow-sm">
         <TopNav
-          label="PKD-SMM Panel main navigation"
+          label={siteConfig.nav.mainAriaLabel}
           heading={
             <HStack gap={2} vAlign="center">
               <HStack
@@ -44,9 +50,9 @@ export function SiteHeader() {
                 hAlign="center"
                 vAlign="center"
               >
-                PKD
+                {siteConfig.brandInitials}
               </HStack>
-              <Text weight="bold">PKD-SMM Panel</Text>
+              <Text weight="bold">{siteConfig.name}</Text>
             </HStack>
           }
           startContent={
@@ -59,8 +65,12 @@ export function SiteHeader() {
           endContent={
             <HStack gap={2}>
               <MobileNavToggle label="Open menu" />
-              <Button label="Sign in" variant="ghost" href="/login" size="sm" className="max-sm:hidden" />
-              <Button label="Sign up" variant="primary" href="/signup" size="sm" />
+              {isLogin ? null : (
+                <Button label="Sign in" variant="ghost" href="/login" size="sm" className="max-sm:hidden" />
+              )}
+              {isSignup ? null : (
+                <Button label="Sign up" variant="primary" href="/signup" size="sm" />
+              )}
             </HStack>
           }
         />
@@ -77,8 +87,12 @@ export function SiteHeader() {
             ))}
           </SideNavSection>
           <SideNavSection title="Account">
-            <SideNavItem label="Sign in" href="/login" onClick={closeMenu} />
-            <SideNavItem label="Create free account" href="/signup" onClick={closeMenu} />
+            {isLogin ? null : (
+              <SideNavItem label="Sign in" href="/login" onClick={closeMenu} />
+            )}
+            {isSignup ? null : (
+              <SideNavItem label="Create free account" href="/signup" onClick={closeMenu} />
+            )}
           </SideNavSection>
         </MobileNav>
       </HStack>

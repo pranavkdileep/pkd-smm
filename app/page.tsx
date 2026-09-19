@@ -12,10 +12,12 @@ import {FeatureTabs} from './components/landing/FeatureTabs';
 import {Reviews} from './components/landing/Reviews';
 import {AboutSection} from './components/landing/AboutSection';
 import {Faq} from './components/landing/Faq';
-import {FinalCta} from './components/landing/FinalCta';
 import {SiteFooter} from './components/landing/SiteFooter';
+import {getLandingPricing} from '@/actions/users/services';
 
-export default function Home() {
+export default async function Home() {
+  const initialPricing = await getLandingPricing();
+
   return (
     <VStack gap={0}>
       <SiteHeader />
@@ -24,14 +26,13 @@ export default function Home() {
         <TrustLine />
         <PlatformsStrip />
         <ServicesCatalog />
-        <PricingTables />
+        <PricingTables initialPricing={initialPricing} />
         <HowItWorks />
         <PaymentMethods />
         <FeatureTabs />
         <Reviews />
         <AboutSection />
         <Faq />
-        <FinalCta />
       </main>
       <SiteFooter />
     </VStack>

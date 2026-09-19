@@ -9,6 +9,7 @@ import type {ReactNode} from 'react';
 import {HOW_IT_WORKS} from './content';
 import {NamedIcon} from './NamedIcon';
 import {SectionIntro} from './SectionIntro';
+import {siteConfig} from '@/lib/config';
 
 function StepCopy({step, title, body}: {step: string; title: string; body: string}) {
   return (
@@ -197,7 +198,7 @@ function MockWindow({step, className}: {step: string; className?: string}) {
         >
           <NamedIcon name="lock" size="sm" className="text-secondary" />
           <Text size="3xs" weight="semibold" color="secondary">
-            pkd-smm.panel/dashboard/step-{step.toLowerCase()}
+            {siteConfig.domain}/dashboard/step-{step.toLowerCase()}
           </Text>
         </HStack>
       </HStack>

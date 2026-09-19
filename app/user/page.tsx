@@ -8,9 +8,10 @@ import {getCurrentUser} from '@/actions/auth/session';
 import {getDefaultOrderService, getOrderServiceById} from '@/actions/users/services';
 
 import {OrderForm} from './OrderForm';
+import {siteConfig} from '@/lib/config';
 
 export const metadata = {
-  title: 'New Order · PKD-SMM Panel',
+  title: `New Order · ${siteConfig.name}`,
 };
 
 type SearchParams = Promise<{[key: string]: string | string[] | undefined}>;

@@ -26,9 +26,10 @@ import {
   formatTicketDate,
   ticketRef,
 } from '@/app/components/support/ticketMeta';
+import {siteConfig} from '@/lib/config';
 
 export const metadata = {
-  title: 'Support ticket · PKD-SMM Panel',
+  title: `Support ticket · ${siteConfig.name}`,
 };
 
 type Params = Promise<{id: string}>;

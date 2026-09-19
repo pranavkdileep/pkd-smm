@@ -294,6 +294,8 @@ export async function listOrders(input: {
   page?: number;
   pageSize?: number;
   status?: OrderStatus;
+  /** Substring match on order ID, service name, or any order-form input value (link). */
+  q?: string;
 }): Promise<ListOrdersResult> {
   const user = await getCurrentUser();
   if (!user) {
@@ -308,6 +310,33 @@ export async function listOrders(input: {
       return {orders: [], total: 0, page: 1, pageSize: DEFAULT_PAGE_SIZE, totalPages: 1};
     }
     filter.status = input.status;
+  }
+
+  const q = (input.q ?? '').trim();
+  // Service-name matches resolve to ids first (different collection).
+  let serviceIdFilter: string[] | null = null;
+  if (q) {
+    const pattern = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+    const matchedServices = await collections.services
+      .find({name: pattern}, {projection: {id: 1}})
+      .toArray();
+    serviceIdFilter = matchedServices.map((service) => service.id);
+    filter.$or = [
+      {id: pattern},
+      ...(serviceIdFilter.length ? [{serviceId: {$in: serviceIdFilter}}] : []),
+      // Any order-form input value (link/username/post URL) contains q.
+      {
+        $expr: {
+          $anyElementTrue: {
+            $map: {
+              input: {$objectToArray: {$ifNull: ['$inputs', {}]}},
+              as: 'kv',
+              in: {$regexMatch: {input: '$$kv.v', regex: q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), options: 'i'}},
+            },
+          },
+        },
+      },
+    ];
   }
 
   const pageSize = clampPageSize(input.pageSize);

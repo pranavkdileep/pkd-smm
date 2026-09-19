@@ -3,6 +3,8 @@
 import {collections} from '@/lib/db';
 import type {Service, ServicePlatform, ServiceSortOption} from '@/lib/database';
 import {PLATFORM_TYPES, SERVICE_SORT_OPTIONS} from '@/lib/database';
+import type {PlatformId, PricingRow} from '@/app/components/landing/content';
+import {PRICING} from '@/app/components/landing/content';
 
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 100;
@@ -205,4 +207,67 @@ export async function getOrderServiceById(id: string): Promise<OrderServiceDetai
     {projection: ORDER_SERVICE_PROJECTION}
   );
   return service ? toOrderDetails(service) : null;
+}
+
+/**
+ * Auto-fetches active services grouped by platform for the public #pricing section.
+ * Falls back to curated PRICING if database has no active services or fails to connect.
+ */
+export async function getLandingPricing(): Promise<Record<PlatformId, PricingRow[]>> {
+  try {
+    const services = await collections.services
+      .find({status: 'active'}, {projection: ORDER_SERVICE_PROJECTION})
+      .sort({price: 1, name: 1})
+      .toArray();
+
+    if (!services || services.length === 0) {
+      return PRICING;
+    }
+
+    const grouped: Partial<Record<PlatformId, PricingRow[]>> = {};
+
+    for (const service of services) {
+      const platformKey = (service.platform ?? '').toLowerCase() as PlatformId;
+      if (!(platformKey in PRICING)) {
+        continue;
+      }
+
+      grouped[platformKey] ??= [];
+      if (grouped[platformKey]!.length >= 8) {
+        continue;
+      }
+
+      const formattedPrice =
+        service.price < 0.01 ? service.price.toFixed(3) : service.price.toFixed(2);
+      const min = (service.minOrder ?? 10).toLocaleString('en-IN');
+      const max = (service.maxOrder ?? 100000).toLocaleString('en-IN');
+
+      let guarantee = 'Standard delivery';
+      if (service.refill) {
+        const descMatch = service.description?.match(/(\d+[- ]day refill|lifetime(?:\s+guarantee)?)/i);
+        guarantee = descMatch ? descMatch[0] : 'Refill guarantee';
+      } else if (service.cancel) {
+        guarantee = 'Cancellable';
+      }
+
+      grouped[platformKey]!.push({
+        service: service.name,
+        rate: `₹${formattedPrice} / 1K`,
+        quantity: `${min} – ${max}`,
+        guarantee,
+      });
+    }
+
+    const result: Record<PlatformId, PricingRow[]> = {...PRICING};
+    for (const key of Object.keys(PRICING) as PlatformId[]) {
+      if (grouped[key] && grouped[key]!.length > 0) {
+        result[key] = grouped[key]!;
+      }
+    }
+
+    return result;
+  } catch (error) {
+    console.error('Failed to fetch landing pricing:', error);
+    return PRICING;
+  }
 }

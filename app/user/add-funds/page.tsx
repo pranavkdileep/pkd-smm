@@ -9,9 +9,10 @@ import {getUserDepositsPage} from '@/actions/deposits/status';
 import {AddFundsForm} from './AddFundsForm';
 import {DepositHistory} from './DepositHistory';
 import {PaymentResultBanner} from './PaymentResultBanner';
+import {siteConfig} from '@/lib/config';
 
 export const metadata = {
-  title: 'Add Funds · PKD-SMM Panel',
+  title: `Add Funds · ${siteConfig.name}`,
 };
 
 interface AddFundsPageProps {

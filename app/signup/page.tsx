@@ -2,9 +2,10 @@ import {Center} from '@astryxdesign/core/Center';
 
 import {SiteHeader} from '../components/landing/SiteHeader';
 import {SignupForm} from './SignupForm';
+import {siteConfig} from '@/lib/config';
 
 export const metadata = {
-  title: 'Create account · PKD-SMM Panel',
+  title: `Create account · ${siteConfig.name}`,
 };
 
 export default function SignupPage() {

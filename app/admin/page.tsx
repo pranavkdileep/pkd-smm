@@ -12,9 +12,10 @@ import {getSession} from '@/actions/auth/session';
 import {formatAmount} from '@/app/user/add-funds/format';
 import {ORDER_STATUS_DOT, ORDER_STATUS_LABELS} from '@/app/components/orders/orderMeta';
 import {StatGrid} from './StatGrid';
+import {siteConfig} from '@/lib/config';
 
 export const metadata = {
-  title: 'Dashboard · PKD-SMM Admin',
+  title: `Dashboard · ${siteConfig.adminName}`,
 };
 
 export default async function AdminDashboardPage() {

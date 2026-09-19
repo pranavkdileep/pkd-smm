@@ -1,6 +1,7 @@
 import {collections} from '@/lib/db';
 import {signEmailVerificationToken} from '@/actions/auth/jwt';
 import {sendEmail} from '@/lib/email';
+import {siteConfig} from '@/lib/config';
 
 /** Serializable subset of the user document the signup workflow needs. */
 export interface SignupUser {
@@ -31,11 +32,11 @@ export async function sendVerificationEmail(user: SignupUser, token: string): Pr
 
   await sendEmail({
     to: user.email,
-    subject: 'Verify your PKD-SMM Panel account',
+    subject: siteConfig.email.verificationSubject,
     body: [
       `Hi ${user.username},`,
       '',
-      'Welcome to PKD-SMM Panel! Verify your email address by opening the link below:',
+      `Welcome to ${siteConfig.name}! Verify your email address by opening the link below:`,
       '',
       verificationUrl,
       '',

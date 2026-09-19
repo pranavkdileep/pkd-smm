@@ -13,9 +13,10 @@ import {formatAmount, formatDateTime} from '@/app/user/add-funds/format';
 import {ticketRef} from '@/app/components/support/ticketMeta';
 import {ORDER_STATUS_DOT, ORDER_STATUS_LABELS} from '@/app/components/orders/orderMeta';
 import {SectionPagination} from './SectionPagination';
+import {siteConfig} from '@/lib/config';
 
 export const metadata = {
-  title: 'User detail · PKD-SMM Admin',
+  title: `User detail · ${siteConfig.adminName}`,
 };
 
 const SECTION_PAGE_SIZE = 10;

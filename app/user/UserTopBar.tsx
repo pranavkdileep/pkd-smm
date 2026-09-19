@@ -3,6 +3,7 @@
 import {useState} from 'react';
 import {usePathname, useRouter} from 'next/navigation';
 import {TopNav, TopNavItem} from '@astryxdesign/core/TopNav';
+import {MobileNavToggle} from '@astryxdesign/core/MobileNav';
 import {HStack} from '@astryxdesign/core/HStack';
 import {Text} from '@astryxdesign/core/Text';
 import {Icon} from '@astryxdesign/core/Icon';
@@ -27,7 +28,9 @@ export function UserTopBar({balance}: UserTopBarProps) {
   return (
     <TopNav
       label="Account bar"
-      //heading={<TopNavHeading heading="PKD-SMM" subheading="Dashboard" />}
+      // Explicit toggle: AppShell auto-collapses sideNav below md into a
+      // drawer, and this toggle (no-op on desktop) opens it on mobile.
+      startContent={<MobileNavToggle label="Open navigation" />}
       endContent={
         <HStack gap={5} vAlign="center">
           <HStack gap={1.5} vAlign="center">

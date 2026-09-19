@@ -11,9 +11,10 @@ import {UrlPagination} from '@/app/components/support/UrlPagination';
 
 import {AdminDepositsToolbar} from './AdminDepositsToolbar';
 import {AdminDepositsTable} from './AdminDepositsTable';
+import {siteConfig} from '@/lib/config';
 
 export const metadata = {
-  title: 'Deposits · PKD-SMM Admin',
+  title: `Deposits · ${siteConfig.adminName}`,
 };
 
 type SearchParams = Promise<{[key: string]: string | string[] | undefined}>;

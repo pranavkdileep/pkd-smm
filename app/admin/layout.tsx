@@ -2,9 +2,10 @@ import type {ReactNode} from 'react';
 import {AppShell} from '@astryxdesign/core/AppShell';
 
 import {AdminSideNav} from './AdminSideNav';
+import {siteConfig} from '@/lib/config';
 
 export const metadata = {
-  title: 'Admin · PKD-SMM Panel',
+  title: `Admin · ${siteConfig.name}`,
 };
 
 export default function AdminLayout({children}: {children: ReactNode}) {

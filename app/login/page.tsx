@@ -4,9 +4,10 @@ import {Spinner} from '@astryxdesign/core/Spinner';
 
 import {SiteHeader} from '../components/landing/SiteHeader';
 import {LoginForm} from './LoginForm';
+import {siteConfig} from '@/lib/config';
 
 export const metadata = {
-  title: 'Sign in · PKD-SMM Panel',
+  title: `Sign in · ${siteConfig.name}`,
 };
 
 export default function LoginPage() {

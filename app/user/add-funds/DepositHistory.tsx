@@ -2,10 +2,14 @@
 
 import {useCallback, useRef, useState} from 'react';
 import {useRouter} from 'next/navigation';
-import {Wallet} from 'lucide-react';
+import {Check, Copy, Wallet} from 'lucide-react';
 
 import {Table, useTablePagination, proportional, pixel, type TableColumn} from '@astryxdesign/core/Table';
+import {HStack} from '@astryxdesign/core/HStack';
+import {Text} from '@astryxdesign/core/Text';
 import {StatusDot} from '@astryxdesign/core/StatusDot';
+import {IconButton} from '@astryxdesign/core/IconButton';
+import {useClipboard} from '@astryxdesign/core/hooks';
 import {Button} from '@astryxdesign/core/Button';
 import {EmptyState} from '@astryxdesign/core/EmptyState';
 
@@ -39,6 +43,27 @@ interface DepositRow extends Record<string, unknown> {
 interface DepositHistoryProps {
   /** Page 1 of the history, fetched on the server for the first render. */
   initialPage: DepositsPage;
+}
+
+/** Truncated id + copy affordance — one hook instance per row for its own copied state. */
+function DepositIdCell({id}: {id: string}) {
+  const {copy, isCopied} = useClipboard({announce: 'Deposit ID copied'});
+  const shortId = `${id.slice(0, 8)}…`;
+  return (
+    <HStack gap={1.5} vAlign="center">
+      <Text size="sm" hasTabularNumbers>
+        {shortId}
+      </Text>
+      <IconButton
+        label={isCopied ? 'Copied' : 'Copy full deposit ID'}
+        tooltip={isCopied ? 'Copied' : 'Copy full ID'}
+        icon={isCopied ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
+        variant="ghost"
+        size="sm"
+        onClick={() => void copy(id)}
+      />
+    </HStack>
+  );
 }
 
 /**
@@ -113,21 +138,30 @@ export function DepositHistory({initialPage}: DepositHistoryProps) {
 
   const columns: TableColumn<DepositRow>[] = [
     {key: 'date', header: 'Date', width: proportional(1)},
-    {key: 'id', header: 'Deposit ID', width: proportional(2)},
+    {
+      key: 'id',
+      header: 'Deposit ID',
+      width: proportional(1),
+      renderCell: (row) => <DepositIdCell id={row.id} />,
+    },
     {key: 'amount', header: 'Amount', width: proportional(1)},
     {key: 'gateway', header: 'Gateway', width: proportional(1)},
     {
       key: 'status',
       header: 'Status',
-      width: proportional(1),
+      width: pixel(140),
       renderCell: (row) => {
         const meta = STATUS_META[row.status];
+        // StatusDot's label is screen-reader-only — always pair with visible text.
         return (
-          <StatusDot
-            variant={meta.variant}
-            label={meta.label}
-            isPulsing={meta.isPulsing}
-          />
+          <HStack gap={2} vAlign="center">
+            <StatusDot
+              variant={meta.variant}
+              label={meta.label}
+              isPulsing={meta.isPulsing}
+            />
+            <Text size="sm">{meta.label}</Text>
+          </HStack>
         );
       },
     },

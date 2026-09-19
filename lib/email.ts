@@ -1,5 +1,6 @@
 import {createHash} from 'node:crypto';
 import {Resend} from 'resend';
+import {siteConfig} from './config';
 
 /** Payload shared by every transactional email the app sends. */
 export interface EmailMessage {
@@ -11,9 +12,9 @@ export interface EmailMessage {
 /**
  * Default sender uses Resend's sandbox domain, which only delivers to the
  * account owner's inbox. Once a custom domain is verified in Resend, set
- * EMAIL_FROM (e.g. `PKD-SMM Panel <noreply@yourdomain.com>`) in `.env.local`.
+ * EMAIL_FROM (e.g. `${siteConfig.name} <noreply@yourdomain.com>`) in `.env.local`.
  */
-const DEFAULT_FROM = 'PKD-SMM Panel <onboarding@resend.dev>';
+const DEFAULT_FROM = siteConfig.email.defaultFrom;
 
 let resendClient: Resend | null = null;
 

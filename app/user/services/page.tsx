@@ -3,27 +3,23 @@ import {Heading} from '@astryxdesign/core/Heading';
 import {Text} from '@astryxdesign/core/Text';
 import {VStack} from '@astryxdesign/core/VStack';
 import {HStack} from '@astryxdesign/core/HStack';
-import {Grid} from '@astryxdesign/core/Grid';
-import {Card} from '@astryxdesign/core/Card';
 import {EmptyState} from '@astryxdesign/core/EmptyState';
 
-import {listCatalogServices, type CatalogServiceRow} from '@/actions/users/services';
+import {listCatalogServices} from '@/actions/users/services';
 import {
   PLATFORM_TYPES,
   SERVICE_PAGE_SIZES,
   SERVICE_SORT_OPTIONS,
   type ServiceSortOption,
 } from '@/lib/database';
-import {PLATFORM_LABELS, PLATFORM_TINTS} from '@/app/components/platformMeta';
-import {BrandIcon, type PlatformKey} from '@/app/components/landing/BrandIcon';
 import {UrlPagination} from '@/app/components/support/UrlPagination';
-import {formatAmount} from '@/app/user/add-funds/format';
 
-import {OrderNowButton} from './OrderNowButton';
+import {ServicesTable} from './ServicesTable';
 import {ServicesToolbar} from './ServicesToolbar';
+import {siteConfig} from '@/lib/config';
 
 export const metadata = {
-  title: 'Services · PKD-SMM Panel',
+  title: `Services · ${siteConfig.name}`,
 };
 
 type SearchParams = Promise<{[key: string]: string | string[] | undefined}>;
@@ -38,58 +34,6 @@ function parsePositiveInt(value: string | undefined): number | undefined {
   }
   const parsed = Number.parseInt(value, 10);
   return Number.isFinite(parsed) && parsed >= 1 ? parsed : undefined;
-}
-
-function ServiceCard({service}: {service: CatalogServiceRow}) {
-  const platformKey = service.platform.toLowerCase() as PlatformKey;
-  const perks = [service.refill ? 'Refillable' : '', service.cancel ? 'Cancellable' : '']
-    .filter(Boolean)
-    .join(' · ');
-
-  return (
-    <Card padding={3} elevation="low" className="flex flex-col">
-      <VStack gap={3} className="flex-1">
-        <HStack gap={2} vAlign="center">
-          <HStack
-            width={9}
-            height={9}
-            hAlign="center"
-            vAlign="center"
-            className={`rounded-lg ${PLATFORM_TINTS[platformKey]}`}
-          >
-            <BrandIcon platform={platformKey} size="md" />
-          </HStack>
-          <Text size="sm" color="secondary">
-            {PLATFORM_LABELS[platformKey]}
-          </Text>
-        </HStack>
-        <VStack gap={1}>
-          <Heading level={4}>{service.name}</Heading>
-          {service.description ? (
-            <Text size="sm" color="secondary" className="line-clamp-2">
-              {service.description}
-            </Text>
-          ) : null}
-        </VStack>
-      </VStack>
-      <VStack gap={1} className="mt-3 border-t border-border pt-3">
-        <HStack justify="between" vAlign="center" width="100%">
-          <Text weight="bold">{formatAmount(service.price, 'INR')} / 1K</Text>
-          {perks ? (
-            <Text size="sm" color="secondary">
-              {perks}
-            </Text>
-          ) : null}
-        </HStack>
-        <HStack justify="between" vAlign="center" width="100%">
-          <Text size="sm" color="secondary">
-            Min {service.minOrder.toLocaleString()} · Max {service.maxOrder.toLocaleString()}
-          </Text>
-          <OrderNowButton serviceId={service.id} />
-        </HStack>
-      </VStack>
-    </Card>
-  );
 }
 
 export default async function ServicesPage({searchParams}: {searchParams: SearchParams}) {
@@ -137,11 +81,11 @@ export default async function ServicesPage({searchParams}: {searchParams: Search
         />
       ) : (
         <>
-          <Grid columns={{minWidth: 280, max: 3}} gap={3}>
-            {result.services.map((service) => (
-              <ServiceCard key={service.id} service={service} />
-            ))}
-          </Grid>
+          <ServicesTable
+            services={result.services}
+            rowIndexStart={(result.page - 1) * result.pageSize + 1}
+            rowCount={result.total}
+          />
           {result.totalPages > 1 ? (
             <HStack justify="end" wrap="wrap">
               <UrlPagination

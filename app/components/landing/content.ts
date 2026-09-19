@@ -1,6 +1,8 @@
+import {siteConfig} from '@/lib/config';
+
 export const SITE = {
-  name: "PKD-SMM Panel",
-  tagline: "Affordable social media boost platform for individuals and marketing teams",
+  name: siteConfig.name,
+  tagline: siteConfig.tagline,
   fromPrice: "₹0.02/1K",
 };
 
@@ -261,7 +263,7 @@ export const FAQS = [
     a: "Ordering social media growth services — followers, likes, views, reactions and comments — from one dashboard with one balance. Each service has its own page describing tiers, prices, and guarantees.",
   },
   {
-    q: "Which platforms does PKD-SMM Panel support?",
+    q: `Which platforms does ${siteConfig.name} support?`,
     a: "Six platforms: Instagram, Telegram, TikTok, YouTube, X (Twitter), and Facebook. You are never locked into one network — mix services wherever your audience lives.",
   },
   {
@@ -282,7 +284,7 @@ export const FAQS = [
   },
   {
     q: "Can marketing teams manage multiple brands?",
-    a: "That's what PKD-SMM is built for. Use one shared balance across brands, keep per-brand order history, and export receipts for accounting.",
+    a: `That's what ${siteConfig.shortName} is built for. Use one shared balance across brands, keep per-brand order history, and export receipts for accounting.`,
   },
   {
     q: "How fast do orders start?",

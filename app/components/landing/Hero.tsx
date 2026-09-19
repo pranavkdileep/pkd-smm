@@ -42,7 +42,7 @@ export function Hero() {
           </Heading>
 
           <Text as="p" color="secondary" size="lg">
-            PKD-SMM Panel is an affordable social media growth platform for Instagram, Telegram,
+            {SITE.name} is an affordable social media growth platform for Instagram, Telegram,
             TikTok, YouTube, X and Facebook — followers, views, likes and engagement delivered to a
             public link and tracked live on your dashboard.
           </Text>

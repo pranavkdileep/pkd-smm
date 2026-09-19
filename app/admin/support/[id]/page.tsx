@@ -26,9 +26,10 @@ import {
 
 import {AdminCloseTicketButton} from './AdminCloseTicketButton';
 import {AdminReplyForm} from './AdminReplyForm';
+import {siteConfig} from '@/lib/config';
 
 export const metadata = {
-  title: 'Support ticket · PKD-SMM Admin',
+  title: `Support ticket · ${siteConfig.adminName}`,
 };
 
 type Params = Promise<{id: string}>;

@@ -28,12 +28,12 @@ export function TicketsTable({tickets}: {tickets: SupportTicketRow[]}) {
     {
       key: 'title',
       header: 'Ticket',
-      width: proportional(1),
+      width: proportional(2),
       renderCell: (ticket) => (
         <VStack gap={0.5}>
           <Link
             href={`/user/support/${ticket.id}`}
-            className="text-sm font-medium text-primary hover:text-blue-vivid"
+            className="text-sm font-medium text-primary hover:text-blue-vivid hover:underline"
           >
             {ticket.title}
           </Link>
@@ -46,7 +46,7 @@ export function TicketsTable({tickets}: {tickets: SupportTicketRow[]}) {
     {
       key: 'category',
       header: 'Category',
-      width: pixel(110),
+      width: pixel(130),
       renderCell: (ticket) => (
         <Token
           label={CATEGORY_LABELS[ticket.category] ?? ticket.category}
@@ -58,7 +58,7 @@ export function TicketsTable({tickets}: {tickets: SupportTicketRow[]}) {
     {
       key: 'priority',
       header: 'Priority',
-      width: pixel(100),
+      width: pixel(110),
       renderCell: (ticket) => (
         <Token
           label={PRIORITY_LABELS[ticket.priority] ?? ticket.priority}
@@ -70,7 +70,7 @@ export function TicketsTable({tickets}: {tickets: SupportTicketRow[]}) {
     {
       key: 'status',
       header: 'Status',
-      width: pixel(110),
+      width: pixel(130),
       renderCell: (ticket) => (
         <HStack gap={2} vAlign="center">
           <StatusDot
@@ -84,7 +84,7 @@ export function TicketsTable({tickets}: {tickets: SupportTicketRow[]}) {
     {
       key: 'updatedAt',
       header: 'Updated',
-      width: pixel(130),
+      width: pixel(150),
       renderCell: (ticket) => (
         <Text size="sm" color="secondary">
           {formatTicketDate(ticket.updatedAt)}

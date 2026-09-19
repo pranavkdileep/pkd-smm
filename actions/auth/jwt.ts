@@ -1,4 +1,5 @@
 import {SignJWT, jwtVerify} from 'jose';
+import {siteConfig} from '@/lib/config';
 
 export type SessionRole = 'user' | 'admin';
 
@@ -13,7 +14,7 @@ export interface AuthResult {
   error?: string;
 }
 
-export const SESSION_COOKIE = 'pkd_session';
+export const SESSION_COOKIE = siteConfig.auth.sessionCookie;
 export const SESSION_MAX_AGE = 60 * 60 * 24 * 7;
 
 if (!process.env.JWT_SECRET) {

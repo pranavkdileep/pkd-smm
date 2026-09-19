@@ -18,5 +18,6 @@ export const ORDER_STATUS_DOT: Record<
   processing: 'accent',
   completed: 'success',
   cancelled: 'neutral',
-  refunded: 'error',
+  // Refunds are financial settlements, not operational failures — amber, not red.
+  refunded: 'warning',
 };

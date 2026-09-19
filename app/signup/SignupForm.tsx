@@ -10,6 +10,8 @@ import {Button} from '@astryxdesign/core/Button';
 import {Card} from '@astryxdesign/core/Card';
 import {TextInput} from '@astryxdesign/core/TextInput';
 import {Banner} from '@astryxdesign/core/Banner';
+import {PasswordInput} from '@/app/components/forms/PasswordInput';
+import {siteConfig} from '@/lib/config';
 
 import {signupUser} from '@/actions/auth/signup';
 
@@ -46,7 +48,7 @@ export function SignupForm() {
           <Heading level={2}>Account created</Heading>
           <Banner
             status="success"
-            title="Welcome to PKD-SMM Panel"
+            title={`Welcome to ${siteConfig.name}`}
             description={`Your account ${username} is ready and you are signed in. We sent a verification email to ${email} — please confirm your address.`}
           />
         </VStack>
@@ -83,9 +85,8 @@ export function SignupForm() {
               htmlName="email"
               isRequired
             />
-            <TextInput
+            <PasswordInput
               label="Password"
-              type="password"
               value={password}
               onChange={setPassword}
               placeholder="At least 8 characters"

@@ -5,9 +5,10 @@ import {VStack} from '@astryxdesign/core/VStack';
 import {listUpstreams} from '@/actions/admin/upstreams';
 import {UPSTREAM_PAGE_SIZES} from '@/lib/database';
 import {UpstreamsManager} from './UpstreamsManager';
+import {siteConfig} from '@/lib/config';
 
 export const metadata = {
-  title: 'Upstream Providers · PKD-SMM Admin',
+  title: `Upstream Providers · ${siteConfig.adminName}`,
 };
 
 type SearchParams = Promise<{[key: string]: string | string[] | undefined}>;

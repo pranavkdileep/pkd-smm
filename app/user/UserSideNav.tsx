@@ -13,6 +13,7 @@ import {
   LifeBuoy,
   Zap,
 } from 'lucide-react';
+import {siteConfig} from '@/lib/config';
 
 // Responsive contract: handled by AppShell — the side nav collapses into the
 // mobile drawer below the md breakpoint and supports inline collapse above it.
@@ -24,7 +25,7 @@ export function UserSideNav() {
       aria-label="User navigation"
       header={
         <SideNavHeading
-          heading="PKD-SMM"
+          heading={siteConfig.shortName}
           subheading="Dashboard"
           icon={<Zap size={18} aria-hidden="true" />}
         />

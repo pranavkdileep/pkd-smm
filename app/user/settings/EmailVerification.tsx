@@ -6,7 +6,7 @@ import {VStack} from '@astryxdesign/core/VStack';
 import {Text} from '@astryxdesign/core/Text';
 import {Button} from '@astryxdesign/core/Button';
 import {Banner} from '@astryxdesign/core/Banner';
-import {StatusDot} from '@astryxdesign/core/StatusDot';
+import {Badge} from '@astryxdesign/core/Badge';
 
 import {resendEmailVerification} from '@/actions/users/verification';
 
@@ -37,7 +37,7 @@ export function EmailVerification({email}: {email: string}) {
   return (
     <VStack gap={3}>
       <HStack gap={2} vAlign="center">
-        <StatusDot variant="warning" label="Not verified" />
+        <Badge variant="warning" label="Unverified" />
         <Text color="secondary">{email} isn’t verified yet.</Text>
       </HStack>
 

@@ -6,10 +6,8 @@ import {
   pixel,
   type TableColumn,
 } from '@astryxdesign/core/Table';
-import {HStack} from '@astryxdesign/core/HStack';
 import {VStack} from '@astryxdesign/core/VStack';
 import {Text} from '@astryxdesign/core/Text';
-import {StatusDot} from '@astryxdesign/core/StatusDot';
 
 import type {OrderRow} from '@/actions/users/orders';
 import {formatAmount} from '@/app/user/add-funds/format';
@@ -62,13 +60,11 @@ export function RefundsTable({
       key: 'refundedAt',
       header: 'Refunded',
       width: pixel(150),
+      // Plain date: a refund timestamp is not an error state, so no StatusDot.
       renderCell: (refund) => (
-        <HStack gap={2} vAlign="center">
-          <StatusDot variant="error" label="Refunded" />
-          <Text size="sm" color="secondary">
-            {formatTicketDate(refund.updatedAt)}
-          </Text>
-        </HStack>
+        <Text size="sm" color="secondary">
+          {formatTicketDate(refund.updatedAt)}
+        </Text>
       ),
     },
   ];

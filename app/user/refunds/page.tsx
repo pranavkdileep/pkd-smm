@@ -10,9 +10,10 @@ import {ORDER_PAGE_SIZES} from '@/lib/database';
 
 import {RefundsTable} from './RefundsTable';
 import {UrlPagination} from '@/app/components/support/UrlPagination';
+import {siteConfig} from '@/lib/config';
 
 export const metadata = {
-  title: 'Refunds · PKD-SMM Panel',
+  title: `Refunds · ${siteConfig.name}`,
 };
 
 type SearchParams = Promise<{[key: string]: string | string[] | undefined}>;

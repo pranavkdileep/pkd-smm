@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import { siteConfig } from "@/lib/config";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,9 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PKD-SMM Panel — Affordable Social Media Boost Platform",
-  description:
-    "Affordable SMM panel for individuals and marketing teams. Boost Instagram, Telegram, TikTok, YouTube, X and Facebook from one dashboard with live tracking.",
+  title: siteConfig.title,
+  description: siteConfig.description,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

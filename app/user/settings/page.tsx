@@ -6,16 +6,17 @@ import {Text} from '@astryxdesign/core/Text';
 import {Grid} from '@astryxdesign/core/Grid';
 import {Divider} from '@astryxdesign/core/Divider';
 import {MetadataList, MetadataListItem} from '@astryxdesign/core/MetadataList';
-import {StatusDot} from '@astryxdesign/core/StatusDot';
+import {Badge} from '@astryxdesign/core/Badge';
 import type {Language} from '@/lib/database';
 
 import {getUserDetails} from '@/actions/users/details';
 
 import {ChangePasswordForm} from './ChangePasswordForm';
 import {EmailVerification} from './EmailVerification';
+import {siteConfig} from '@/lib/config';
 
 export const metadata = {
-  title: 'Settings · PKD-SMM Panel',
+  title: `Settings · ${siteConfig.name}`,
 };
 
 const LANGUAGE_LABELS: Record<Language, string> = {
@@ -68,10 +69,11 @@ export default async function SettingsPage() {
           <MetadataListItem label="Email">
             <HStack gap={2} vAlign="center">
               <Text>{user.email}</Text>
-              <StatusDot
-                variant={user.emailVerified ? 'success' : 'warning'}
-                label={user.emailVerified ? 'Verified' : 'Not verified'}
-              />
+              {user.emailVerified ? (
+                <Badge variant="success" label="Verified" />
+              ) : (
+                <Badge variant="warning" label="Unverified" />
+              )}
             </HStack>
           </MetadataListItem>
           <MetadataListItem label="Balance">₹{user.balance.toFixed(2)}</MetadataListItem>
@@ -90,8 +92,8 @@ export default async function SettingsPage() {
           </Text>
         </VStack>
         {user.emailVerified ? (
-          <HStack gap={2} vAlign="center">
-            <StatusDot variant="success" label="Verified" />
+          <HStack gap={2} vAlign="center" width="100%">
+            <Badge variant="success" label="Verified" />
             <Text color="secondary">Your email is confirmed. Nothing more to do here.</Text>
           </HStack>
         ) : (

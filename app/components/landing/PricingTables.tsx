@@ -1,6 +1,6 @@
 'use client';
 
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {TabList, Tab} from '@astryxdesign/core/TabList';
 import {Table} from '@astryxdesign/core/Table';
 import {VStack} from '@astryxdesign/core/VStack';
@@ -17,6 +17,7 @@ import {PLATFORMS, PRICING} from './content';
 import {BrandIcon} from './BrandIcon';
 import {NamedIcon} from './NamedIcon';
 import {SectionIntro} from './SectionIntro';
+import {getLandingPricing} from '@/actions/users/services';
 
 interface PricingRecord extends Record<string, unknown> {
   service: string;
@@ -92,8 +93,36 @@ function PricingPanel({rows}: {rows: PricingRow[]}) {
   );
 }
 
-export function PricingTables() {
+interface PricingTablesProps {
+  initialPricing?: Record<PlatformId, PricingRow[]>;
+}
+
+export function PricingTables({initialPricing}: PricingTablesProps = {}) {
   const [active, setActive] = useState<PlatformId>('instagram');
+  const [pricing, setPricing] = useState<Record<PlatformId, PricingRow[]>>(
+    initialPricing ?? PRICING
+  );
+
+  useEffect(() => {
+    let activeEffect = true;
+    async function fetchPricing() {
+      try {
+        const live = await getLandingPricing();
+        if (activeEffect && live) {
+          setPricing(live);
+        }
+      } catch (error) {
+        // preserve current/fallback pricing
+      }
+    }
+
+    fetchPricing();
+    return () => {
+      activeEffect = false;
+    };
+  }, []);
+
+  const currentRows = pricing[active] ?? PRICING[active] ?? [];
 
   return (
     <section id="pricing" aria-label="Popular rates" className="scroll-mt-24 bg-surface py-16 md:py-24">
@@ -131,7 +160,7 @@ export function PricingTables() {
             />
           </HStack>
 
-          <PricingPanel key={active} rows={PRICING[active]} />
+          <PricingPanel key={active} rows={currentRows} />
 
           <HStack gap={2} vAlign="center">
             {PLATFORMS.map((platform) => (

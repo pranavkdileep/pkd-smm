@@ -5,9 +5,10 @@ import {VStack} from '@astryxdesign/core/VStack';
 import {listServices} from '@/actions/admin/services';
 import {SERVICE_PAGE_SIZES} from '@/lib/database';
 import {ServicesManager} from './ServicesManager';
+import {siteConfig} from '@/lib/config';
 
 export const metadata = {
-  title: 'Services · PKD-SMM Admin',
+  title: `Services · ${siteConfig.adminName}`,
 };
 
 type SearchParams = Promise<{[key: string]: string | string[] | undefined}>;

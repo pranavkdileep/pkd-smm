@@ -27,12 +27,14 @@ export function OrdersAutoRefresh({
   page,
   pageSize,
   status,
+  search,
   pageKey,
 }: {
   orders: OrderRow[];
   page: number;
   pageSize: number;
   status?: OrderStatus;
+  search?: string;
   pageKey: string;
 }) {
   const router = useRouter();
@@ -65,7 +67,7 @@ export function OrdersAutoRefresh({
     async function poll() {
       polls += 1;
       try {
-        const fresh = await listOrders({page, pageSize, status});
+        const fresh = await listOrders({page, pageSize, status, q: search});
         const changed = fresh.orders.some((order) => {
           const prev = before.get(order.id);
           return (

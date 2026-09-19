@@ -1,4 +1,5 @@
 import {MongoClient, type Db} from 'mongodb';
+import {siteConfig} from './config';
 import type {
   AdminUser,
   Deposit,
@@ -13,7 +14,7 @@ import type {
 } from './database';
 
 const MONGODB_URI = process.env.MONGODB_URI;
-const MONGODB_DB = process.env.MONGODB_DB ?? 'pkd-smm';
+const MONGODB_DB = process.env.MONGODB_DB ?? siteConfig.database.defaultDbName;
 
 if (!MONGODB_URI) {
   throw new Error('MONGODB_URI is not set. Add it to .env.local');

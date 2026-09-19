@@ -14,6 +14,7 @@ import {Link} from '@astryxdesign/core/Link';
 import {NumberInput} from '@astryxdesign/core/NumberInput';
 import {Text} from '@astryxdesign/core/Text';
 import {TextInput} from '@astryxdesign/core/TextInput';
+import {Token} from '@astryxdesign/core/Token';
 import {
   Typeahead,
   TypeaheadItem,
@@ -49,9 +50,15 @@ function chargeFor(service: OrderServiceDetails, quantity: number): number {
 
 function ServiceDetails({service}: {service: OrderServiceDetails}) {
   const platformKey = platformKeyOf(service);
-  const perks = [service.refill ? 'Refillable' : '', service.cancel ? 'Cancellable' : '']
-    .filter(Boolean)
-    .join(' · ');
+  // Service descriptions often pack metadata as emoji-joined segments
+  // ("Name [tag] ⌛ Start: INSTANT ⚡ Speed: Slow"). Split on emoji dividers
+  // so the blurb reads as text and each attribute reads as a token chip.
+  const metaParts = (service.description ?? '')
+    .split(/[\u{231B}\u{26A1}\u{23F1}\u{1F680}\u{1F6E1}\u{2705}\u{274C}\u{2B50}\u{1F4A7}]/u)
+    .map((part) => part.replace(/^[\s|•·-]+/, '').trim())
+    .filter(Boolean);
+  const [blurb, ...attrs] = metaParts;
+  const hasStructuredMeta = attrs.length > 0;
 
   return (
     <VStack gap={3}>
@@ -72,7 +79,20 @@ function ServiceDetails({service}: {service: OrderServiceDetails}) {
           <Heading level={4}>{service.name}</Heading>
         </VStack>
       </HStack>
-      {service.description ? (
+      {hasStructuredMeta ? (
+        <VStack gap={2}>
+          {blurb ? (
+            <Text size="sm" color="secondary">
+              {blurb}
+            </Text>
+          ) : null}
+          <HStack gap={1.5} wrap="wrap">
+            {attrs.slice(0, 6).map((attr) => (
+              <Token key={attr} label={attr} color="gray" size="sm" />
+            ))}
+          </HStack>
+        </VStack>
+      ) : service.description ? (
         <Text size="sm" color="secondary">
           {service.description}
         </Text>
@@ -82,7 +102,7 @@ function ServiceDetails({service}: {service: OrderServiceDetails}) {
           <Text size="sm" color="secondary">
             Rate
           </Text>
-          <Text size="sm" weight="bold">
+          <Text size="sm" weight="bold" hasTabularNumbers>
             {formatAmount(service.price, 'INR')} / 1K
           </Text>
         </HStack>
@@ -90,16 +110,19 @@ function ServiceDetails({service}: {service: OrderServiceDetails}) {
           <Text size="sm" color="secondary">
             Limits
           </Text>
-          <Text size="sm">
+          <Text size="sm" hasTabularNumbers>
             {service.minOrder.toLocaleString()} – {service.maxOrder.toLocaleString()}
           </Text>
         </HStack>
-        {perks ? (
-          <HStack justify="between" width="100%">
+        {service.refill || service.cancel ? (
+          <HStack justify="between" vAlign="center" width="100%">
             <Text size="sm" color="secondary">
               Guarantees
             </Text>
-            <Text size="sm">{perks}</Text>
+            <HStack gap={1.5} wrap="wrap" justify="end">
+              {service.refill ? <Token label="Refillable" color="green" size="sm" /> : null}
+              {service.cancel ? <Token label="Cancellable" color="blue" size="sm" /> : null}
+            </HStack>
           </HStack>
         ) : null}
       </VStack>
@@ -215,8 +238,8 @@ export function OrderForm({
 
 
   return (
-    <Grid columns={{minWidth: 320, max: 2}} gap={4}>
-      <Card padding={4} elevation="low">
+    <Grid columns={{minWidth: 320, max: 2}} gap={4} className="items-stretch">
+      <Card padding={4} elevation="low" className="h-full">
         <VStack gap={4}>
           <Heading level={3}>Service</Heading>
           <Typeahead
@@ -259,7 +282,7 @@ export function OrderForm({
         </VStack>
       </Card>
 
-      <Card padding={4} elevation="low">
+      <Card padding={4} elevation="low" className="h-full">
         <VStack gap={4}>
           <Heading level={3}>Order details</Heading>
 
@@ -314,10 +337,10 @@ export function OrderForm({
 
               <VStack gap={2} className="rounded-lg border border-border bg-surface p-4">
                 <HStack justify="between" width="100%">
-                  <Text size="sm" color="secondary">
+                  <Text size="sm" color="secondary" hasTabularNumbers>
                     {formatAmount(service.price, 'INR')} / 1K × {quantity.toLocaleString()}
                   </Text>
-                  <Text size="sm" color="secondary">
+                  <Text size="sm" color="secondary" hasTabularNumbers>
                     Balance {formatAmount(balance, 'INR')}
                   </Text>
                 </HStack>
@@ -328,7 +351,7 @@ export function OrderForm({
                   className="border-t border-border pt-2"
                 >
                   <Text weight="bold">Total charge</Text>
-                  <Heading level={3}>{formatAmount(charge ?? 0, 'INR')}</Heading>
+                  <Heading level={2}>{formatAmount(charge ?? 0, 'INR')}</Heading>
                 </HStack>
               </VStack>
 
@@ -353,7 +376,7 @@ export function OrderForm({
                 isDisabled={isInsufficient}
                 onClick={handleSubmit}
               />
-              <Text size="sm" color="secondary">
+              <Text size="sm" weight="medium">
                 The total is debited from your balance right away — orders that fail upstream are
                 refunded automatically.
               </Text>
