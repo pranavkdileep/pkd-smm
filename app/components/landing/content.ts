@@ -296,21 +296,30 @@ export const FOOTER_COLUMNS = [
   {
     heading: "Company",
     links: [
-      { label: "How it works", href: "#how-it-works" },
-      { label: "Pricing", href: "#pricing" },
-      { label: "FAQ", href: "#faq" },
-      { label: "About us", href: "#about" },
-      { label: "Contact", href: "#faq" },
+      { label: "All services", href: "/services" },
+      { label: "How it works", href: "/#how-it-works" },
+      { label: "Pricing", href: "/#pricing" },
+      { label: "FAQ", href: "/#faq" },
+      { label: "About us", href: "/#about" },
+      { label: "Contact", href: "/#faq" },
     ],
   },
   {
-    heading: "Resources",
+    heading: "Legal & Compliance",
     links: [
-      { label: "API docs", href: "#" },
-      { label: "Blog", href: "#" },
-      { label: "Refund policy", href: "#" },
-      { label: "Terms of service", href: "#" },
-      { label: "Privacy policy", href: "#" },
+      { label: "Terms of service", href: "/terms" },
+      { label: "Privacy policy", href: "/privacy" },
+      { label: "Cookie policy", href: "/cookies" },
+      { label: "Refund policy", href: "/refund" },
+      { label: "Delivery policy", href: "/delivery" },
+    ],
+  },
+  {
+    heading: "Policies & Standards",
+    links: [
+      { label: "Accessibility statement", href: "/accessibility" },
+      { label: "Affiliate disclosure", href: "/affiliate-disclosure" },
+      { label: "DMCA copyright", href: "/dmca" },
     ],
   },
 ];

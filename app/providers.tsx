@@ -4,11 +4,15 @@ import Link from 'next/link';
 import {Theme} from '@astryxdesign/core/theme';
 import {LinkProvider} from '@astryxdesign/core/Link';
 import {neutralTheme} from '@astryxdesign/theme-neutral/built';
+import {CookieConsent} from './components/legal/CookieConsent';
 
 export function Providers({children}: {children: React.ReactNode}) {
   return (
     <Theme theme={neutralTheme} mode="light">
-      <LinkProvider component={Link}>{children}</LinkProvider>
+      <LinkProvider component={Link}>
+        {children}
+        <CookieConsent />
+      </LinkProvider>
     </Theme>
   );
 }

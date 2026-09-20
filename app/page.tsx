@@ -13,13 +13,34 @@ import {Reviews} from './components/landing/Reviews';
 import {AboutSection} from './components/landing/AboutSection';
 import {Faq} from './components/landing/Faq';
 import {SiteFooter} from './components/landing/SiteFooter';
+import {FAQS, SERVICES} from './components/landing/content';
+import {
+  OrganizationJsonLd,
+  WebSiteJsonLd,
+  FaqPageJsonLd,
+  ServiceOfferCatalogJsonLd,
+} from './components/seo/JsonLd';
 import {getLandingPricing} from '@/actions/users/services';
 
 export default async function Home() {
   const initialPricing = await getLandingPricing();
 
+  const homepageOffers = SERVICES.map((s) => ({
+    name: s.name,
+    description: s.blurb,
+    price: s.fromPrice.replace(/[^0-9.]/g, '') || '0.10',
+    priceCurrency: 'INR',
+  }));
+
   return (
     <VStack gap={0}>
+      <OrganizationJsonLd />
+      <WebSiteJsonLd />
+      <FaqPageJsonLd faqs={FAQS} />
+      <ServiceOfferCatalogJsonLd
+        catalogName="Featured Social Media Growth Services"
+        offers={homepageOffers}
+      />
       <SiteHeader />
       <main>
         <Hero />

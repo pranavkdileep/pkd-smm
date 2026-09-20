@@ -1,8 +1,11 @@
+'use client';
+
 import { Grid } from '@astryxdesign/core/Grid';
 import { VStack } from '@astryxdesign/core/VStack';
 import { HStack } from '@astryxdesign/core/HStack';
 import { Text } from '@astryxdesign/core/Text';
 import { Divider } from '@astryxdesign/core/Divider';
+import { Button } from '@astryxdesign/core/Button';
 import Link from 'next/link';
 
 import { FOOTER_COLUMNS, PLATFORMS, SITE } from './content';
@@ -10,10 +13,16 @@ import { BrandIcon } from './BrandIcon';
 import { siteConfig } from '@/lib/config';
 
 export function SiteFooter() {
+  const openCookieSettings = () => {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent(siteConfig.legal.eventCookieSettings));
+    }
+  };
+
   return (
     <footer className="border-t border-border bg-surface">
       <VStack maxWidth={1280} gap={6} className="mx-auto w-full px-6 py-12">
-        <Grid columns={{ minWidth: 220, max: 4 }} gap={6}>
+        <Grid columns={{ minWidth: 200, max: 4 }} gap={6}>
           <VStack gap={3} align="start">
             <HStack gap={2} vAlign="center">
               <HStack
@@ -31,6 +40,12 @@ export function SiteFooter() {
               {SITE.tagline}. Six platforms, one balance, live order tracking and support around the
               clock.
             </Text>
+            <Button
+              label="Cookie Settings"
+              variant="ghost"
+              size="sm"
+              onClick={openCookieSettings}
+            />
           </VStack>
 
           {FOOTER_COLUMNS.map((column) => (
@@ -57,7 +72,7 @@ export function SiteFooter() {
             {PLATFORMS.map((platform) => (
               <Link
                 key={platform.id}
-                href="#services"
+                href={`/services/${platform.id}`}
                 className="text-sm text-secondary hover:text-blue-vivid"
               >
                 {platform.name} services
