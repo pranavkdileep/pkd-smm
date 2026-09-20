@@ -4,31 +4,31 @@
  */
 
 export const siteConfig = {
-  name: 'PKD-SMM Panel',
-  shortName: 'PKD-SMM',
-  brandInitials: 'PKD',
+  name: 'Social Geeks SMM Panel',
+  shortName: 'Social Geeks SMM',
+  brandInitials: 'SG',
   tagline: 'Affordable social media boost platform for individuals and marketing teams',
   description:
     'Affordable SMM panel for individuals and marketing teams. Boost Instagram, Telegram, TikTok, YouTube, X and Facebook from one dashboard with live tracking.',
-  title: 'PKD-SMM Panel  Affordable Social Media Boost Platform',
-  domain: 'pkd-smm.panel',
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://pkd-smm.com',
-  adminName: 'PKD-SMM Admin',
+  title: 'Social Geeks SMM | Affordable Social Media Boost Platform',
+  domain: 'socialgeeksmm.com',
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://socialgeeksmm.com',
+  adminName: 'Social Geeks SMM Admin',
   nav: {
-    mainAriaLabel: 'PKD-SMM Panel main navigation',
+    mainAriaLabel: 'Social Geeks SMM Panel main navigation',
   },
   email: {
-    defaultFrom: 'PKD-SMM Panel <onboarding@resend.dev>',
-    verificationSubject: 'Verify your PKD-SMM Panel account',
-    support: 'support@pkd-smm.panel',
-    privacy: 'privacy@pkd-smm.panel',
-    dmca: 'dmca@pkd-smm.panel',
-    accessibility: 'accessibility@pkd-smm.panel',
-    affiliates: 'affiliates@pkd-smm.panel',
+    defaultFrom: 'Social Geeks SMM <onboarding@resend.dev>',
+    verificationSubject: 'Verify your Social Geeks SMM account',
+    support: 'support@socialgeeksmm.com',
+    privacy: 'privacy@socialgeeksmm.com',
+    dmca: 'dmca@socialgeeksmm.com',
+    accessibility: 'accessibility@socialgeeksmm.com',
+    affiliates: 'affiliates@socialgeeksmm.com',
   },
   seo: {
-    title: 'PKD-SMM Panel – Affordable Social Media Boost Platform',
-    titleTemplate: '%s | PKD-SMM Panel',
+    title: 'Social Geeks SMM – Affordable Social Media Boost Platform',
+    titleTemplate: '%s | Social Geeks SMM',
     defaultDescription:
       'Affordable SMM panel for creators, agencies, and marketing teams. Boost Instagram followers, Telegram members, TikTok views, YouTube watch hours, and X engagement with instant start and refill guarantee.',
     keywords: [
@@ -49,25 +49,26 @@ export const siteConfig = {
       'social media growth service',
       'instant SMM panel',
       'SMM reseller panel',
-      'PKD SMM',
+      'Social Geeks SMM',
+      'Social Geeks',
     ] as const,
     openGraph: {
       type: 'website' as const,
       locale: 'en_US' as const,
-      siteName: 'PKD-SMM Panel',
+      siteName: 'Social Geeks SMM Panel',
       images: [
         {
           url: '/opengraph-image',
           width: 1200,
           height: 630,
-          alt: 'PKD-SMM Panel – Affordable Social Media Boost Platform',
+          alt: 'Social Geeks SMM – Affordable Social Media Boost Platform',
         },
       ],
     },
     twitter: {
       card: 'summary_large_image' as const,
-      handle: '@pkdsmm',
-      creator: '@pkdsmm',
+      handle: '@socialgeeksmm',
+      creator: '@socialgeeksmm',
     },
     rating: {
       ratingValue: '4.9',
@@ -199,16 +200,16 @@ export const siteConfig = {
     },
   },
   auth: {
-    sessionCookie: 'pkd_session',
+    sessionCookie: 'sg_session',
   },
   database: {
     defaultDbName: 'pkd-smm',
   },
   legal: {
-    companyName: 'PKD-SMM Panel',
-    cookieConsentKey: 'pkd_cookie_consent_v1',
-    eventCookieSettings: 'pkd:open-cookie-settings',
-    affiliateCookieKey: 'pkd_ref_id',
+    companyName: 'Social Geeks SMM Panel',
+    cookieConsentKey: 'sg_cookie_consent_v1',
+    eventCookieSettings: 'sg:open-cookie-settings',
+    affiliateCookieKey: 'sg_ref_id',
     effectiveDate: 'September 20, 2026',
   },
 } as const;

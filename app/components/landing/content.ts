@@ -84,7 +84,7 @@ export interface ServiceCard {
 }
 
 export const SERVICES: ServiceCard[] = [
-  { platform: "instagram", name: "Instagram Followers", blurb: "Real and premium tiers with refill windows up to 60 days.", fromPrice: "from ₹0.49/1K" },
+  { platform: "instagram", name: "Instagram Followers", blurb: "Real and premium tiers with refill windows up to 60 days.", fromPrice: "from ₹49/1K" },
   { platform: "instagram", name: "Instagram Likes", blurb: "Fast likes spread naturally across your posts.", fromPrice: "from ₹0.09/1K" },
   { platform: "instagram", name: "Reels Views", blurb: "Video views that push your reach on explore.", fromPrice: "from ₹0.05/1K" },
   { platform: "telegram", name: "Telegram Members", blurb: "Real, online and premium members for channels & groups.", fromPrice: "from ₹0.15/1K" },

@@ -244,9 +244,9 @@ function checkBrandingConfig() {
     if (!text.includes("import { siteConfig } from '@/lib/config'") && !text.includes('import { siteConfig }')) {
       throw new Error(`${p} must import siteConfig from @/lib/config for centralized branding values`);
     }
-    // Verify no hardcoded email addresses with @pkd-smm.panel
-    if (text.includes('@pkd-smm.panel')) {
-      throw new Error(`${p} contains hardcoded email string '@pkd-smm.panel'. Sourced values must come from siteConfig.email.* or siteConfig.domain`);
+    // Verify no hardcoded email addresses
+    if (text.includes('@pkd-smm.panel') || text.includes('@socialgeeksmm.com')) {
+      throw new Error(`${p} contains hardcoded email string. Sourced values must come from siteConfig.email.* or siteConfig.domain`);
     }
   }
 

@@ -1,6 +1,6 @@
-# ⚡ PKD-SMM
+# ⚡ Social Geeks SMM
 
-> A modern SMM panel  social media services storefront with user dashboards, admin back-office, payments, and background order sync.
+> A modern SMM panel social media services storefront with user dashboards, admin back-office, payments, and background order sync.
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
 ![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
@@ -74,7 +74,7 @@ An interactive terminal UI to **add / edit / remove / list** admin users. Passwo
 | `MONGODB_DB` | Database name (default: `pkd-smm`) |
 | `JWT_SECRET` | Secret for signing session tokens |
 | `RESEND_API_KEY` | Resend API key for transactional email |
-| `EMAIL_FROM` | Sender identity, e.g. `PKD-SMM Panel <noreply@example.com>` |
+| `EMAIL_FROM` | Sender identity, e.g. `Social Geeks SMM Panel <noreply@socialgeeksmm.com>` |
 | `DODO_PAYMENTS_ENVIRONMENT` | `test_mode` or `live_mode` |
 | `DODO_PAYMENTS_TEST_API_KEY` / `DODO_PAYMENTS_TEST_PRODUCT_ID` | Used in test mode |
 | `DODO_PAYMENTS_LIVE_API_KEY` / `DODO_PAYMENTS_PRODUCT_ID` | Used in live mode |

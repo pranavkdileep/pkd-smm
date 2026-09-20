@@ -229,9 +229,9 @@ export default function ServicesPage() {
         {/* Informational SEO Content Section (Rich Content >300 words) */}
         <VStack gap={8} maxWidth={1280} className="mx-auto w-full px-4 py-16 md:px-6">
           <VStack gap={3} align="start" maxWidth={900}>
-            <Heading level={2}>Why Choose PKD-SMM for Social Media Growth?</Heading>
+            <Heading level={2}>Why Choose {siteConfig.shortName} for Social Media Growth?</Heading>
             <Text as="p" color="secondary" size="lg">
-              PKD-SMM Panel delivers reliable social media marketing solutions designed for
+              {siteConfig.name} delivers reliable social media marketing solutions designed for
               creators, digital agencies, and resellers. Our infrastructure combines speed, safety,
               and transparency.
             </Text>
