@@ -1,11 +1,11 @@
 'use server';
 
-import {revalidatePath} from 'next/cache';
-import {randomUUID} from 'node:crypto';
+import { revalidatePath } from 'next/cache';
+import { randomUUID } from 'node:crypto';
 
-import {collections} from '@/lib/db';
-import type {UpstreamProvider} from '@/lib/database';
-import {getSession} from '@/actions/auth/session';
+import { collections } from '@/lib/db';
+import type { UpstreamProvider } from '@/lib/database';
+import { getSession } from '@/actions/auth/session';
 
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 100;
@@ -39,7 +39,7 @@ export interface UpstreamInput {
   apiKey: string;
 }
 
-export type MutationResult = {success: true} | {success: false; error: string};
+export type MutationResult = { success: true } | { success: false; error: string };
 
 async function isAdmin(): Promise<boolean> {
   const session = await getSession();
@@ -56,7 +56,7 @@ function buildFilter(search: string): Record<string, unknown> {
     return {};
   }
   const pattern = new RegExp(escapeRegex(trimmed), 'i');
-  return {$or: [{name: pattern}, {apiUrl: pattern}]};
+  return { $or: [{ name: pattern }, { apiUrl: pattern }] };
 }
 
 function clampPage(value: number | undefined, totalPages: number): number {
@@ -99,14 +99,14 @@ function validateUpstreamInput(input: UpstreamInput): string | null {
   return null;
 }
 
-/** Lightweight lookup for the service dialog typeahead — returns only id + name. */
+/** Lightweight lookup for the service dialog typeahead  returns only id + name. */
 export async function searchUpstreams(query: string): Promise<UpstreamOption[]> {
   const trimmed = query.trim();
-  const filter = trimmed ? {name: new RegExp(escapeRegex(trimmed), 'i')} : {};
+  const filter = trimmed ? { name: new RegExp(escapeRegex(trimmed), 'i') } : {};
   const upstreams = await collections.upstreamProviders
-    .find(filter, {sort: {name: 1}, limit: TYPEAHEAD_LIMIT})
+    .find(filter, { sort: { name: 1 }, limit: TYPEAHEAD_LIMIT })
     .toArray();
-  return upstreams.map((upstream) => ({id: upstream.id, label: upstream.name}));
+  return upstreams.map((upstream) => ({ id: upstream.id, label: upstream.name }));
 }
 
 export async function listUpstreams(input: {
@@ -123,7 +123,7 @@ export async function listUpstreams(input: {
 
   const upstreams = await collections.upstreamProviders
     .find(filter, {
-      sort: {name: 1},
+      sort: { name: 1 },
       skip: (page - 1) * pageSize,
       limit: pageSize,
     })
@@ -140,11 +140,11 @@ export async function listUpstreams(input: {
 
 export async function createUpstream(input: UpstreamInput): Promise<MutationResult> {
   if (!(await isAdmin())) {
-    return {success: false, error: 'Admin session required.'};
+    return { success: false, error: 'Admin session required.' };
   }
   const validationError = validateUpstreamInput(input);
   if (validationError) {
-    return {success: false, error: validationError};
+    return { success: false, error: validationError };
   }
 
   const upstream: UpstreamProvider = {
@@ -158,45 +158,45 @@ export async function createUpstream(input: UpstreamInput): Promise<MutationResu
 
   revalidatePath('/admin/upstreams');
   revalidatePath('/admin');
-  return {success: true};
+  return { success: true };
 }
 
 export async function updateUpstream(upstreamId: string, input: UpstreamInput): Promise<MutationResult> {
   if (!(await isAdmin())) {
-    return {success: false, error: 'Admin session required.'};
+    return { success: false, error: 'Admin session required.' };
   }
   if (!upstreamId) {
-    return {success: false, error: 'Provider id is required.'};
+    return { success: false, error: 'Provider id is required.' };
   }
   const validationError = validateUpstreamInput(input);
   if (validationError) {
-    return {success: false, error: validationError};
+    return { success: false, error: validationError };
   }
 
   const result = await collections.upstreamProviders.updateOne(
-    {id: upstreamId},
-    {$set: {name: input.name.trim(), apiUrl: input.apiUrl.trim(), apiKey: input.apiKey.trim()}},
+    { id: upstreamId },
+    { $set: { name: input.name.trim(), apiUrl: input.apiUrl.trim(), apiKey: input.apiKey.trim() } },
   );
   if (result.matchedCount === 0) {
-    return {success: false, error: 'Provider not found.'};
+    return { success: false, error: 'Provider not found.' };
   }
 
   revalidatePath('/admin/upstreams');
   revalidatePath('/admin');
-  return {success: true};
+  return { success: true };
 }
 
 export async function deleteUpstream(upstreamId: string): Promise<MutationResult> {
   if (!(await isAdmin())) {
-    return {success: false, error: 'Admin session required.'};
+    return { success: false, error: 'Admin session required.' };
   }
 
-  const result = await collections.upstreamProviders.deleteOne({id: upstreamId});
+  const result = await collections.upstreamProviders.deleteOne({ id: upstreamId });
   if (result.deletedCount === 0) {
-    return {success: false, error: 'Provider not found.'};
+    return { success: false, error: 'Provider not found.' };
   }
 
   revalidatePath('/admin/upstreams');
   revalidatePath('/admin');
-  return {success: true};
+  return { success: true };
 }

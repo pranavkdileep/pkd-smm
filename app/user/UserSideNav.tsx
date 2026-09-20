@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import {usePathname} from 'next/navigation';
-import {SideNav, SideNavHeading, SideNavSection, SideNavItem} from '@astryxdesign/core/SideNav';
+import { usePathname } from 'next/navigation';
+import { SideNav, SideNavHeading, SideNavSection, SideNavItem } from '@astryxdesign/core/SideNav';
 import {
   CirclePlus,
   ClipboardList,
@@ -13,9 +13,9 @@ import {
   LifeBuoy,
   Zap,
 } from 'lucide-react';
-import {siteConfig} from '@/lib/config';
+import { siteConfig } from '@/lib/config';
 
-// Responsive contract: handled by AppShell — the side nav collapses into the
+// Responsive contract: handled by AppShell  the side nav collapses into the
 // mobile drawer below the md breakpoint and supports inline collapse above it.
 export function UserSideNav() {
   const pathname = usePathname();

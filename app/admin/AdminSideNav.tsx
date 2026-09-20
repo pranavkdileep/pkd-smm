@@ -1,14 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import {usePathname} from 'next/navigation';
-import {SideNav, SideNavHeading, SideNavSection, SideNavItem} from '@astryxdesign/core/SideNav';
-import {LayoutDashboard, Users, Layers, Server, ShieldCheck, LifeBuoy, ClipboardList, Wallet, Receipt} from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { SideNav, SideNavHeading, SideNavSection, SideNavItem } from '@astryxdesign/core/SideNav';
+import { LayoutDashboard, Users, Layers, Server, ShieldCheck, LifeBuoy, ClipboardList, Wallet, Receipt } from 'lucide-react';
 
-import {LogoutButton} from './LogoutButton';
-import {siteConfig} from '@/lib/config';
+import { LogoutButton } from './LogoutButton';
+import { siteConfig } from '@/lib/config';
 
-// Responsive contract: handled by AppShell — the side nav collapses into the
+// Responsive contract: handled by AppShell  the side nav collapses into the
 // mobile drawer below the md breakpoint and supports inline collapse above it.
 export function AdminSideNav() {
   const pathname = usePathname();

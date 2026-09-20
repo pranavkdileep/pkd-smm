@@ -1,19 +1,19 @@
 'use client';
 
-import {useState} from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import {VStack} from '@astryxdesign/core/VStack';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Heading} from '@astryxdesign/core/Heading';
-import {Text} from '@astryxdesign/core/Text';
-import {Button} from '@astryxdesign/core/Button';
-import {Card} from '@astryxdesign/core/Card';
-import {TextInput} from '@astryxdesign/core/TextInput';
-import {Banner} from '@astryxdesign/core/Banner';
-import {PasswordInput} from '@/app/components/forms/PasswordInput';
-import {siteConfig} from '@/lib/config';
+import { VStack } from '@astryxdesign/core/VStack';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Heading } from '@astryxdesign/core/Heading';
+import { Text } from '@astryxdesign/core/Text';
+import { Button } from '@astryxdesign/core/Button';
+import { Card } from '@astryxdesign/core/Card';
+import { TextInput } from '@astryxdesign/core/TextInput';
+import { Banner } from '@astryxdesign/core/Banner';
+import { PasswordInput } from '@/app/components/forms/PasswordInput';
+import { siteConfig } from '@/lib/config';
 
-import {signupUser} from '@/actions/auth/signup';
+import { signupUser } from '@/actions/auth/signup';
 
 export function SignupForm() {
   const [username, setUsername] = useState('');
@@ -28,7 +28,7 @@ export function SignupForm() {
     setError(null);
     setIsPending(true);
     try {
-      const result = await signupUser({username, email, password});
+      const result = await signupUser({ username, email, password });
       if (!result.success) {
         setError(result.error);
         return;
@@ -49,7 +49,7 @@ export function SignupForm() {
           <Banner
             status="success"
             title={`Welcome to ${siteConfig.name}`}
-            description={`Your account ${username} is ready and you are signed in. We sent a verification email to ${email} — please confirm your address.`}
+            description={`Your account ${username} is ready and you are signed in. We sent a verification email to ${email}  please confirm your address.`}
           />
         </VStack>
       </Card>

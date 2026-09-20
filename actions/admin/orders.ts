@@ -1,17 +1,17 @@
 'use server';
 
-import {revalidatePath} from 'next/cache';
+import { revalidatePath } from 'next/cache';
 
-import {collections} from '@/lib/db';
+import { collections } from '@/lib/db';
 import {
   ORDER_STATUSES,
   type Order,
   type OrderStatus,
   type Service,
 } from '@/lib/database';
-import {getSession} from '@/actions/auth/session';
-import {refundOrder} from '@/lib/upstream-order-api-call';
-import {updateOrderStatus} from '@/lib/update-order-status';
+import { getSession } from '@/actions/auth/session';
+import { refundOrder } from '@/lib/upstream-order-api-call';
+import { updateOrderStatus } from '@/lib/update-order-status';
 
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 100;
@@ -38,7 +38,7 @@ export interface ListAdminOrdersResult {
   totalPages: number;
 }
 
-export type MutationResult = {success: true} | {success: false; error: string};
+export type MutationResult = { success: true } | { success: false; error: string };
 
 async function isAdmin(): Promise<boolean> {
   const session = await getSession();
@@ -78,9 +78,9 @@ async function buildFilter(input: {
   if (search) {
     const pattern = new RegExp(escapeRegex(search), 'i');
     const matchingUsers = await collections.users
-      .find({username: pattern}, {projection: {id: 1}})
+      .find({ username: pattern }, { projection: { id: 1 } })
       .toArray();
-    filter.$or = [{id: pattern}, {userId: {$in: matchingUsers.map((user) => user.id)}}];
+    filter.$or = [{ id: pattern }, { userId: { $in: matchingUsers.map((user) => user.id) } }];
   }
 
   return filter;
@@ -93,10 +93,10 @@ async function toRows(orders: Order[]): Promise<AdminOrderRow[]> {
 
   const [users, services] = await Promise.all([
     userIds.length
-      ? collections.users.find({id: {$in: userIds}}, {projection: {id: 1, username: 1}}).toArray()
+      ? collections.users.find({ id: { $in: userIds } }, { projection: { id: 1, username: 1 } }).toArray()
       : Promise.resolve([]),
     serviceIds.length
-      ? collections.services.find({id: {$in: serviceIds}}).toArray()
+      ? collections.services.find({ id: { $in: serviceIds } }).toArray()
       : Promise.resolve([] as Service[]),
   ]);
   const usernameById = new Map(users.map((user) => [user.id, user.username]));
@@ -124,7 +124,7 @@ export async function listAdminOrders(input: {
   status?: string;
 }): Promise<ListAdminOrdersResult> {
   if (!(await isAdmin())) {
-    return {orders: [], total: 0, page: 1, pageSize: DEFAULT_PAGE_SIZE, totalPages: 1};
+    return { orders: [], total: 0, page: 1, pageSize: DEFAULT_PAGE_SIZE, totalPages: 1 };
   }
 
   const filter = await buildFilter(input);
@@ -136,17 +136,17 @@ export async function listAdminOrders(input: {
 
   const orders = await collections.orders
     .find(filter, {
-      sort: {createdAt: -1, id: -1},
+      sort: { createdAt: -1, id: -1 },
       skip: (page - 1) * pageSize,
       limit: pageSize,
     })
     .toArray();
 
-  return {orders: await toRows(orders), total, page, pageSize, totalPages};
+  return { orders: await toRows(orders), total, page, pageSize, totalPages };
 }
 
 /**
- * Manual status override. Never touches the balance — 'refunded' is excluded
+ * Manual status override. Never touches the balance  'refunded' is excluded
  * because that transition must credit the user, which only cancelAndRefundOrder
  * (via refundOrder) does.
  */
@@ -155,54 +155,54 @@ export async function setAdminOrderStatus(
   status: OrderStatus,
 ): Promise<MutationResult> {
   if (!(await isAdmin())) {
-    return {success: false, error: 'Admin session required.'};
+    return { success: false, error: 'Admin session required.' };
   }
   if (!ORDER_STATUSES.includes(status) || status === 'refunded') {
-    return {success: false, error: 'Invalid status. Use Cancel + refund to refund an order.'};
+    return { success: false, error: 'Invalid status. Use Cancel + refund to refund an order.' };
   }
 
   const result = await collections.orders.updateOne(
-    {id: orderId},
-    {$set: {status, updatedAt: new Date().toISOString()}},
+    { id: orderId },
+    { $set: { status, updatedAt: new Date().toISOString() } },
   );
   if (result.matchedCount === 0) {
-    return {success: false, error: 'Order not found.'};
+    return { success: false, error: 'Order not found.' };
   }
 
   revalidatePath('/admin/orders');
-  return {success: true};
+  return { success: true };
 }
 
 /**
  * Cancels a live order and refunds its full price to the user's balance.
  * Best-effort upstream cancel first (so the provider stops billing/delivering),
- * then refundOrder — which guards against double credit.
+ * then refundOrder  which guards against double credit.
  */
 export async function cancelAndRefundOrder(orderId: string): Promise<MutationResult> {
   if (!(await isAdmin())) {
-    return {success: false, error: 'Admin session required.'};
+    return { success: false, error: 'Admin session required.' };
   }
 
-  const order = await collections.orders.findOne({id: orderId});
+  const order = await collections.orders.findOne({ id: orderId });
   if (!order) {
-    return {success: false, error: 'Order not found.'};
+    return { success: false, error: 'Order not found.' };
   }
   if (order.status !== 'pending' && order.status !== 'processing') {
-    return {success: false, error: 'Only pending or processing orders can be cancelled.'};
+    return { success: false, error: 'Only pending or processing orders can be cancelled.' };
   }
 
-  // ponytail: upstream cancel failure is ignored — the local refund is the
+  // ponytail: upstream cancel failure is ignored  the local refund is the
   // guarantee; a stuck upstream order gets caught by the next status sync.
   if (order.upstreamOrderId) {
-    const service = await collections.services.findOne({id: order.serviceId});
+    const service = await collections.services.findOne({ id: order.serviceId });
     const provider = service
-      ? await collections.upstreamProviders.findOne({id: service.upstreamId})
+      ? await collections.upstreamProviders.findOne({ id: service.upstreamId })
       : null;
     if (provider?.apiUrl && provider?.apiKey) {
       try {
         await fetch(provider.apiUrl, {
           method: 'POST',
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: new URLSearchParams({
             key: provider.apiKey,
             action: 'cancel',
@@ -217,29 +217,29 @@ export async function cancelAndRefundOrder(orderId: string): Promise<MutationRes
 
   const refunded = await refundOrder(order);
   if (!refunded) {
-    return {success: false, error: 'Order was already refunded.'};
+    return { success: false, error: 'Order was already refunded.' };
   }
 
   revalidatePath('/admin/orders');
-  return {success: true};
+  return { success: true };
 }
 
 /** Re-syncs one order against its upstream provider's status API. */
 export async function syncAdminOrderStatus(orderId: string): Promise<MutationResult> {
   if (!(await isAdmin())) {
-    return {success: false, error: 'Admin session required.'};
+    return { success: false, error: 'Admin session required.' };
   }
 
-  const order = await collections.orders.findOne({id: orderId});
+  const order = await collections.orders.findOne({ id: orderId });
   if (!order) {
-    return {success: false, error: 'Order not found.'};
+    return { success: false, error: 'Order not found.' };
   }
   if (!order.upstreamOrderId) {
-    return {success: false, error: 'This order has not been sent upstream yet.'};
+    return { success: false, error: 'This order has not been sent upstream yet.' };
   }
 
   await updateOrderStatus([order]);
 
   revalidatePath('/admin/orders');
-  return {success: true};
+  return { success: true };
 }

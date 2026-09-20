@@ -1,18 +1,18 @@
 'use client';
 
-import {useState, useTransition} from 'react';
+import { useState, useTransition } from 'react';
 import Link from 'next/link';
-import {useRouter} from 'next/navigation';
-import {Table, proportional, pixel, type TableColumn} from '@astryxdesign/core/Table';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Text} from '@astryxdesign/core/Text';
-import {Button} from '@astryxdesign/core/Button';
-import {StatusDot} from '@astryxdesign/core/StatusDot';
-import {Banner} from '@astryxdesign/core/Banner';
-import {AlertDialog} from '@astryxdesign/core/AlertDialog';
+import { useRouter } from 'next/navigation';
+import { Table, proportional, pixel, type TableColumn } from '@astryxdesign/core/Table';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Text } from '@astryxdesign/core/Text';
+import { Button } from '@astryxdesign/core/Button';
+import { StatusDot } from '@astryxdesign/core/StatusDot';
+import { Banner } from '@astryxdesign/core/Banner';
+import { AlertDialog } from '@astryxdesign/core/AlertDialog';
 
-import {deleteUser, setUserStatus, type AdminUserRow} from '@/actions/admin/users';
-import {AdjustBalanceDialog} from './AdjustBalanceDialog';
+import { deleteUser, setUserStatus, type AdminUserRow } from '@/actions/admin/users';
+import { AdjustBalanceDialog } from './AdjustBalanceDialog';
 
 const LANGUAGE_LABELS: Record<string, string> = {
   en: 'English',
@@ -26,16 +26,16 @@ const LANGUAGE_LABELS: Record<string, string> = {
 
 function formatCreatedAt(value: string | null): string {
   if (!value) {
-    return '—';
+    return '';
   }
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) {
-    return '—';
+    return '';
   }
-  return date.toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric'});
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
-export function UsersTable({users}: {users: AdminUserRow[]}) {
+export function UsersTable({ users }: { users: AdminUserRow[] }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);

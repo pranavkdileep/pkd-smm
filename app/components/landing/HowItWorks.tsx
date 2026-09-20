@@ -1,17 +1,17 @@
-import {VStack} from '@astryxdesign/core/VStack';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Grid} from '@astryxdesign/core/Grid';
-import {Heading} from '@astryxdesign/core/Heading';
-import {Text} from '@astryxdesign/core/Text';
-import {Badge} from '@astryxdesign/core/Badge';
-import {ProgressBar} from '@astryxdesign/core/ProgressBar';
-import type {ReactNode} from 'react';
-import {HOW_IT_WORKS} from './content';
-import {NamedIcon} from './NamedIcon';
-import {SectionIntro} from './SectionIntro';
-import {siteConfig} from '@/lib/config';
+import { VStack } from '@astryxdesign/core/VStack';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Grid } from '@astryxdesign/core/Grid';
+import { Heading } from '@astryxdesign/core/Heading';
+import { Text } from '@astryxdesign/core/Text';
+import { Badge } from '@astryxdesign/core/Badge';
+import { ProgressBar } from '@astryxdesign/core/ProgressBar';
+import type { ReactNode } from 'react';
+import { HOW_IT_WORKS } from './content';
+import { NamedIcon } from './NamedIcon';
+import { SectionIntro } from './SectionIntro';
+import { siteConfig } from '@/lib/config';
 
-function StepCopy({step, title, body}: {step: string; title: string; body: string}) {
+function StepCopy({ step, title, body }: { step: string; title: string; body: string }) {
   return (
     <VStack gap={3} align="start">
       <HStack
@@ -32,7 +32,7 @@ function StepCopy({step, title, body}: {step: string; title: string; body: strin
   );
 }
 
-function FieldRow({iconName, value}: {iconName: 'mail' | 'link' | 'user-plus'; value: string}) {
+function FieldRow({ iconName, value }: { iconName: 'mail' | 'link' | 'user-plus'; value: string }) {
   return (
     <HStack gap={2} vAlign="center" className="rounded-md border border-border bg-card px-3 py-2">
       <NamedIcon name={iconName} size="sm" className="shrink-0 text-secondary" />
@@ -43,7 +43,7 @@ function FieldRow({iconName, value}: {iconName: 'mail' | 'link' | 'user-plus'; v
   );
 }
 
-/** Step 01 — registration form with instant verification. */
+/** Step 01  registration form with instant verification. */
 function MockSignup() {
   return (
     <VStack gap={2}>
@@ -70,12 +70,12 @@ function MockSignup() {
 }
 
 const PAYMENT_OPTIONS = [
-  {name: 'Visa', icon: 'credit-card' as const},
-  {name: 'Stripe', icon: 'landmark' as const},
-  {name: 'Crypto', icon: 'bitcoin' as const},
+  { name: 'Visa', icon: 'credit-card' as const },
+  { name: 'Stripe', icon: 'landmark' as const },
+  { name: 'Crypto', icon: 'bitcoin' as const },
 ];
 
-/** Step 02 — payment selector with instant balance credit. */
+/** Step 02  payment selector with instant balance credit. */
 function MockPayment() {
   return (
     <VStack gap={2}>
@@ -88,9 +88,8 @@ function MockPayment() {
             key={option.name}
             gap={1.5}
             vAlign="center"
-            className={`rounded-md border px-3 py-2 ${
-              index === 0 ? 'border-blue-ring bg-blue-subtle' : 'border-border bg-card'
-            }`}
+            className={`rounded-md border px-3 py-2 ${index === 0 ? 'border-blue-ring bg-blue-subtle' : 'border-border bg-card'
+              }`}
           >
             <NamedIcon
               name={option.icon}
@@ -120,7 +119,7 @@ function MockPayment() {
   );
 }
 
-/** Step 03 — service picker with a live price calculator. */
+/** Step 03  service picker with a live price calculator. */
 function MockOrderForm() {
   return (
     <VStack gap={2}>
@@ -146,7 +145,7 @@ function MockOrderForm() {
   );
 }
 
-/** Step 04 — live order progress tracker. */
+/** Step 04  live order progress tracker. */
 function MockTracking() {
   return (
     <VStack gap={2}>
@@ -181,8 +180,8 @@ const STEP_MOCKS: Record<string, ReactNode> = {
   '04': <MockTracking />,
 };
 
-/** Mock browser chrome built from components — no external screenshots. */
-function MockWindow({step, className}: {step: string; className?: string}) {
+/** Mock browser chrome built from components  no external screenshots. */
+function MockWindow({ step, className }: { step: string; className?: string }) {
   return (
     <VStack className={`overflow-hidden rounded-lg border border-border bg-card shadow-md ${className ?? ''}`}>
       <HStack gap={2} vAlign="center" className="border-b border-border bg-surface px-4 py-3">
@@ -224,7 +223,7 @@ export function HowItWorks() {
           return (
             <Grid
               key={item.step}
-              columns={{minWidth: 380, max: 2}}
+              columns={{ minWidth: 380, max: 2 }}
               gap={8}
               align="center"
               aria-label={`Step ${item.step}: ${item.title}`}

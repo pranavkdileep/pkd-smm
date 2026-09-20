@@ -1,4 +1,4 @@
-import type {SupportTicketCategory, SupportTicketPriority} from '@/lib/database';
+import type { SupportTicketCategory, SupportTicketPriority } from '@/lib/database';
 
 /** Display labels for ticket categories. */
 export const CATEGORY_LABELS: Record<SupportTicketCategory, string> = {
@@ -10,7 +10,7 @@ export const CATEGORY_LABELS: Record<SupportTicketCategory, string> = {
   other: 'Other',
 };
 
-/** Token colors per category — one hue per category keeps the list scannable. */
+/** Token colors per category  one hue per category keeps the list scannable. */
 export const CATEGORY_TOKEN_COLORS: Record<
   SupportTicketCategory,
   'blue' | 'teal' | 'orange' | 'purple' | 'cyan' | 'gray'
@@ -44,10 +44,10 @@ function isValidDate(value: string): boolean {
   return !Number.isNaN(new Date(value).getTime());
 }
 
-/** "Sep 7, 2026" — for list columns and header meta. */
+/** "Sep 7, 2026"  for list columns and header meta. */
 export function formatTicketDate(value: string): string {
   if (!isValidDate(value)) {
-    return '—';
+    return '';
   }
   return new Date(value).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -56,10 +56,10 @@ export function formatTicketDate(value: string): string {
   });
 }
 
-/** "Sep 7, 2026, 2:30 PM" — for conversation timestamps. */
+/** "Sep 7, 2026, 2:30 PM"  for conversation timestamps. */
 export function formatCommentTimestamp(value: string): string {
   if (!isValidDate(value)) {
-    return '—';
+    return '';
   }
   return new Date(value).toLocaleString('en-US', {
     year: 'numeric',

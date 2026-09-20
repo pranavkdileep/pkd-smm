@@ -1,12 +1,12 @@
-import {Grid} from '@astryxdesign/core/Grid';
-import {VStack} from '@astryxdesign/core/VStack';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Card} from '@astryxdesign/core/Card';
-import {Text} from '@astryxdesign/core/Text';
+import { Grid } from '@astryxdesign/core/Grid';
+import { VStack } from '@astryxdesign/core/VStack';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Card } from '@astryxdesign/core/Card';
+import { Text } from '@astryxdesign/core/Text';
 
-import {PAYMENTS} from './content';
-import {NamedIcon, type NamedIconName} from './NamedIcon';
-import {SectionIntro} from './SectionIntro';
+import { PAYMENTS } from './content';
+import { NamedIcon, type NamedIconName } from './NamedIcon';
+import { SectionIntro } from './SectionIntro';
 
 const PAYMENT_ICONS: NamedIconName[] = [
   'credit-card',
@@ -33,11 +33,11 @@ export function PaymentMethods() {
         <SectionIntro
           eyebrow="Add funds"
           title="Payment methods"
-          lead="Top up your balance with cards or crypto and it is credited instantly — orders spend straight from your balance."
+          lead="Top up your balance with cards or crypto and it is credited instantly  orders spend straight from your balance."
           align="center"
         />
 
-        <Grid columns={{minWidth: 190, max: 6}} gap={3}>
+        <Grid columns={{ minWidth: 190, max: 6 }} gap={3}>
           {PAYMENTS.map((payment, index) => (
             <Card key={payment.name} padding={3} elevation="low">
               <VStack gap={2} align="start">

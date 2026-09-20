@@ -64,7 +64,9 @@ export function SiteHeader() {
           }
           endContent={
             <HStack gap={2}>
-              <MobileNavToggle label="Open menu" />
+              <span className="md:hidden">
+                <MobileNavToggle label="Open menu" />
+              </span>
               {isLogin ? null : (
                 <Button label="Sign in" variant="ghost" href="/login" size="sm" className="max-sm:hidden" />
               )}

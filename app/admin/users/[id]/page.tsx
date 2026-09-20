@@ -1,19 +1,19 @@
 import Link from 'next/link';
-import {notFound} from 'next/navigation';
-import {VStack} from '@astryxdesign/core/VStack';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Grid} from '@astryxdesign/core/Grid';
-import {Card} from '@astryxdesign/core/Card';
-import {Heading} from '@astryxdesign/core/Heading';
-import {Text} from '@astryxdesign/core/Text';
-import {StatusDot} from '@astryxdesign/core/StatusDot';
+import { notFound } from 'next/navigation';
+import { VStack } from '@astryxdesign/core/VStack';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Grid } from '@astryxdesign/core/Grid';
+import { Card } from '@astryxdesign/core/Card';
+import { Heading } from '@astryxdesign/core/Heading';
+import { Text } from '@astryxdesign/core/Text';
+import { StatusDot } from '@astryxdesign/core/StatusDot';
 
-import {collections} from '@/lib/db';
-import {formatAmount, formatDateTime} from '@/app/user/add-funds/format';
-import {ticketRef} from '@/app/components/support/ticketMeta';
-import {ORDER_STATUS_DOT, ORDER_STATUS_LABELS} from '@/app/components/orders/orderMeta';
-import {SectionPagination} from './SectionPagination';
-import {siteConfig} from '@/lib/config';
+import { collections } from '@/lib/db';
+import { formatAmount, formatDateTime } from '@/app/user/add-funds/format';
+import { ticketRef } from '@/app/components/support/ticketMeta';
+import { ORDER_STATUS_DOT, ORDER_STATUS_LABELS } from '@/app/components/orders/orderMeta';
+import { SectionPagination } from './SectionPagination';
+import { siteConfig } from '@/lib/config';
 
 export const metadata = {
   title: `User detail · ${siteConfig.adminName}`,
@@ -27,10 +27,10 @@ function parsePage(value: string | string[] | undefined): number {
   return Number.isFinite(parsed) && parsed >= 1 ? parsed : 1;
 }
 
-function clampPage(page: number, total: number): {page: number; totalPages: number; skip: number} {
+function clampPage(page: number, total: number): { page: number; totalPages: number; skip: number } {
   const totalPages = Math.max(1, Math.ceil(total / SECTION_PAGE_SIZE));
   const clamped = Math.min(page, totalPages);
-  return {page: clamped, totalPages, skip: (clamped - 1) * SECTION_PAGE_SIZE};
+  return { page: clamped, totalPages, skip: (clamped - 1) * SECTION_PAGE_SIZE };
 }
 
 function SectionCard({
@@ -65,7 +65,7 @@ function SectionCard({
   );
 }
 
-function Row({left, right}: {left: React.ReactNode; right: React.ReactNode}) {
+function Row({ left, right }: { left: React.ReactNode; right: React.ReactNode }) {
   return (
     <HStack justify="between" vAlign="center" width="100%" gap={2}>
       {left}
@@ -74,25 +74,25 @@ function Row({left, right}: {left: React.ReactNode; right: React.ReactNode}) {
   );
 }
 
-type SearchParams = Promise<{[key: string]: string | string[] | undefined}>;
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
 export default async function AdminUserDetailPage({
   params,
   searchParams,
 }: {
-  params: Promise<{id: string}>;
+  params: Promise<{ id: string }>;
   searchParams: SearchParams;
 }) {
-  const {id} = await params;
+  const { id } = await params;
   const query = await searchParams;
-  const user = await collections.users.findOne({id});
+  const user = await collections.users.findOne({ id });
   if (!user) {
     notFound();
   }
 
-  const scoping = {userId: user.id};
+  const scoping = { userId: user.id };
 
-  // Counts first — each section's page param clamps against its own total.
+  // Counts first  each section's page param clamps against its own total.
   const [orderCount, depositCount, ticketCount, loginCount] = await Promise.all([
     collections.orders.countDocuments(scoping),
     collections.deposits.countDocuments(scoping),
@@ -106,7 +106,7 @@ export default async function AdminUserDetailPage({
   const loginsPage = clampPage(parsePage(query.lpage), loginCount);
 
   const pageWindow = (skip: number) => ({
-    sort: {createdAt: -1 as const},
+    sort: { createdAt: -1 as const },
     skip,
     limit: SECTION_PAGE_SIZE,
   });
@@ -116,14 +116,14 @@ export default async function AdminUserDetailPage({
     collections.deposits.find(scoping, pageWindow(depositsPage.skip)).toArray(),
     // Tickets sort by activity, matching the global support list.
     collections.supportTickets
-      .find(scoping, {...pageWindow(ticketsPage.skip), sort: {updatedAt: -1 as const}})
+      .find(scoping, { ...pageWindow(ticketsPage.skip), sort: { updatedAt: -1 as const } })
       .toArray(),
     collections.loginEvents.find(scoping, pageWindow(loginsPage.skip)).toArray(),
   ]);
 
   const serviceIds = [...new Set(orders.map((order) => order.serviceId))];
   const services = serviceIds.length
-    ? await collections.services.find({id: {$in: serviceIds}}, {projection: {id: 1, name: 1}}).toArray()
+    ? await collections.services.find({ id: { $in: serviceIds } }, { projection: { id: 1, name: 1 } }).toArray()
     : [];
   const serviceNameById = new Map(services.map((service) => [service.id, service.name]));
 
@@ -158,12 +158,12 @@ export default async function AdminUserDetailPage({
           </VStack>
           <VStack gap={1}>
             <Text size="sm" color="secondary">Joined</Text>
-            <Text size="sm">{user.createdAt ? formatDateTime(user.createdAt) : '—'}</Text>
+            <Text size="sm">{user.createdAt ? formatDateTime(user.createdAt) : ''}</Text>
           </VStack>
         </HStack>
       </Card>
 
-      <Grid gap={4} columns={{minWidth: 320}}>
+      <Grid gap={4} columns={{ minWidth: 320 }}>
         <SectionCard
           title="Orders"
           count={orderCount}

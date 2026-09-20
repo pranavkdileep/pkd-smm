@@ -1,17 +1,17 @@
 'use client';
 
-import {useCallback, useEffect, useRef, useState} from 'react';
-import {useRouter} from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-import {Banner} from '@astryxdesign/core/Banner';
-import {Button} from '@astryxdesign/core/Button';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Spinner} from '@astryxdesign/core/Spinner';
-import {Text} from '@astryxdesign/core/Text';
+import { Banner } from '@astryxdesign/core/Banner';
+import { Button } from '@astryxdesign/core/Button';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Spinner } from '@astryxdesign/core/Spinner';
+import { Text } from '@astryxdesign/core/Text';
 
-import {checkDepositStatus} from '@/actions/deposits/status';
+import { checkDepositStatus } from '@/actions/deposits/status';
 
-import {formatAmount} from './format';
+import { formatAmount } from './format';
 
 const POLL_INTERVAL_MS = 5000;
 const MAX_POLL_ATTEMPTS = 24; // ~2 minutes, then the user checks manually.
@@ -25,10 +25,10 @@ interface PaymentResultBannerProps {
 }
 
 type Outcome =
-  | {kind: 'success'; amount?: number; alreadyCredited: boolean}
-  | {kind: 'failed'; message: string}
-  | {kind: 'pending'}
-  | {kind: 'cancelled'};
+  | { kind: 'success'; amount?: number; alreadyCredited: boolean }
+  | { kind: 'failed'; message: string }
+  | { kind: 'pending' }
+  | { kind: 'cancelled' };
 
 const DEFAULT_FAILURE_MESSAGE = 'The payment was unsuccessful. No charge was made.';
 
@@ -42,11 +42,11 @@ function toOutcome(props: PaymentResultBannerProps): Outcome | null {
         alreadyCredited: props.alreadyCredited || props.payment === 'already_credited',
       };
     case 'failed':
-      return {kind: 'failed', message: props.error || DEFAULT_FAILURE_MESSAGE};
+      return { kind: 'failed', message: props.error || DEFAULT_FAILURE_MESSAGE };
     case 'pending':
-      return {kind: 'pending'};
+      return { kind: 'pending' };
     case 'cancelled':
-      return {kind: 'cancelled'};
+      return { kind: 'cancelled' };
     default:
       return null;
   }
@@ -80,10 +80,10 @@ export function PaymentResultBanner(props: PaymentResultBannerProps) {
       });
       router.refresh();
     } else if (result.status === 'failed') {
-      setOutcome({kind: 'failed', message: result.error || DEFAULT_FAILURE_MESSAGE});
+      setOutcome({ kind: 'failed', message: result.error || DEFAULT_FAILURE_MESSAGE });
       router.refresh();
     } else if (result.status === 'cancelled') {
-      setOutcome({kind: 'cancelled'});
+      setOutcome({ kind: 'cancelled' });
       router.refresh();
     }
     // Still pending (or transient): keep polling.
@@ -128,7 +128,7 @@ export function PaymentResultBanner(props: PaymentResultBannerProps) {
         }
         description={
           outcome.alreadyCredited
-            ? 'This deposit was already credited earlier — you were not charged twice.'
+            ? 'This deposit was already credited earlier  you were not charged twice.'
             : 'Your balance has been updated.'
         }
       />
@@ -154,7 +154,7 @@ export function PaymentResultBanner(props: PaymentResultBannerProps) {
         status="warning"
         isDismissable
         title="Payment cancelled"
-        description="You cancelled the checkout — no charge was made."
+        description="You cancelled the checkout  no charge was made."
         endContent={
           <Button variant="secondary" size="sm" label="Try again" onClick={retry} />
         }
@@ -166,7 +166,7 @@ export function PaymentResultBanner(props: PaymentResultBannerProps) {
     <Banner
       status="info"
       title="Confirming your payment"
-      description="We check with the payment gateway every few seconds — this updates automatically."
+      description="We check with the payment gateway every few seconds  this updates automatically."
       endContent={
         depositId ? (
           <Button

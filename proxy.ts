@@ -1,8 +1,8 @@
-import {NextResponse, type NextRequest} from 'next/server';
-import {SESSION_COOKIE, verifySessionToken} from '@/actions/auth/jwt';
+import { NextResponse, type NextRequest } from 'next/server';
+import { SESSION_COOKIE, verifySessionToken } from '@/actions/auth/jwt';
 
 export async function proxy(request: NextRequest) {
-  const {pathname} = request.nextUrl;
+  const { pathname } = request.nextUrl;
 
   const isAdminRoute = pathname.startsWith('/admin');
   const isUserRoute = pathname.startsWith('/user');
@@ -22,7 +22,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/login?error=forbidden', request.url));
   }
 
-  // Admins have no business in the customer dashboard — send them home.
+  // Admins have no business in the customer dashboard  send them home.
   if (isUserRoute && session.role === 'admin') {
     return NextResponse.redirect(new URL('/admin', request.url));
   }

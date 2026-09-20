@@ -1,15 +1,15 @@
-import {VStack} from '@astryxdesign/core/VStack';
-import {Heading} from '@astryxdesign/core/Heading';
-import {Text} from '@astryxdesign/core/Text';
-import {Card} from '@astryxdesign/core/Card';
-import {Divider} from '@astryxdesign/core/Divider';
+import { VStack } from '@astryxdesign/core/VStack';
+import { Heading } from '@astryxdesign/core/Heading';
+import { Text } from '@astryxdesign/core/Text';
+import { Card } from '@astryxdesign/core/Card';
+import { Divider } from '@astryxdesign/core/Divider';
 
-import {getUserDepositsPage} from '@/actions/deposits/status';
+import { getUserDepositsPage } from '@/actions/deposits/status';
 
-import {AddFundsForm} from './AddFundsForm';
-import {DepositHistory} from './DepositHistory';
-import {PaymentResultBanner} from './PaymentResultBanner';
-import {siteConfig} from '@/lib/config';
+import { AddFundsForm } from './AddFundsForm';
+import { DepositHistory } from './DepositHistory';
+import { PaymentResultBanner } from './PaymentResultBanner';
+import { siteConfig } from '@/lib/config';
 
 export const metadata = {
   title: `Add Funds · ${siteConfig.name}`,
@@ -23,7 +23,7 @@ function firstParam(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
 }
 
-export default async function AddFundsPage({searchParams}: AddFundsPageProps) {
+export default async function AddFundsPage({ searchParams }: AddFundsPageProps) {
   const params = await searchParams;
   const payment = firstParam(params.payment);
   // First page is rendered on the server; DepositHistory fetches further
@@ -33,12 +33,12 @@ export default async function AddFundsPage({searchParams}: AddFundsPageProps) {
   return (
     // Deposit page per the Astryx settings/forms archetype: one self-contained
     // Add Funds card (the only Card on the page) above a dense, edge-to-edge
-    // history table — no card soup, one containment layer for the form.
+    // history table  no card soup, one containment layer for the form.
     <VStack gap={8} className="w-full pt-6 px-6 pb-10">
       <VStack gap={1}>
         <Heading level={1}>Add Funds</Heading>
         <Text color="secondary">
-          Top up your balance via Dodo Payments — cards, net banking, UPI, and global
+          Top up your balance via Dodo Payments  cards, net banking, UPI, and global
           wallets.
         </Text>
       </VStack>

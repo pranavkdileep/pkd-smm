@@ -1,13 +1,13 @@
 'use client';
 
-import {useEffect, useRef, useState, useTransition} from 'react';
-import {usePathname, useRouter, useSearchParams} from 'next/navigation';
-import {Toolbar} from '@astryxdesign/core/Toolbar';
-import {TextInput} from '@astryxdesign/core/TextInput';
-import {Selector} from '@astryxdesign/core/Selector';
-import {Search} from 'lucide-react';
+import { useEffect, useRef, useState, useTransition } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { Toolbar } from '@astryxdesign/core/Toolbar';
+import { TextInput } from '@astryxdesign/core/TextInput';
+import { Selector } from '@astryxdesign/core/Selector';
+import { Search } from 'lucide-react';
 
-import {TransactionTypes} from '@/lib/database';
+import { TransactionTypes } from '@/lib/database';
 
 const SEARCH_DEBOUNCE_MS = 300;
 
@@ -17,7 +17,7 @@ const TYPE_OPTIONS = TransactionTypes.map((value) => ({
 }));
 
 /**
- * Ledger filters: debounced search (transaction id or username — a username
+ * Ledger filters: debounced search (transaction id or username  a username
  * narrows the ledger to that user) plus a type selector. Filters live in the
  * URL; changing either resets to page 1.
  */
@@ -43,7 +43,7 @@ export function AdminTransactionsToolbar({
     };
   }, []);
 
-  function navigate(updates: {q?: string; type?: string | null}) {
+  function navigate(updates: { q?: string; type?: string | null }) {
     const params = new URLSearchParams(searchParams.toString());
 
     const q = updates.q !== undefined ? updates.q : (searchParams.get('q') ?? '');
@@ -76,7 +76,7 @@ export function AdminTransactionsToolbar({
     }
     timeoutRef.current = setTimeout(() => {
       if (next.trim() !== initialSearch.trim()) {
-        navigate({q: next});
+        navigate({ q: next });
       }
     }, SEARCH_DEBOUNCE_MS);
   }
@@ -104,7 +104,7 @@ export function AdminTransactionsToolbar({
           variant="ghost"
           options={TYPE_OPTIONS}
           value={initialType}
-          onChange={(next) => navigate({type: next})}
+          onChange={(next) => navigate({ type: next })}
           placeholder="All types"
           hasClear
           isDisabled={isPending}

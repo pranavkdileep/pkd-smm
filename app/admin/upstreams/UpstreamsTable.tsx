@@ -1,19 +1,19 @@
 'use client';
 
-import {useState} from 'react';
-import {useRouter} from 'next/navigation';
-import {Table, proportional, pixel, type TableColumn} from '@astryxdesign/core/Table';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Text} from '@astryxdesign/core/Text';
-import {Button} from '@astryxdesign/core/Button';
-import {Banner} from '@astryxdesign/core/Banner';
-import {AlertDialog} from '@astryxdesign/core/AlertDialog';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Table, proportional, pixel, type TableColumn } from '@astryxdesign/core/Table';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Text } from '@astryxdesign/core/Text';
+import { Button } from '@astryxdesign/core/Button';
+import { Banner } from '@astryxdesign/core/Banner';
+import { AlertDialog } from '@astryxdesign/core/AlertDialog';
 
-import {deleteUpstream, type AdminUpstreamRow} from '@/actions/admin/upstreams';
+import { deleteUpstream, type AdminUpstreamRow } from '@/actions/admin/upstreams';
 
 function maskApiKey(key: string): string {
   if (!key) {
-    return '—';
+    return '';
   }
   if (key.length <= 4) {
     return '••••';

@@ -15,7 +15,7 @@
   --font-family-code: var(--font-geist-mono), ui-monospace, monospace;
 }
 
-/* Hero background wash — brand-blue radial glows on the body surface */
+/* Hero background wash  brand-blue radial glows on the body surface */
 .landing-hero-wash {
   background:
     radial-gradient(circle at -6% 18%, color-mix(in srgb, var(--color-text-blue) 14%, transparent), transparent 34%),
@@ -23,7 +23,7 @@
     var(--color-background-body);
 }
 
-/* Final CTA banner — accent gradient with soft corner circles */
+/* Final CTA banner  accent gradient with soft corner circles */
 .landing-cta-banner {
   position: relative;
   overflow: hidden;
@@ -47,7 +47,7 @@
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Platform marquee — pauses on hover, static under reduced motion */
+/* Platform marquee  pauses on hover, static under reduced motion */
 @keyframes landing-marquee-scroll {
   from {
     transform: translate3d(0, 0, 0);

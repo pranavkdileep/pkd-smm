@@ -1,15 +1,15 @@
-import {VStack} from '@astryxdesign/core/VStack';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Grid} from '@astryxdesign/core/Grid';
-import {Heading} from '@astryxdesign/core/Heading';
-import {Text} from '@astryxdesign/core/Text';
-import {Button} from '@astryxdesign/core/Button';
-import {Badge} from '@astryxdesign/core/Badge';
+import { VStack } from '@astryxdesign/core/VStack';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Grid } from '@astryxdesign/core/Grid';
+import { Heading } from '@astryxdesign/core/Heading';
+import { Text } from '@astryxdesign/core/Text';
+import { Button } from '@astryxdesign/core/Button';
+import { Badge } from '@astryxdesign/core/Badge';
 
-import {HERO_BENEFITS, PLATFORMS, SITE} from './content';
-import {BrandIcon} from './BrandIcon';
-import {NamedIcon} from './NamedIcon';
-import {HeroSignInCard} from './HeroSignInCard';
+import { HERO_BENEFITS, PLATFORMS, SITE } from './content';
+import { BrandIcon } from './BrandIcon';
+import { NamedIcon } from './NamedIcon';
+import { HeroSignInCard } from './HeroSignInCard';
 
 export function Hero() {
   return (
@@ -19,10 +19,10 @@ export function Hero() {
       className="landing-hero-wash relative w-full bg-body"
     >
       <Grid
-        columns={{minWidth: 420, max: 2}}
+        columns={{ minWidth: 420, max: 2 }}
         gap={10}
-        maxWidth={1200}
-        className="relative mx-auto items-center px-6 py-14 md:py-20"
+        maxWidth={1440}
+        className="relative mx-auto items-center px-4 py-12 md:py-16 lg:px-8"
       >
         <VStack gap={4} align="start">
           <HStack gap={2} wrap="wrap">
@@ -43,7 +43,7 @@ export function Hero() {
 
           <Text as="p" color="secondary" size="lg">
             {SITE.name} is an affordable social media growth platform for Instagram, Telegram,
-            TikTok, YouTube, X and Facebook — followers, views, likes and engagement delivered to a
+            TikTok, YouTube, X and Facebook  followers, views, likes and engagement delivered to a
             public link and tracked live on your dashboard.
           </Text>
 
@@ -52,16 +52,16 @@ export function Hero() {
             <Button label="Explore services" variant="secondary" size="lg" href="#services" />
           </HStack>
 
-          <Grid columns={{minWidth: 240, max: 2}} gap={3} className="pt-2">
+          <Grid columns={{ minWidth: 200, max: 2 }} gap={2} className="w-full pt-2">
             {HERO_BENEFITS.map((benefit) => (
               <HStack
                 key={benefit.text}
                 gap={2}
                 vAlign="center"
-                className="rounded-lg border border-border bg-card px-3 py-2.5"
+                className="rounded-lg border border-border bg-card/80 p-3 backdrop-blur-sm transition-colors hover:border-primary/30"
               >
                 <NamedIcon name={benefit.icon} size="sm" className="shrink-0 text-blue-vivid" />
-                <Text size="sm" weight="semibold" color="primary">
+                <Text size="sm" weight="medium" color="primary">
                   {benefit.text}
                 </Text>
               </HStack>
@@ -69,7 +69,7 @@ export function Hero() {
           </Grid>
         </VStack>
 
-        <HStack justify="end">
+        <HStack justify="end" className="w-full">
           <HeroSignInCard />
         </HStack>
       </Grid>

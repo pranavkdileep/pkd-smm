@@ -6,14 +6,14 @@ import {
   pixel,
   type TableColumn,
 } from '@astryxdesign/core/Table';
-import {VStack} from '@astryxdesign/core/VStack';
-import {Text} from '@astryxdesign/core/Text';
+import { VStack } from '@astryxdesign/core/VStack';
+import { Text } from '@astryxdesign/core/Text';
 
-import type {OrderRow} from '@/actions/users/orders';
-import {formatAmount} from '@/app/user/add-funds/format';
-import {formatTicketDate, ticketRef} from '@/app/components/support/ticketMeta';
+import type { OrderRow } from '@/actions/users/orders';
+import { formatAmount } from '@/app/user/add-funds/format';
+import { formatTicketDate, ticketRef } from '@/app/components/support/ticketMeta';
 
-/** Dense refund rows — every row is the same status, so no state column. */
+/** Dense refund rows  every row is the same status, so no state column. */
 export function RefundsTable({
   refunds,
   rowIndexStart,

@@ -1,14 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import {Table, proportional, pixel, type TableColumn} from '@astryxdesign/core/Table';
-import {HStack} from '@astryxdesign/core/HStack';
-import {VStack} from '@astryxdesign/core/VStack';
-import {Text} from '@astryxdesign/core/Text';
-import {StatusDot} from '@astryxdesign/core/StatusDot';
-import {Token} from '@astryxdesign/core/Token';
+import { Table, proportional, pixel, type TableColumn } from '@astryxdesign/core/Table';
+import { HStack } from '@astryxdesign/core/HStack';
+import { VStack } from '@astryxdesign/core/VStack';
+import { Text } from '@astryxdesign/core/Text';
+import { StatusDot } from '@astryxdesign/core/StatusDot';
+import { Token } from '@astryxdesign/core/Token';
 
-import type {SupportTicketRow} from '@/actions/support/list';
+import type { SupportTicketRow } from '@/actions/support/list';
 
 import {
   CATEGORY_LABELS,
@@ -20,10 +20,10 @@ import {
 } from '@/app/components/support/ticketMeta';
 
 /**
- * Dense ticket rows — title links into the conversation; category and priority
+ * Dense ticket rows  title links into the conversation; category and priority
  * read as tokens, status as a labeled dot.
  */
-export function TicketsTable({tickets}: {tickets: SupportTicketRow[]}) {
+export function TicketsTable({ tickets }: { tickets: SupportTicketRow[] }) {
   const columns: TableColumn<SupportTicketRow>[] = [
     {
       key: 'title',

@@ -1,22 +1,22 @@
-import {Fragment} from 'react';
+import { Fragment } from 'react';
 import Link from 'next/link';
-import {notFound} from 'next/navigation';
-import {ArrowLeft} from 'lucide-react';
-import {Heading} from '@astryxdesign/core/Heading';
-import {Text} from '@astryxdesign/core/Text';
-import {VStack} from '@astryxdesign/core/VStack';
-import {HStack} from '@astryxdesign/core/HStack';
-import {List, ListItem} from '@astryxdesign/core/List';
-import {StatusDot} from '@astryxdesign/core/StatusDot';
-import {Token} from '@astryxdesign/core/Token';
-import {Banner} from '@astryxdesign/core/Banner';
+import { notFound } from 'next/navigation';
+import { ArrowLeft } from 'lucide-react';
+import { Heading } from '@astryxdesign/core/Heading';
+import { Text } from '@astryxdesign/core/Text';
+import { VStack } from '@astryxdesign/core/VStack';
+import { HStack } from '@astryxdesign/core/HStack';
+import { List, ListItem } from '@astryxdesign/core/List';
+import { StatusDot } from '@astryxdesign/core/StatusDot';
+import { Token } from '@astryxdesign/core/Token';
+import { Banner } from '@astryxdesign/core/Banner';
 
-import {getSupportTicketDetail} from '@/actions/support/list';
-import {SUPPORT_COMMENT_PAGE_SIZES} from '@/lib/database';
+import { getSupportTicketDetail } from '@/actions/support/list';
+import { SUPPORT_COMMENT_PAGE_SIZES } from '@/lib/database';
 
-import {CloseTicketButton} from './CloseTicketButton';
-import {ReplyForm} from './ReplyForm';
-import {UrlPagination} from '@/app/components/support/UrlPagination';
+import { CloseTicketButton } from './CloseTicketButton';
+import { ReplyForm } from './ReplyForm';
+import { UrlPagination } from '@/app/components/support/UrlPagination';
 import {
   CATEGORY_LABELS,
   CATEGORY_TOKEN_COLORS,
@@ -26,14 +26,14 @@ import {
   formatTicketDate,
   ticketRef,
 } from '@/app/components/support/ticketMeta';
-import {siteConfig} from '@/lib/config';
+import { siteConfig } from '@/lib/config';
 
 export const metadata = {
   title: `Support ticket · ${siteConfig.name}`,
 };
 
-type Params = Promise<{id: string}>;
-type SearchParams = Promise<{[key: string]: string | string[] | undefined}>;
+type Params = Promise<{ id: string }>;
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
 function firstParam(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
@@ -47,8 +47,8 @@ function parsePositiveInt(value: string | undefined): number | undefined {
   return Number.isFinite(parsed) && parsed >= 1 ? parsed : undefined;
 }
 
-/** Message body with line breaks preserved — ReactNode keeps ListItem wrapping. */
-function MessageBody({message}: {message: string}) {
+/** Message body with line breaks preserved  ReactNode keeps ListItem wrapping. */
+function MessageBody({ message }: { message: string }) {
   return (
     <Text type="body" color="primary">
       {message.split('\n').map((line, index) => (
@@ -68,7 +68,7 @@ export default async function SupportTicketPage({
   params: Params;
   searchParams: SearchParams;
 }) {
-  const {id} = await params;
+  const { id } = await params;
   const commentParams = await searchParams;
   const page = parsePositiveInt(firstParam(commentParams.page));
   const pageSizeParam = parsePositiveInt(firstParam(commentParams.pageSize));
@@ -77,7 +77,7 @@ export default async function SupportTicketPage({
       ? pageSizeParam
       : undefined;
 
-  const result = await getSupportTicketDetail(id, {page, pageSize});
+  const result = await getSupportTicketDetail(id, { page, pageSize });
   if (!result) {
     notFound();
   }

@@ -1,7 +1,7 @@
 'use client';
 
-import {useState, useTransition} from 'react';
-import {useRouter} from 'next/navigation';
+import { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Table,
   proportional,
@@ -9,30 +9,30 @@ import {
   useTableRowExpansion,
   type TableColumn,
 } from '@astryxdesign/core/Table';
-import {HStack} from '@astryxdesign/core/HStack';
-import {VStack} from '@astryxdesign/core/VStack';
-import {Text} from '@astryxdesign/core/Text';
-import {StatusDot} from '@astryxdesign/core/StatusDot';
-import {Button} from '@astryxdesign/core/Button';
-import {Banner} from '@astryxdesign/core/Banner';
-import {AlertDialog} from '@astryxdesign/core/AlertDialog';
+import { HStack } from '@astryxdesign/core/HStack';
+import { VStack } from '@astryxdesign/core/VStack';
+import { Text } from '@astryxdesign/core/Text';
+import { StatusDot } from '@astryxdesign/core/StatusDot';
+import { Button } from '@astryxdesign/core/Button';
+import { Banner } from '@astryxdesign/core/Banner';
+import { AlertDialog } from '@astryxdesign/core/AlertDialog';
 
-import {approveAdminDeposit, type AdminDepositRow} from '@/actions/admin/deposits';
-import type {DepositStatus} from '@/lib/database';
-import {formatAmount, formatDateTime} from '@/app/user/add-funds/format';
-import {ticketRef} from '@/app/components/support/ticketMeta';
+import { approveAdminDeposit, type AdminDepositRow } from '@/actions/admin/deposits';
+import type { DepositStatus } from '@/lib/database';
+import { formatAmount, formatDateTime } from '@/app/user/add-funds/format';
+import { ticketRef } from '@/app/components/support/ticketMeta';
 
 const STATUS_META: Record<
   DepositStatus,
-  {variant: 'success' | 'warning' | 'error' | 'neutral'; label: string}
+  { variant: 'success' | 'warning' | 'error' | 'neutral'; label: string }
 > = {
-  completed: {variant: 'success', label: 'Completed'},
-  pending: {variant: 'warning', label: 'Pending'},
-  failed: {variant: 'error', label: 'Failed'},
-  cancelled: {variant: 'neutral', label: 'Cancelled'},
+  completed: { variant: 'success', label: 'Completed' },
+  pending: { variant: 'warning', label: 'Pending' },
+  failed: { variant: 'error', label: 'Failed' },
+  cancelled: { variant: 'neutral', label: 'Cancelled' },
 };
 
-function DetailRow({label, value}: {label: string; value: string}) {
+function DetailRow({ label, value }: { label: string; value: string }) {
   return (
     <HStack gap={2} vAlign="start">
       <Text size="sm" color="secondary" className="w-44 shrink-0">
@@ -46,7 +46,7 @@ function DetailRow({label, value}: {label: string; value: string}) {
 }
 
 /** Expanded panel: everything needed to inspect a failed/pending deposit. */
-function DepositDetails({deposit}: {deposit: AdminDepositRow}) {
+function DepositDetails({ deposit }: { deposit: AdminDepositRow }) {
   return (
     <VStack gap={2} width="100%">
       {deposit.errorMessage ? (
@@ -67,7 +67,7 @@ function DepositDetails({deposit}: {deposit: AdminDepositRow}) {
   );
 }
 
-/** Approve button + confirm — only for deposits not yet completed. */
+/** Approve button + confirm  only for deposits not yet completed. */
 function ApproveAction({
   deposit,
   onError,
@@ -227,7 +227,7 @@ export function AdminDepositsTable({
         density="compact"
         hasHover
         textOverflow="truncate"
-        plugins={{expansion}}
+        plugins={{ expansion }}
         rowIndexStart={rowIndexStart}
         rowCount={rowCount}
       />

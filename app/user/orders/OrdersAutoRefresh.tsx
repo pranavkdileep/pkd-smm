@@ -1,13 +1,13 @@
 'use client';
 
-import {useEffect, useRef, useState} from 'react';
-import {useRouter} from 'next/navigation';
-import {ProgressBar} from '@astryxdesign/core/ProgressBar';
-import {Text} from '@astryxdesign/core/Text';
-import {VStack} from '@astryxdesign/core/VStack';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { ProgressBar } from '@astryxdesign/core/ProgressBar';
+import { Text } from '@astryxdesign/core/Text';
+import { VStack } from '@astryxdesign/core/VStack';
 
-import {listOrders, refreshOrderStatuses, type OrderRow} from '@/actions/users/orders';
-import type {OrderStatus} from '@/lib/database';
+import { listOrders, refreshOrderStatuses, type OrderRow } from '@/actions/users/orders';
+import type { OrderStatus } from '@/lib/database';
 
 interface Tracked {
   id: string;
@@ -19,7 +19,7 @@ interface Tracked {
 /**
  * After the orders page loads, syncs this page's live orders (pending /
  * processing) upstream, shows an updating bar, and polls the page until a
- * tracked order changes — then refreshes. Terminal orders are ignored.
+ * tracked order changes  then refreshes. Terminal orders are ignored.
  * Remounts per page via `pageKey`, so page changes re-run it.
  */
 export function OrdersAutoRefresh({
@@ -67,7 +67,7 @@ export function OrdersAutoRefresh({
     async function poll() {
       polls += 1;
       try {
-        const fresh = await listOrders({page, pageSize, status, q: search});
+        const fresh = await listOrders({ page, pageSize, status, q: search });
         const changed = fresh.orders.some((order) => {
           const prev = before.get(order.id);
           return (

@@ -10,7 +10,7 @@ export const siteConfig = {
   tagline: 'Affordable social media boost platform for individuals and marketing teams',
   description:
     'Affordable SMM panel for individuals and marketing teams. Boost Instagram, Telegram, TikTok, YouTube, X and Facebook from one dashboard with live tracking.',
-  title: 'PKD-SMM Panel — Affordable Social Media Boost Platform',
+  title: 'PKD-SMM Panel  Affordable Social Media Boost Platform',
   domain: 'pkd-smm.panel',
   adminName: 'PKD-SMM Admin',
   nav: {

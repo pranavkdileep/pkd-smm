@@ -1,54 +1,54 @@
 'use client';
 
-import {useMemo, useState} from 'react';
+import { useMemo, useState } from 'react';
 import NextLink from 'next/link';
-import {useRouter} from 'next/navigation';
-import {Search} from 'lucide-react';
-import {Banner} from '@astryxdesign/core/Banner';
-import {Button} from '@astryxdesign/core/Button';
-import {Card} from '@astryxdesign/core/Card';
-import {Grid} from '@astryxdesign/core/Grid';
-import {Heading} from '@astryxdesign/core/Heading';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Link} from '@astryxdesign/core/Link';
-import {NumberInput} from '@astryxdesign/core/NumberInput';
-import {Text} from '@astryxdesign/core/Text';
-import {TextInput} from '@astryxdesign/core/TextInput';
-import {Token} from '@astryxdesign/core/Token';
+import { useRouter } from 'next/navigation';
+import { Search } from 'lucide-react';
+import { Banner } from '@astryxdesign/core/Banner';
+import { Button } from '@astryxdesign/core/Button';
+import { Card } from '@astryxdesign/core/Card';
+import { Grid } from '@astryxdesign/core/Grid';
+import { Heading } from '@astryxdesign/core/Heading';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Link } from '@astryxdesign/core/Link';
+import { NumberInput } from '@astryxdesign/core/NumberInput';
+import { Text } from '@astryxdesign/core/Text';
+import { TextInput } from '@astryxdesign/core/TextInput';
+import { Token } from '@astryxdesign/core/Token';
 import {
   Typeahead,
   TypeaheadItem,
   type SearchableItem,
   type SearchSource,
 } from '@astryxdesign/core/Typeahead';
-import {VStack} from '@astryxdesign/core/VStack';
+import { VStack } from '@astryxdesign/core/VStack';
 
-import {createOrder} from '@/actions/users/orders';
-import {searchOrderServices, type OrderServiceDetails} from '@/actions/users/services';
-import {BrandIcon, type PlatformKey} from '@/app/components/landing/BrandIcon';
-import {PLATFORM_LABELS, PLATFORM_TINTS} from '@/app/components/platformMeta';
-import {formatAmount} from '@/app/user/add-funds/format';
+import { createOrder } from '@/actions/users/orders';
+import { searchOrderServices, type OrderServiceDetails } from '@/actions/users/services';
+import { BrandIcon, type PlatformKey } from '@/app/components/landing/BrandIcon';
+import { PLATFORM_LABELS, PLATFORM_TINTS } from '@/app/components/platformMeta';
+import { formatAmount } from '@/app/user/add-funds/format';
 
 type ServiceItem = SearchableItem<OrderServiceDetails>;
 
 type Feedback =
-  | {type: 'error'; title: string}
-  | {type: 'success'; title: string; description: string};
+  | { type: 'error'; title: string }
+  | { type: 'success'; title: string; description: string };
 
 function toItem(service: OrderServiceDetails): ServiceItem {
-  return {id: service.id, label: service.name, auxiliaryData: service};
+  return { id: service.id, label: service.name, auxiliaryData: service };
 }
 
 function platformKeyOf(service: OrderServiceDetails): PlatformKey {
   return service.platform.toLowerCase() as PlatformKey;
 }
 
-/** Mirrors the server-side billing formula in actions/users/orders.ts — price is per 1K. */
+/** Mirrors the server-side billing formula in actions/users/orders.ts  price is per 1K. */
 function chargeFor(service: OrderServiceDetails, quantity: number): number {
   return Math.ceil((service.price * quantity) / 10) / 100;
 }
 
-function ServiceDetails({service}: {service: OrderServiceDetails}) {
+function ServiceDetails({ service }: { service: OrderServiceDetails }) {
   const platformKey = platformKeyOf(service);
   // Service descriptions often pack metadata as emoji-joined segments
   // ("Name [tag] ⌛ Start: INSTANT ⚡ Speed: Slow"). Split on emoji dividers
@@ -171,12 +171,12 @@ export function OrderForm({
   }
 
   function handleInputChange(slug: string, value: string) {
-    setInputs((prev) => ({...prev, [slug]: value}));
+    setInputs((prev) => ({ ...prev, [slug]: value }));
     setInputErrors((prev) => {
       if (!prev[slug]) {
         return prev;
       }
-      const next = {...prev};
+      const next = { ...prev };
       delete next[slug];
       return next;
     });
@@ -195,7 +195,7 @@ export function OrderForm({
     }
     if (Object.keys(errors).length > 0) {
       setInputErrors(errors);
-      setFeedback({type: 'error', title: 'Fill in the highlighted fields to continue.'});
+      setFeedback({ type: 'error', title: 'Fill in the highlighted fields to continue.' });
       return;
     }
     if (quantity < service.minOrder || quantity > service.maxOrder) {
@@ -217,20 +217,20 @@ export function OrderForm({
         ),
       });
       if (!result.success) {
-        setFeedback({type: 'error', title: result.error ?? 'Could not place the order. Try again.'});
+        setFeedback({ type: 'error', title: result.error ?? 'Could not place the order. Try again.' });
         return;
       }
       setFeedback({
         type: 'success',
         title: 'Order placed',
-        description: `Order #${result.orderId?.slice(0, 8)} is pending — fulfillment starts in the background.`,
+        description: `Order #${result.orderId?.slice(0, 8)} is pending  fulfillment starts in the background.`,
       });
       setInputs({});
       setQuantity(service.minOrder);
       // Re-render the layout so the top-bar balance reflects the debit.
       router.refresh();
     } catch {
-      setFeedback({type: 'error', title: 'Something went wrong. Try again.'});
+      setFeedback({ type: 'error', title: 'Something went wrong. Try again.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -238,7 +238,7 @@ export function OrderForm({
 
 
   return (
-    <Grid columns={{minWidth: 320, max: 2}} gap={4} className="items-stretch">
+    <Grid columns={{ minWidth: 320, max: 2 }} gap={4} className="items-stretch">
       <Card padding={4} elevation="low" className="h-full">
         <VStack gap={4}>
           <Heading level={3}>Service</Heading>
@@ -314,7 +314,7 @@ export function OrderForm({
                   isRequired
                   isDisabled={isSubmitting}
                   status={
-                    inputErrors[slug] ? {type: 'error', message: inputErrors[slug]} : undefined
+                    inputErrors[slug] ? { type: 'error', message: inputErrors[slug] } : undefined
                   }
                   width="100%"
                 />
@@ -377,7 +377,7 @@ export function OrderForm({
                 onClick={handleSubmit}
               />
               <Text size="sm" weight="medium">
-                The total is debited from your balance right away — orders that fail upstream are
+                The total is debited from your balance right away  orders that fail upstream are
                 refunded automatically.
               </Text>
             </>

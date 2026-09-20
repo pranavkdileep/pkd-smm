@@ -1,22 +1,22 @@
 'use client';
 
-import {useState} from 'react';
-import {usePathname, useRouter, useSearchParams} from 'next/navigation';
-import {Send} from 'lucide-react';
-import {VStack} from '@astryxdesign/core/VStack';
-import {HStack} from '@astryxdesign/core/HStack';
-import {TextArea} from '@astryxdesign/core/TextArea';
-import {Button} from '@astryxdesign/core/Button';
-import {Banner} from '@astryxdesign/core/Banner';
+import { useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { Send } from 'lucide-react';
+import { VStack } from '@astryxdesign/core/VStack';
+import { HStack } from '@astryxdesign/core/HStack';
+import { TextArea } from '@astryxdesign/core/TextArea';
+import { Button } from '@astryxdesign/core/Button';
+import { Banner } from '@astryxdesign/core/Banner';
 
-import {addSupportTicketComment} from '@/actions/support/comments';
+import { addSupportTicketComment } from '@/actions/support/comments';
 
 const MESSAGE_MAX_LENGTH = 5000; // Mirrors the limit enforced in actions/support/comments.ts.
 
 /**
  * Reply composer at the bottom of an open ticket's conversation.
  *
- * After sending, the user is moved to the page holding the newest comment —
+ * After sending, the user is moved to the page holding the newest comment 
  * a reply from any earlier page lands on the last page.
  */
 export function ReplyForm({

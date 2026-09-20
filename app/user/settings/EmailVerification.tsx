@@ -1,20 +1,20 @@
 'use client';
 
-import {useState} from 'react';
-import {HStack} from '@astryxdesign/core/HStack';
-import {VStack} from '@astryxdesign/core/VStack';
-import {Text} from '@astryxdesign/core/Text';
-import {Button} from '@astryxdesign/core/Button';
-import {Banner} from '@astryxdesign/core/Banner';
-import {Badge} from '@astryxdesign/core/Badge';
+import { useState } from 'react';
+import { HStack } from '@astryxdesign/core/HStack';
+import { VStack } from '@astryxdesign/core/VStack';
+import { Text } from '@astryxdesign/core/Text';
+import { Button } from '@astryxdesign/core/Button';
+import { Banner } from '@astryxdesign/core/Banner';
+import { Badge } from '@astryxdesign/core/Badge';
 
-import {resendEmailVerification} from '@/actions/users/verification';
+import { resendEmailVerification } from '@/actions/users/verification';
 
 /**
  * Inline "resend verification email" control for unverified accounts.
  * Confirmation is shown inline (the send itself is invisible), not as a toast.
  */
-export function EmailVerification({email}: {email: string}) {
+export function EmailVerification({ email }: { email: string }) {
   const [isPending, setIsPending] = useState(false);
   const [sentAt, setSentAt] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -61,7 +61,7 @@ export function EmailVerification({email}: {email: string}) {
           }}
         />
         {sentAt !== null ? (
-          <Text size="sm" color="secondary">Sent just now — check your inbox.</Text>
+          <Text size="sm" color="secondary">Sent just now  check your inbox.</Text>
         ) : null}
       </HStack>
     </VStack>

@@ -1,7 +1,7 @@
 'use client';
 
-import {useState} from 'react';
-import {useRouter} from 'next/navigation';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Table,
   proportional,
@@ -9,20 +9,20 @@ import {
   useTableRowExpansion,
   type TableColumn,
 } from '@astryxdesign/core/Table';
-import {HStack} from '@astryxdesign/core/HStack';
-import {VStack} from '@astryxdesign/core/VStack';
-import {Text} from '@astryxdesign/core/Text';
-import {StatusDot} from '@astryxdesign/core/StatusDot';
-import {ProgressBar} from '@astryxdesign/core/ProgressBar';
-import {Button} from '@astryxdesign/core/Button';
-import {AlertDialog} from '@astryxdesign/core/AlertDialog';
-import {Banner} from '@astryxdesign/core/Banner';
+import { HStack } from '@astryxdesign/core/HStack';
+import { VStack } from '@astryxdesign/core/VStack';
+import { Text } from '@astryxdesign/core/Text';
+import { StatusDot } from '@astryxdesign/core/StatusDot';
+import { ProgressBar } from '@astryxdesign/core/ProgressBar';
+import { Button } from '@astryxdesign/core/Button';
+import { AlertDialog } from '@astryxdesign/core/AlertDialog';
+import { Banner } from '@astryxdesign/core/Banner';
 
-import type {OrderRow} from '@/actions/users/orders';
-import {requestOrderCancel, requestOrderRefill} from '@/actions/users/orders';
-import {formatAmount} from '@/app/user/add-funds/format';
-import {formatTicketDate, ticketRef} from '@/app/components/support/ticketMeta';
-import {ORDER_STATUS_DOT, ORDER_STATUS_LABELS} from '@/app/components/orders/orderMeta';
+import type { OrderRow } from '@/actions/users/orders';
+import { requestOrderCancel, requestOrderRefill } from '@/actions/users/orders';
+import { formatAmount } from '@/app/user/add-funds/format';
+import { formatTicketDate, ticketRef } from '@/app/components/support/ticketMeta';
+import { ORDER_STATUS_DOT, ORDER_STATUS_LABELS } from '@/app/components/orders/orderMeta';
 
 /** ProgressBar variants keyed by order status. */
 const PROGRESS_VARIANT: Record<
@@ -41,7 +41,7 @@ function isBarDisabled(status: OrderRow['status']): boolean {
 }
 
 /** Compact bar + counts: delivery = quantity − remaining. */
-function DeliveryCell({order}: {order: OrderRow}) {
+function DeliveryCell({ order }: { order: OrderRow }) {
   // Terminal financial states have no meaningful delivery progress.
   if (order.status === 'cancelled' || order.status === 'refunded') {
     return (
@@ -72,7 +72,7 @@ function DeliveryCell({order}: {order: OrderRow}) {
 }
 
 /** Full-width panel revealed by the row's chevron: the order-form inputs. */
-function OrderDetails({order}: {order: OrderRow}) {
+function OrderDetails({ order }: { order: OrderRow }) {
   return (
     <VStack gap={2} width="100%">
       <Text size="sm" weight="semibold">
@@ -98,13 +98,13 @@ function OrderDetails({order}: {order: OrderRow}) {
   );
 }
 
-/** Live statuses that support refill/cancel — terminal orders show no actions. */
+/** Live statuses that support refill/cancel  terminal orders show no actions. */
 function isLiveActionStatus(status: OrderRow['status']): boolean {
   return status === 'pending' || status === 'processing';
 }
 
 /** Per-row Refill/Cancel buttons, gated on service flags + live status. */
-function OrderActions({order}: {order: OrderRow}) {
+function OrderActions({ order }: { order: OrderRow }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -263,20 +263,20 @@ export function OrdersTable({
         </HStack>
       ),
     },
-    // Omit the column entirely when no row on this page has a live action —
+    // Omit the column entirely when no row on this page has a live action 
     // an empty "Actions" header with blank cells is clutter.
     ...(orders.some(
       (order) =>
         (order.serviceRefill || order.serviceCancel) && isLiveActionStatus(order.status)
     )
       ? [
-          {
-            key: 'actions',
-            header: 'Actions',
-            width: pixel(190),
-            renderCell: (order: OrderRow) => <OrderActions order={order} />,
-          } satisfies TableColumn<OrderRow>,
-        ]
+        {
+          key: 'actions',
+          header: 'Actions',
+          width: pixel(190),
+          renderCell: (order: OrderRow) => <OrderActions order={order} />,
+        } satisfies TableColumn<OrderRow>,
+      ]
       : []),
   ];
 
@@ -288,7 +288,7 @@ export function OrdersTable({
       density="compact"
       hasHover
       textOverflow="truncate"
-      plugins={{expansion}}
+      plugins={{ expansion }}
       rowIndexStart={rowIndexStart}
       rowCount={rowCount}
     />

@@ -1,31 +1,31 @@
 'use client';
 
-import {useCallback, useRef, useState} from 'react';
-import {useRouter} from 'next/navigation';
-import {Check, Copy, Wallet} from 'lucide-react';
+import { useCallback, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Check, Copy, Wallet } from 'lucide-react';
 
-import {Table, useTablePagination, proportional, pixel, type TableColumn} from '@astryxdesign/core/Table';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Text} from '@astryxdesign/core/Text';
-import {StatusDot} from '@astryxdesign/core/StatusDot';
-import {IconButton} from '@astryxdesign/core/IconButton';
-import {useClipboard} from '@astryxdesign/core/hooks';
-import {Button} from '@astryxdesign/core/Button';
-import {EmptyState} from '@astryxdesign/core/EmptyState';
+import { Table, useTablePagination, proportional, pixel, type TableColumn } from '@astryxdesign/core/Table';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Text } from '@astryxdesign/core/Text';
+import { StatusDot } from '@astryxdesign/core/StatusDot';
+import { IconButton } from '@astryxdesign/core/IconButton';
+import { useClipboard } from '@astryxdesign/core/hooks';
+import { Button } from '@astryxdesign/core/Button';
+import { EmptyState } from '@astryxdesign/core/EmptyState';
 
-import {checkDepositStatus, getUserDepositsPage, type DepositsPage} from '@/actions/deposits/status';
-import type {Deposit, DepositStatus} from '@/lib/database';
+import { checkDepositStatus, getUserDepositsPage, type DepositsPage } from '@/actions/deposits/status';
+import type { Deposit, DepositStatus } from '@/lib/database';
 
-import {formatAmount, formatDateTime} from './format';
+import { formatAmount, formatDateTime } from './format';
 
 const STATUS_META: Record<
   DepositStatus,
-  {variant: 'success' | 'warning' | 'error' | 'neutral'; label: string; isPulsing?: boolean}
+  { variant: 'success' | 'warning' | 'error' | 'neutral'; label: string; isPulsing?: boolean }
 > = {
-  completed: {variant: 'success', label: 'Completed'},
-  pending: {variant: 'warning', label: 'Pending', isPulsing: true},
-  failed: {variant: 'error', label: 'Failed'},
-  cancelled: {variant: 'neutral', label: 'Cancelled'},
+  completed: { variant: 'success', label: 'Completed' },
+  pending: { variant: 'warning', label: 'Pending', isPulsing: true },
+  failed: { variant: 'error', label: 'Failed' },
+  cancelled: { variant: 'neutral', label: 'Cancelled' },
 };
 
 const GATEWAY_LABELS: Record<string, string> = {
@@ -45,9 +45,9 @@ interface DepositHistoryProps {
   initialPage: DepositsPage;
 }
 
-/** Truncated id + copy affordance — one hook instance per row for its own copied state. */
-function DepositIdCell({id}: {id: string}) {
-  const {copy, isCopied} = useClipboard({announce: 'Deposit ID copied'});
+/** Truncated id + copy affordance  one hook instance per row for its own copied state. */
+function DepositIdCell({ id }: { id: string }) {
+  const { copy, isCopied } = useClipboard({ announce: 'Deposit ID copied' });
   const shortId = `${id.slice(0, 8)}…`;
   return (
     <HStack gap={1.5} vAlign="center">
@@ -72,7 +72,7 @@ function DepositIdCell({id}: {id: string}) {
  * page and fetches new pages through the server action. Pending rows expose
  * a manual "Check status" action that re-verifies against the gateway.
  */
-export function DepositHistory({initialPage}: DepositHistoryProps) {
+export function DepositHistory({ initialPage }: DepositHistoryProps) {
   const router = useRouter();
   const [pageData, setPageData] = useState<DepositsPage>(initialPage);
   const [checkingId, setCheckingId] = useState<string | null>(null);
@@ -82,7 +82,7 @@ export function DepositHistory({initialPage}: DepositHistoryProps) {
   const fetchPage = useCallback(
     async (page: number) => {
       const seq = ++requestSeqRef.current;
-      const result = await getUserDepositsPage({page, pageSize: pageData.pageSize});
+      const result = await getUserDepositsPage({ page, pageSize: pageData.pageSize });
       if (seq !== requestSeqRef.current) {
         return; // A newer request superseded this one.
       }
@@ -116,7 +116,7 @@ export function DepositHistory({initialPage}: DepositHistoryProps) {
     router.refresh();
   }
 
-  const {items: deposits} = pageData;
+  const { items: deposits } = pageData;
 
   if (deposits.length === 0) {
     return (
@@ -137,22 +137,22 @@ export function DepositHistory({initialPage}: DepositHistoryProps) {
   }));
 
   const columns: TableColumn<DepositRow>[] = [
-    {key: 'date', header: 'Date', width: proportional(1)},
+    { key: 'date', header: 'Date', width: proportional(1) },
     {
       key: 'id',
       header: 'Deposit ID',
       width: proportional(1),
       renderCell: (row) => <DepositIdCell id={row.id} />,
     },
-    {key: 'amount', header: 'Amount', width: proportional(1)},
-    {key: 'gateway', header: 'Gateway', width: proportional(1)},
+    { key: 'amount', header: 'Amount', width: proportional(1) },
+    { key: 'gateway', header: 'Gateway', width: proportional(1) },
     {
       key: 'status',
       header: 'Status',
       width: pixel(140),
       renderCell: (row) => {
         const meta = STATUS_META[row.status];
-        // StatusDot's label is screen-reader-only — always pair with visible text.
+        // StatusDot's label is screen-reader-only  always pair with visible text.
         return (
           <HStack gap={2} vAlign="center">
             <StatusDot
@@ -190,7 +190,7 @@ export function DepositHistory({initialPage}: DepositHistoryProps) {
       density="compact"
       dividers="rows"
       textOverflow="truncate"
-      plugins={{pagination: paginationPlugin}}
+      plugins={{ pagination: paginationPlugin }}
       // Windowed view: aria indices reflect position across all pages.
       rowIndexStart={(pageData.page - 1) * pageData.pageSize + 1}
       rowCount={pageData.totalItems}

@@ -1,17 +1,17 @@
-import {Carousel} from '@astryxdesign/core/Carousel';
-import {ClickableCard} from '@astryxdesign/core/ClickableCard';
-import {VStack} from '@astryxdesign/core/VStack';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Heading} from '@astryxdesign/core/Heading';
-import {Text} from '@astryxdesign/core/Text';
-import {Badge} from '@astryxdesign/core/Badge';
+import { Carousel } from '@astryxdesign/core/Carousel';
+import { ClickableCard } from '@astryxdesign/core/ClickableCard';
+import { VStack } from '@astryxdesign/core/VStack';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Heading } from '@astryxdesign/core/Heading';
+import { Text } from '@astryxdesign/core/Text';
+import { Badge } from '@astryxdesign/core/Badge';
 
 
-import {FREE_SERVICES, SERVICES} from './content';
-import {NamedIcon} from './NamedIcon';
-import {BrandIcon} from './BrandIcon';
-import {SectionIntro} from './SectionIntro';
-import {PLATFORM_TINTS} from '@/app/components/platformMeta';
+import { FREE_SERVICES, SERVICES } from './content';
+import { NamedIcon } from './NamedIcon';
+import { BrandIcon } from './BrandIcon';
+import { SectionIntro } from './SectionIntro';
+import { PLATFORM_TINTS } from '@/app/components/platformMeta';
 
 export function ServicesCatalog() {
   return (
@@ -21,7 +21,7 @@ export function ServicesCatalog() {
           <SectionIntro
             eyebrow="All services"
             title="Every platform, one panel"
-            lead="Followers, views, likes and engagement for Instagram, Telegram, TikTok, YouTube, X and Facebook — each service states its price and guarantee before you pay."
+            lead="Followers, views, likes and engagement for Instagram, Telegram, TikTok, YouTube, X and Facebook  each service states its price and guarantee before you pay."
           />
         </VStack>
 

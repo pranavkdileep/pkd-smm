@@ -1,14 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import {Table, proportional, pixel, type TableColumn} from '@astryxdesign/core/Table';
-import {HStack} from '@astryxdesign/core/HStack';
-import {VStack} from '@astryxdesign/core/VStack';
-import {Text} from '@astryxdesign/core/Text';
-import {StatusDot} from '@astryxdesign/core/StatusDot';
-import {Token} from '@astryxdesign/core/Token';
+import { Table, proportional, pixel, type TableColumn } from '@astryxdesign/core/Table';
+import { HStack } from '@astryxdesign/core/HStack';
+import { VStack } from '@astryxdesign/core/VStack';
+import { Text } from '@astryxdesign/core/Text';
+import { StatusDot } from '@astryxdesign/core/StatusDot';
+import { Token } from '@astryxdesign/core/Token';
 
-import type {AdminSupportTicketRow} from '@/actions/admin/support';
+import type { AdminSupportTicketRow } from '@/actions/admin/support';
 import {
   CATEGORY_LABELS,
   CATEGORY_TOKEN_COLORS,
@@ -19,10 +19,10 @@ import {
 } from '@/app/components/support/ticketMeta';
 
 /**
- * Dense admin ticket rows — title links into the conversation, the requester
+ * Dense admin ticket rows  title links into the conversation, the requester
  * is resolved inline, and category/priority read as tokens, status as a dot.
  */
-export function AdminTicketsTable({tickets}: {tickets: AdminSupportTicketRow[]}) {
+export function AdminTicketsTable({ tickets }: { tickets: AdminSupportTicketRow[] }) {
   const columns: TableColumn<AdminSupportTicketRow>[] = [
     {
       key: 'title',

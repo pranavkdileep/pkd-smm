@@ -1,6 +1,6 @@
 'use client';
 
-import {useState} from 'react';
+import { useState } from 'react';
 import {
   Table,
   proportional,
@@ -8,20 +8,20 @@ import {
   useTableRowExpansion,
   type TableColumn,
 } from '@astryxdesign/core/Table';
-import {HStack} from '@astryxdesign/core/HStack';
-import {VStack} from '@astryxdesign/core/VStack';
-import {Text} from '@astryxdesign/core/Text';
-import {Token} from '@astryxdesign/core/Token';
+import { HStack } from '@astryxdesign/core/HStack';
+import { VStack } from '@astryxdesign/core/VStack';
+import { Text } from '@astryxdesign/core/Text';
+import { Token } from '@astryxdesign/core/Token';
 
-import type {CatalogServiceRow} from '@/actions/users/services';
-import {PLATFORM_LABELS, PLATFORM_TINTS} from '@/app/components/platformMeta';
-import {BrandIcon, type PlatformKey} from '@/app/components/landing/BrandIcon';
-import {formatAmount} from '@/app/user/add-funds/format';
+import type { CatalogServiceRow } from '@/actions/users/services';
+import { PLATFORM_LABELS, PLATFORM_TINTS } from '@/app/components/platformMeta';
+import { BrandIcon, type PlatformKey } from '@/app/components/landing/BrandIcon';
+import { formatAmount } from '@/app/user/add-funds/format';
 
-import {OrderNowButton} from './OrderNowButton';
+import { OrderNowButton } from './OrderNowButton';
 
 /**
- * Dense service rows — one row per service instead of card soup.
+ * Dense service rows  one row per service instead of card soup.
  * Long descriptions expand via the row chevron.
  */
 export function ServicesTable({
@@ -152,7 +152,7 @@ export function ServicesTable({
       hasHover
       dividers="rows"
       textOverflow="truncate"
-      plugins={{expansion}}
+      plugins={{ expansion }}
       rowIndexStart={rowIndexStart}
       rowCount={rowCount}
     />

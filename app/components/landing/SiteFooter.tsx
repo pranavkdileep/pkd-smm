@@ -1,19 +1,19 @@
-import {Grid} from '@astryxdesign/core/Grid';
-import {VStack} from '@astryxdesign/core/VStack';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Text} from '@astryxdesign/core/Text';
-import {Divider} from '@astryxdesign/core/Divider';
+import { Grid } from '@astryxdesign/core/Grid';
+import { VStack } from '@astryxdesign/core/VStack';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Text } from '@astryxdesign/core/Text';
+import { Divider } from '@astryxdesign/core/Divider';
 import Link from 'next/link';
 
-import {FOOTER_COLUMNS, PLATFORMS, SITE} from './content';
-import {BrandIcon} from './BrandIcon';
-import {siteConfig} from '@/lib/config';
+import { FOOTER_COLUMNS, PLATFORMS, SITE } from './content';
+import { BrandIcon } from './BrandIcon';
+import { siteConfig } from '@/lib/config';
 
 export function SiteFooter() {
   return (
     <footer className="border-t border-border bg-surface">
       <VStack maxWidth={1280} gap={6} className="mx-auto w-full px-6 py-12">
-        <Grid columns={{minWidth: 220, max: 4}} gap={6}>
+        <Grid columns={{ minWidth: 220, max: 4 }} gap={6}>
           <VStack gap={3} align="start">
             <HStack gap={2} vAlign="center">
               <HStack
@@ -70,7 +70,7 @@ export function SiteFooter() {
 
         <HStack justify="between" wrap="wrap" gap={3}>
           <Text size="xsm" color="secondary">
-            © 2026 {SITE.name}. Independent third-party marketing service — not affiliated with or
+            © 2026 {SITE.name}. Independent third-party marketing service  not affiliated with or
             endorsed by Instagram, Telegram, TikTok, YouTube, X or Facebook.
           </Text>
           <HStack gap={3}>

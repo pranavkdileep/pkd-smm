@@ -1,21 +1,21 @@
 'use client';
 
-import {useState} from 'react';
-import {useRouter} from 'next/navigation';
-import {Dialog, DialogHeader} from '@astryxdesign/core/Dialog';
-import {Layout, LayoutContent, LayoutFooter} from '@astryxdesign/core/Layout';
-import {VStack} from '@astryxdesign/core/VStack';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Banner} from '@astryxdesign/core/Banner';
-import {Button} from '@astryxdesign/core/Button';
-import {NumberInput} from '@astryxdesign/core/NumberInput';
-import {TextInput} from '@astryxdesign/core/TextInput';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Dialog, DialogHeader } from '@astryxdesign/core/Dialog';
+import { Layout, LayoutContent, LayoutFooter } from '@astryxdesign/core/Layout';
+import { VStack } from '@astryxdesign/core/VStack';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Banner } from '@astryxdesign/core/Banner';
+import { Button } from '@astryxdesign/core/Button';
+import { NumberInput } from '@astryxdesign/core/NumberInput';
+import { TextInput } from '@astryxdesign/core/TextInput';
 
-import {adjustUserBalance, type AdminUserRow} from '@/actions/admin/users';
-import {formatAmount} from '@/app/user/add-funds/format';
+import { adjustUserBalance, type AdminUserRow } from '@/actions/admin/users';
+import { formatAmount } from '@/app/user/add-funds/format';
 
-/** Manual credit/debit form — positive amount credits, negative debits. */
-export function AdjustBalanceDialog({user, onClose}: {user: AdminUserRow; onClose: () => void}) {
+/** Manual credit/debit form  positive amount credits, negative debits. */
+export function AdjustBalanceDialog({ user, onClose }: { user: AdminUserRow; onClose: () => void }) {
   const router = useRouter();
   const [amount, setAmount] = useState<number | null>(null);
   const [reason, setReason] = useState('');
@@ -56,7 +56,7 @@ export function AdjustBalanceDialog({user, onClose}: {user: AdminUserRow; onClos
       <Layout
         header={
           <DialogHeader
-            title={`Adjust balance — ${user.username}`}
+            title={`Adjust balance  ${user.username}`}
             subtitle={`Current balance: ${formatAmount(user.balance)}. Positive amounts credit, negative debit.`}
             onOpenChange={onClose}
           />

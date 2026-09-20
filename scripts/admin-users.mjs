@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 // Interactive TUI to manage admin users in MongoDB (admin_users collection).
 // Usage: node scripts/admin-users.mjs   (or: npm run admin)
-import {randomBytes, randomUUID, scrypt as scryptCallback} from 'node:crypto';
-import {promisify} from 'node:util';
+import { randomBytes, randomUUID, scrypt as scryptCallback } from 'node:crypto';
+import { promisify } from 'node:util';
 import readline from 'node:readline/promises';
-import {MongoClient} from 'mongodb';
+import { MongoClient } from 'mongodb';
 
 try {
   process.loadEnvFile('.env.local');
 } catch {
-  // no .env.local — rely on real environment variables
+  // no .env.local  rely on real environment variables
 }
 
 const scrypt = promisify(scryptCallback);
@@ -29,18 +29,18 @@ const client = new MongoClient(process.env.MONGODB_URI);
 await client.connect();
 const admins = client.db(process.env.MONGODB_DB ?? 'pkd-smm').collection('admin_users');
 
-const rl = readline.createInterface({input: process.stdin, output: process.stdout});
+const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 
 async function ask(question) {
   try {
     return (await rl.question(question)).trim();
   } catch {
-    return '5'; // stdin closed (EOF / piped input) — quit cleanly
+    return '5'; // stdin closed (EOF / piped input)  quit cleanly
   }
 }
 
 async function list() {
-  const users = await admins.find({}, {projection: {_id: 0, id: 1, username: 1}}).toArray();
+  const users = await admins.find({}, { projection: { _id: 0, id: 1, username: 1 } }).toArray();
   if (users.length === 0) {
     console.log('\nNo admin users.\n');
     return;
@@ -51,7 +51,7 @@ async function list() {
 }
 
 async function pickUser(action) {
-  const users = await admins.find({}, {projection: {_id: 0, id: 1, username: 1}}).toArray();
+  const users = await admins.find({}, { projection: { _id: 0, id: 1, username: 1 } }).toArray();
   if (users.length === 0) {
     console.log('\nNo admin users.\n');
     return null;
@@ -69,10 +69,10 @@ async function pickUser(action) {
 async function add() {
   const username = await ask('Username: ');
   if (!username) return console.log('Username required.\n');
-  if (await admins.findOne({username})) return console.log('Username already exists.\n');
+  if (await admins.findOne({ username })) return console.log('Username already exists.\n');
   const password = await ask('Password: ');
   if (!password) return console.log('Password required.\n');
-  await admins.insertOne({id: randomUUID(), username, passwordHash: await hashPassword(password)});
+  await admins.insertOne({ id: randomUUID(), username, passwordHash: await hashPassword(password) });
   console.log(`Added admin "${username}".\n`);
 }
 
@@ -83,13 +83,13 @@ async function edit() {
   const password = await ask('New password (empty to keep current): ');
   const update = {};
   if (username) {
-    const taken = await admins.findOne({username, id: {$ne: user.id}});
+    const taken = await admins.findOne({ username, id: { $ne: user.id } });
     if (taken) return console.log('Username already exists.\n');
     update.username = username;
   }
   if (password) update.passwordHash = await hashPassword(password);
   if (Object.keys(update).length === 0) return console.log('Nothing to change.\n');
-  await admins.updateOne({id: user.id}, {$set: update});
+  await admins.updateOne({ id: user.id }, { $set: update });
   console.log(`Updated admin "${update.username ?? user.username}".\n`);
 }
 
@@ -101,11 +101,11 @@ async function remove() {
   }
   const confirm = await ask(`Really remove "${user.username}"? (y/N): `);
   if (confirm.toLowerCase() !== 'y') return console.log('Cancelled.\n');
-  await admins.deleteOne({id: user.id});
+  await admins.deleteOne({ id: user.id });
   console.log(`Removed admin "${user.username}".\n`);
 }
 
-const actions = {1: list, 2: add, 3: edit, 4: remove};
+const actions = { 1: list, 2: add, 3: edit, 4: remove };
 
 while (true) {
   console.log('=== Admin Users ===');

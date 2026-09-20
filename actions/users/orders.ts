@@ -1,13 +1,13 @@
 'use server';
 
-import {randomUUID} from 'node:crypto';
-import {start} from 'workflow/api';
-import {getCurrentUser} from '@/actions/auth/session';
-import {collections} from '@/lib/db';
-import type {Order, OrderStatus, Service, Transaction} from '@/lib/database';
-import {ORDER_STATUSES} from '@/lib/database';
-import {processOrderUpstream} from '@/workflows/order-upstream';
-import {refreshOrderStatusUpstream} from '@/workflows/order-status-sync';
+import { randomUUID } from 'node:crypto';
+import { start } from 'workflow/api';
+import { getCurrentUser } from '@/actions/auth/session';
+import { collections } from '@/lib/db';
+import type { Order, OrderStatus, Service, Transaction } from '@/lib/database';
+import { ORDER_STATUSES } from '@/lib/database';
+import { processOrderUpstream } from '@/workflows/order-upstream';
+import { refreshOrderStatusUpstream } from '@/workflows/order-status-sync';
 
 export interface CreateOrderInput {
   serviceId: string;
@@ -30,23 +30,23 @@ export interface CreateOrderResult {
 export async function createOrder(input: CreateOrderInput): Promise<CreateOrderResult> {
   const user = await getCurrentUser();
   if (!user) {
-    return {success: false, error: 'You must be signed in to place an order.'};
+    return { success: false, error: 'You must be signed in to place an order.' };
   }
   if (user.status === 'banned') {
-    return {success: false, error: 'Your account is suspended.'};
+    return { success: false, error: 'Your account is suspended.' };
   }
 
-  const {serviceId, quantity} = input;
+  const { serviceId, quantity } = input;
   if (typeof serviceId !== 'string' || !serviceId.trim()) {
-    return {success: false, error: 'Please choose a service.'};
+    return { success: false, error: 'Please choose a service.' };
   }
   if (!Number.isInteger(quantity) || quantity < 1) {
-    return {success: false, error: 'Quantity must be a whole number of 1 or more.'};
+    return { success: false, error: 'Quantity must be a whole number of 1 or more.' };
   }
 
-  const service = await collections.services.findOne({id: serviceId, status: 'active'});
+  const service = await collections.services.findOne({ id: serviceId, status: 'active' });
   if (!service) {
-    return {success: false, error: 'This service is not available.'};
+    return { success: false, error: 'This service is not available.' };
   }
   if (quantity < service.minOrder || quantity > service.maxOrder) {
     return {
@@ -55,13 +55,13 @@ export async function createOrder(input: CreateOrderInput): Promise<CreateOrderR
     };
   }
 
-  // Keep only the fields the service declares — client-supplied extras are
+  // Keep only the fields the service declares  client-supplied extras are
   // dropped, every declared field is required and trimmed.
   const inputs: Record<string, string> = {};
   for (const [key, label] of Object.entries(service.inputs ?? {})) {
     const value = input.inputs?.[key];
     if (typeof value !== 'string' || !value.trim()) {
-      return {success: false, error: `Please fill in the "${label}" field.`};
+      return { success: false, error: `Please fill in the "${label}" field.` };
     }
     inputs[key] = value.trim();
   }
@@ -69,14 +69,14 @@ export async function createOrder(input: CreateOrderInput): Promise<CreateOrderR
   // Service price is per 1K; rounded up to the paisa so tiny orders never bill 0.
   const totalPrice = Math.ceil((service.price * quantity) / 10) / 100;
 
-  // Atomic debit — the balance guard makes concurrent orders fail cleanly
+  // Atomic debit  the balance guard makes concurrent orders fail cleanly
   // instead of double-spending.
   const debited = await collections.users.findOneAndUpdate(
-    {id: user.id, balance: {$gte: totalPrice}},
-    {$inc: {balance: -totalPrice}}
+    { id: user.id, balance: { $gte: totalPrice } },
+    { $inc: { balance: -totalPrice } }
   );
   if (!debited) {
-    return {success: false, error: 'Insufficient balance. Please add funds first.'};
+    return { success: false, error: 'Insufficient balance. Please add funds first.' };
   }
 
   const orderId = randomUUID();
@@ -109,16 +109,16 @@ export async function createOrder(input: CreateOrderInput): Promise<CreateOrderR
   await collections.orders.insertOne(order);
   await collections.transactions.insertOne(transaction);
 
-  // Forwards the order to its upstream provider in the background — it flips
+  // Forwards the order to its upstream provider in the background  it flips
   // the order to processing or auto-refunds the balance on failure.
   await start(processOrderUpstream, [orderId]);
 
-  return {success: true, orderId};
+  return { success: true, orderId };
 }
 
 /**
  * Triggers an upstream status sync for the given orders. Only the caller's
- * own pending/processing orders are enqueued — completed, cancelled and
+ * own pending/processing orders are enqueued  completed, cancelled and
  * refunded orders are never touched. Returns the live order ids accepted.
  */
 export async function refreshOrderStatuses(orderIds: string[]): Promise<{
@@ -127,21 +127,21 @@ export async function refreshOrderStatuses(orderIds: string[]): Promise<{
 }> {
   const user = await getCurrentUser();
   if (!user || !Array.isArray(orderIds) || orderIds.length === 0) {
-    return {started: false, orderIds: []};
+    return { started: false, orderIds: [] };
   }
   const ids = [...new Set(orderIds.filter((id) => typeof id === 'string' && id))].slice(0, 100);
   if (ids.length === 0) {
-    return {started: false, orderIds: []};
+    return { started: false, orderIds: [] };
   }
   const live = await collections.orders
-    .find({id: {$in: ids}, userId: user.id, status: {$in: ['pending', 'processing']}})
+    .find({ id: { $in: ids }, userId: user.id, status: { $in: ['pending', 'processing'] } })
     .toArray();
   if (live.length === 0) {
-    return {started: false, orderIds: []};
+    return { started: false, orderIds: [] };
   }
   const liveIds = live.map((order) => order.id);
   await start(refreshOrderStatusUpstream, [liveIds]);
-  return {started: true, orderIds: liveIds};
+  return { started: true, orderIds: liveIds };
 }
 
 const DEFAULT_PAGE_SIZE = 10;
@@ -149,17 +149,17 @@ const MAX_PAGE_SIZE = 100;
 
 /**
  * POSTs one action call to an upstream panel API (form-urlencoded).
- * Success is HTTP 200 with no `error` field — response shapes vary by action.
+ * Success is HTTP 200 with no `error` field  response shapes vary by action.
  */
 async function callUpstreamAction(
-  provider: {apiUrl: string; apiKey: string},
+  provider: { apiUrl: string; apiKey: string },
   params: Record<string, string>,
-): Promise<{success: boolean; error?: string}> {
+): Promise<{ success: boolean; error?: string }> {
   try {
     const res = await fetch(provider.apiUrl, {
       method: 'POST',
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: new URLSearchParams({key: provider.apiKey, ...params}).toString(),
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ key: provider.apiKey, ...params }).toString(),
     });
     const data = await res.json().catch(() => null);
     if (!res.ok || data?.error) {
@@ -168,7 +168,7 @@ async function callUpstreamAction(
         error: data?.error ? String(data.error) : `Upstream request failed (HTTP ${res.status}).`,
       };
     }
-    return {success: true};
+    return { success: true };
   } catch (err: unknown) {
     return {
       success: false,
@@ -179,29 +179,29 @@ async function callUpstreamAction(
 
 interface OrderActionTarget {
   upstreamOrderId: string;
-  provider: {apiUrl: string; apiKey: string};
+  provider: { apiUrl: string; apiKey: string };
 }
 
 /** Guards shared by refill/cancel: own order, live status, service flag, submitted upstream. */
 async function loadOrderActionTarget(
   orderId: unknown,
   flag: 'refill' | 'cancel',
-): Promise<{target?: OrderActionTarget; error?: string}> {
+): Promise<{ target?: OrderActionTarget; error?: string }> {
   const user = await getCurrentUser();
   if (!user) {
-    return {error: 'You must be signed in.'};
+    return { error: 'You must be signed in.' };
   }
   if (typeof orderId !== 'string' || !orderId) {
-    return {error: 'Invalid order.'};
+    return { error: 'Invalid order.' };
   }
-  const order = await collections.orders.findOne({id: orderId, userId: user.id});
+  const order = await collections.orders.findOne({ id: orderId, userId: user.id });
   if (!order) {
-    return {error: 'Order not found.'};
+    return { error: 'Order not found.' };
   }
   if (order.status !== 'pending' && order.status !== 'processing') {
-    return {error: 'Only pending or processing orders support this action.'};
+    return { error: 'Only pending or processing orders support this action.' };
   }
-  const service = await collections.services.findOne({id: order.serviceId});
+  const service = await collections.services.findOne({ id: order.serviceId });
   if (!service?.[flag]) {
     return {
       error:
@@ -211,39 +211,39 @@ async function loadOrderActionTarget(
     };
   }
   if (!order.upstreamOrderId) {
-    return {error: 'This order has not been sent upstream yet.'};
+    return { error: 'This order has not been sent upstream yet.' };
   }
-  const provider = await collections.upstreamProviders.findOne({id: service.upstreamId});
+  const provider = await collections.upstreamProviders.findOne({ id: service.upstreamId });
   if (!provider?.apiUrl || !provider?.apiKey) {
-    return {error: 'Upstream provider not configured.'};
+    return { error: 'Upstream provider not configured.' };
   }
-  return {target: {upstreamOrderId: order.upstreamOrderId, provider}};
+  return { target: { upstreamOrderId: order.upstreamOrderId, provider } };
 }
 
 /** Asks upstream to refill a live order (`action=refill&order=<upstream id>`). */
-export async function requestOrderRefill(orderId: string): Promise<{success: boolean; error?: string}> {
-  const {target, error} = await loadOrderActionTarget(orderId, 'refill');
+export async function requestOrderRefill(orderId: string): Promise<{ success: boolean; error?: string }> {
+  const { target, error } = await loadOrderActionTarget(orderId, 'refill');
   if (!target) {
-    return {success: false, error};
+    return { success: false, error };
   }
-  // ponytail: no local state change — a refill only tops up upstream; progress
+  // ponytail: no local state change  a refill only tops up upstream; progress
   // surfaces via the existing status-sync on next page load.
-  return callUpstreamAction(target.provider, {action: 'refill', order: target.upstreamOrderId});
+  return callUpstreamAction(target.provider, { action: 'refill', order: target.upstreamOrderId });
 }
 
 /** Asks upstream to cancel a live order (`action=cancel&orders=<upstream id>`). */
-export async function requestOrderCancel(orderId: string): Promise<{success: boolean; error?: string}> {
-  const {target, error} = await loadOrderActionTarget(orderId, 'cancel');
+export async function requestOrderCancel(orderId: string): Promise<{ success: boolean; error?: string }> {
+  const { target, error } = await loadOrderActionTarget(orderId, 'cancel');
   if (!target) {
-    return {success: false, error};
+    return { success: false, error };
   }
-  // ponytail: local status untouched — an upstream Canceled flows to refunded
+  // ponytail: local status untouched  an upstream Canceled flows to refunded
   // via updateOrderStatus on the next sync; mark locally only if cancel
   // latency ever matters.
-  return callUpstreamAction(target.provider, {action: 'cancel', orders: target.upstreamOrderId});
+  return callUpstreamAction(target.provider, { action: 'cancel', orders: target.upstreamOrderId });
 }
 
-/** Sanitized order row for the user dashboard — no upstream ids, no userId. */
+/** Sanitized order row for the user dashboard  no upstream ids, no userId. */
 export interface OrderRow extends Record<string, unknown> {
   id: string;
   /** Service display name; 'Unknown service' if the service was deleted. */
@@ -252,12 +252,12 @@ export interface OrderRow extends Record<string, unknown> {
   remaining: number;
   totalPrice: number;
   status: OrderStatus;
-  /** Raw service flag — the table combines it with a live-status check. */
+  /** Raw service flag  the table combines it with a live-status check. */
   serviceRefill: boolean;
-  /** Raw service flag — the table combines it with a live-status check. */
+  /** Raw service flag  the table combines it with a live-status check. */
   serviceCancel: boolean;
   /** Order-form fields as the user filled them, with display labels. */
-  inputs: {label: string; value: string}[];
+  inputs: { label: string; value: string }[];
   createdAt: string;
   updatedAt: string;
 }
@@ -299,15 +299,15 @@ export async function listOrders(input: {
 }): Promise<ListOrdersResult> {
   const user = await getCurrentUser();
   if (!user) {
-    return {orders: [], total: 0, page: 1, pageSize: DEFAULT_PAGE_SIZE, totalPages: 1};
+    return { orders: [], total: 0, page: 1, pageSize: DEFAULT_PAGE_SIZE, totalPages: 1 };
   }
 
   // ponytail: status is validated against ORDER_STATUSES via the TS type, but
-  // server actions accept any runtime payload — reject unknowns at runtime too.
-  const filter: Record<string, unknown> = {userId: user.id};
+  // server actions accept any runtime payload  reject unknowns at runtime too.
+  const filter: Record<string, unknown> = { userId: user.id };
   if (input.status !== undefined) {
     if (!ORDER_STATUSES.includes(input.status)) {
-      return {orders: [], total: 0, page: 1, pageSize: DEFAULT_PAGE_SIZE, totalPages: 1};
+      return { orders: [], total: 0, page: 1, pageSize: DEFAULT_PAGE_SIZE, totalPages: 1 };
     }
     filter.status = input.status;
   }
@@ -318,20 +318,20 @@ export async function listOrders(input: {
   if (q) {
     const pattern = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
     const matchedServices = await collections.services
-      .find({name: pattern}, {projection: {id: 1}})
+      .find({ name: pattern }, { projection: { id: 1 } })
       .toArray();
     serviceIdFilter = matchedServices.map((service) => service.id);
     filter.$or = [
-      {id: pattern},
-      ...(serviceIdFilter.length ? [{serviceId: {$in: serviceIdFilter}}] : []),
+      { id: pattern },
+      ...(serviceIdFilter.length ? [{ serviceId: { $in: serviceIdFilter } }] : []),
       // Any order-form input value (link/username/post URL) contains q.
       {
         $expr: {
           $anyElementTrue: {
             $map: {
-              input: {$objectToArray: {$ifNull: ['$inputs', {}]}},
+              input: { $objectToArray: { $ifNull: ['$inputs', {}] } },
               as: 'kv',
-              in: {$regexMatch: {input: '$$kv.v', regex: q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), options: 'i'}},
+              in: { $regexMatch: { input: '$$kv.v', regex: q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), options: 'i' } },
             },
           },
         },
@@ -346,7 +346,7 @@ export async function listOrders(input: {
 
   const orders = await collections.orders
     .find(filter, {
-      sort: {createdAt: -1, id: -1},
+      sort: { createdAt: -1, id: -1 },
       skip: (page - 1) * pageSize,
       limit: pageSize,
     })
@@ -355,7 +355,7 @@ export async function listOrders(input: {
   // One query for the page's service names instead of a $lookup per row.
   const serviceIds = [...new Set(orders.map((order) => order.serviceId))];
   const services = serviceIds.length
-    ? await collections.services.find({id: {$in: serviceIds}}).toArray()
+    ? await collections.services.find({ id: { $in: serviceIds } }).toArray()
     : ([] as Service[]);
   const serviceById = new Map(services.map((service) => [service.id, service]));
 

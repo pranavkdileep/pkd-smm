@@ -1,4 +1,4 @@
-import {siteConfig} from '@/lib/config';
+import { siteConfig } from '@/lib/config';
 
 export const SITE = {
   name: siteConfig.name,
@@ -28,7 +28,7 @@ export const PLATFORMS: Platform[] = [
   { id: "facebook", name: "Facebook" },
 ];
 
-/* Placeholder numbers — edit freely, they render straight to the page. */
+/* Placeholder numbers  edit freely, they render straight to the page. */
 export const STATS = [
   {
     label: "Orders Completed",
@@ -60,7 +60,7 @@ export const STATS = [
   },
   {
     label: "Payments",
-    value: "Cards & Crypto",
+    value: "Cards, Crypto & UPI",
     note: "Instant balance credit",
     icon: "credit-card" as const,
     tint: "yellow" as const,
@@ -71,7 +71,7 @@ export const HERO_BENEFITS = [
   { text: "Free test balance for new accounts", icon: "check-circle" as const, tint: "green" as const },
   { text: "Clear refund & refill policy", icon: "file-text" as const, tint: "blue" as const },
   { text: "24/7 live customer support", icon: "headphones" as const, tint: "purple" as const },
-  { text: "Secure payments, cards & crypto", icon: "shield-check" as const, tint: "orange" as const },
+  { text: "Secure payments, cards, crypto, UPI", icon: "shield-check" as const, tint: "orange" as const },
   { text: "Transparent quality tiers", icon: "star" as const, tint: "pink" as const },
   { text: `From ${SITE.fromPrice} per order`, icon: "badge-indian-rupee" as const, tint: "cyan" as const },
 ];
@@ -159,7 +159,7 @@ export const HOW_IT_WORKS = [
   {
     step: "01",
     title: "Create your free account",
-    body: "Sign up with an email in under a minute. No contracts, no minimum deposits — the dashboard is open the moment you confirm.",
+    body: "Sign up with an email in under a minute. No contracts, no minimum deposits  the dashboard is open the moment you confirm.",
   },
   {
     step: "02",
@@ -206,7 +206,7 @@ export const FEATURE_TABS = [
     id: "mobile",
     label: "Works Everywhere",
     headline: "The panel in your pocket",
-    body: "The dashboard is built mobile-first: check statuses, top up, and place repeat orders from any device — no app install required.",
+    body: "The dashboard is built mobile-first: check statuses, top up, and place repeat orders from any device  no app install required.",
     points: ["Mobile-first dashboard", "One-tap reorder", "No app needed"],
   },
   {
@@ -260,11 +260,11 @@ export const REVIEWS = [
 export const FAQS = [
   {
     q: "What is an SMM panel used for?",
-    a: "Ordering social media growth services — followers, likes, views, reactions and comments — from one dashboard with one balance. Each service has its own page describing tiers, prices, and guarantees.",
+    a: "Ordering social media growth services  followers, likes, views, reactions and comments  from one dashboard with one balance. Each service has its own page describing tiers, prices, and guarantees.",
   },
   {
     q: `Which platforms does ${siteConfig.name} support?`,
-    a: "Six platforms: Instagram, Telegram, TikTok, YouTube, X (Twitter), and Facebook. You are never locked into one network — mix services wherever your audience lives.",
+    a: "Six platforms: Instagram, Telegram, TikTok, YouTube, X (Twitter), and Facebook. You are never locked into one network  mix services wherever your audience lives.",
   },
   {
     q: "Do you need my account password?",
@@ -276,7 +276,7 @@ export const FAQS = [
   },
   {
     q: "What happens if a service drops?",
-    a: "Every service states its refill or guarantee terms before you order — from 7-day windows up to lifetime coverage — and drops inside the window are restored free.",
+    a: "Every service states its refill or guarantee terms before you order  from 7-day windows up to lifetime coverage  and drops inside the window are restored free.",
   },
   {
     q: "Is there a way to test before paying?",

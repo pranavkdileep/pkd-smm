@@ -1,16 +1,16 @@
 'use client';
 
-import {useState, useTransition} from 'react';
-import {useRouter} from 'next/navigation';
-import {Table, proportional, pixel, type TableColumn} from '@astryxdesign/core/Table';
-import {HStack} from '@astryxdesign/core/HStack';
-import {VStack} from '@astryxdesign/core/VStack';
-import {Text} from '@astryxdesign/core/Text';
-import {StatusDot} from '@astryxdesign/core/StatusDot';
-import {Button} from '@astryxdesign/core/Button';
-import {Selector} from '@astryxdesign/core/Selector';
-import {Banner} from '@astryxdesign/core/Banner';
-import {AlertDialog} from '@astryxdesign/core/AlertDialog';
+import { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+import { Table, proportional, pixel, type TableColumn } from '@astryxdesign/core/Table';
+import { HStack } from '@astryxdesign/core/HStack';
+import { VStack } from '@astryxdesign/core/VStack';
+import { Text } from '@astryxdesign/core/Text';
+import { StatusDot } from '@astryxdesign/core/StatusDot';
+import { Button } from '@astryxdesign/core/Button';
+import { Selector } from '@astryxdesign/core/Selector';
+import { Banner } from '@astryxdesign/core/Banner';
+import { AlertDialog } from '@astryxdesign/core/AlertDialog';
 
 import {
   cancelAndRefundOrder,
@@ -18,15 +18,15 @@ import {
   syncAdminOrderStatus,
   type AdminOrderRow,
 } from '@/actions/admin/orders';
-import {ORDER_STATUSES, type OrderStatus} from '@/lib/database';
-import {formatAmount} from '@/app/user/add-funds/format';
-import {formatTicketDate, ticketRef} from '@/app/components/support/ticketMeta';
-import {ORDER_STATUS_DOT, ORDER_STATUS_LABELS} from '@/app/components/orders/orderMeta';
+import { ORDER_STATUSES, type OrderStatus } from '@/lib/database';
+import { formatAmount } from '@/app/user/add-funds/format';
+import { formatTicketDate, ticketRef } from '@/app/components/support/ticketMeta';
+import { ORDER_STATUS_DOT, ORDER_STATUS_LABELS } from '@/app/components/orders/orderMeta';
 
-// 'refunded' is excluded on purpose — refunding must credit the balance, which
+// 'refunded' is excluded on purpose  refunding must credit the balance, which
 // only the Cancel + refund action (refundOrder) does.
 const OVERRIDE_OPTIONS = ORDER_STATUSES.filter((status) => status !== 'refunded').map(
-  (value) => ({value, label: ORDER_STATUS_LABELS[value]}),
+  (value) => ({ value, label: ORDER_STATUS_LABELS[value] }),
 );
 
 function isLive(status: OrderStatus): boolean {
@@ -34,13 +34,13 @@ function isLive(status: OrderStatus): boolean {
 }
 
 /** Per-row actions: status override, upstream re-sync, cancel + refund. */
-function OrderActions({order, onError}: {order: AdminOrderRow; onError: (e: string | null) => void}) {
+function OrderActions({ order, onError }: { order: AdminOrderRow; onError: (e: string | null) => void }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
 
-  function run(action: () => Promise<{success: boolean; error?: string}>) {
+  function run(action: () => Promise<{ success: boolean; error?: string }>) {
     onError(null);
     startTransition(async () => {
       const result = await action();

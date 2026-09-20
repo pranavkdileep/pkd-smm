@@ -1,23 +1,23 @@
 'use client';
 
-import {useState, useEffect} from 'react';
-import {TabList, Tab} from '@astryxdesign/core/TabList';
-import {Table} from '@astryxdesign/core/Table';
-import {VStack} from '@astryxdesign/core/VStack';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Text} from '@astryxdesign/core/Text';
-import {Button} from '@astryxdesign/core/Button';
-import {Card} from '@astryxdesign/core/Card';
-import {Icon} from '@astryxdesign/core/Icon';
-import {Badge} from '@astryxdesign/core/Badge';
-import {ShieldCheck} from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { TabList, Tab } from '@astryxdesign/core/TabList';
+import { Table } from '@astryxdesign/core/Table';
+import { VStack } from '@astryxdesign/core/VStack';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Text } from '@astryxdesign/core/Text';
+import { Button } from '@astryxdesign/core/Button';
+import { Card } from '@astryxdesign/core/Card';
+import { Icon } from '@astryxdesign/core/Icon';
+import { Badge } from '@astryxdesign/core/Badge';
+import { ShieldCheck } from 'lucide-react';
 
-import type {PlatformId, PricingRow} from './content';
-import {PLATFORMS, PRICING} from './content';
-import {BrandIcon} from './BrandIcon';
-import {NamedIcon} from './NamedIcon';
-import {SectionIntro} from './SectionIntro';
-import {getLandingPricing} from '@/actions/users/services';
+import type { PlatformId, PricingRow } from './content';
+import { PLATFORMS, PRICING } from './content';
+import { BrandIcon } from './BrandIcon';
+import { NamedIcon } from './NamedIcon';
+import { SectionIntro } from './SectionIntro';
+import { getLandingPricing } from '@/actions/users/services';
 
 interface PricingRecord extends Record<string, unknown> {
   service: string;
@@ -27,13 +27,13 @@ interface PricingRecord extends Record<string, unknown> {
 }
 
 const COLUMNS = [
-  {key: 'service', header: 'Service'},
-  {key: 'rate', header: 'Rate per 1K'},
-  {key: 'quantity', header: 'Quantity'},
-  {key: 'guarantee', header: 'Guarantee'},
+  { key: 'service', header: 'Service' },
+  { key: 'rate', header: 'Rate per 1K' },
+  { key: 'quantity', header: 'Quantity' },
+  { key: 'guarantee', header: 'Guarantee' },
 ] as const;
 
-function MobilePricingRows({rows}: {rows: PricingRow[]}) {
+function MobilePricingRows({ rows }: { rows: PricingRow[] }) {
   return (
     <VStack gap={0} className="divide-y divide-border sm:hidden">
       {rows.map((row) => (
@@ -72,8 +72,8 @@ function MobilePricingRows({rows}: {rows: PricingRow[]}) {
   );
 }
 
-function PricingPanel({rows}: {rows: PricingRow[]}) {
-  const data: PricingRecord[] = rows.map((row) => ({...row}));
+function PricingPanel({ rows }: { rows: PricingRow[] }) {
+  const data: PricingRecord[] = rows.map((row) => ({ ...row }));
   return (
     <Card padding={0} elevation="low" className="overflow-x-auto">
       <HStack className="hidden sm:block">
@@ -83,7 +83,7 @@ function PricingPanel({rows}: {rows: PricingRow[]}) {
       <HStack gap={2} vAlign="center" className="border-t border-border px-4 py-3">
         <Icon icon={ShieldCheck} size="sm" className="text-green-vivid" />
         <Text size="xsm" color="secondary">
-          Starting rates — live prices for every tier sit inside the panel after you sign up.
+          Starting rates  live prices for every tier sit inside the panel after you sign up.
         </Text>
       </HStack>
       <HStack className="px-4 pb-4">
@@ -97,7 +97,7 @@ interface PricingTablesProps {
   initialPricing?: Record<PlatformId, PricingRow[]>;
 }
 
-export function PricingTables({initialPricing}: PricingTablesProps = {}) {
+export function PricingTables({ initialPricing }: PricingTablesProps = {}) {
   const [active, setActive] = useState<PlatformId>('instagram');
   const [pricing, setPricing] = useState<Record<PlatformId, PricingRow[]>>(
     initialPricing ?? PRICING

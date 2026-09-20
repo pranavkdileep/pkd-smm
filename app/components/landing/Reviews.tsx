@@ -1,19 +1,19 @@
-import {Grid} from '@astryxdesign/core/Grid';
-import {Card} from '@astryxdesign/core/Card';
-import {VStack} from '@astryxdesign/core/VStack';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Text} from '@astryxdesign/core/Text';
-import {Avatar} from '@astryxdesign/core/Avatar';
-import {Badge} from '@astryxdesign/core/Badge';
+import { Grid } from '@astryxdesign/core/Grid';
+import { Card } from '@astryxdesign/core/Card';
+import { VStack } from '@astryxdesign/core/VStack';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Text } from '@astryxdesign/core/Text';
+import { Avatar } from '@astryxdesign/core/Avatar';
+import { Badge } from '@astryxdesign/core/Badge';
 
-import {REVIEWS} from './content';
-import {NamedIcon} from './NamedIcon';
-import {SectionIntro} from './SectionIntro';
-import {siteConfig} from '@/lib/config';
+import { REVIEWS } from './content';
+import { NamedIcon } from './NamedIcon';
+import { SectionIntro } from './SectionIntro';
+import { siteConfig } from '@/lib/config';
 
 const RATING = 4.6;
 
-function StarRating({value}: {value: number}) {
+function StarRating({ value }: { value: number }) {
   const fillWidth = `${(value / 5) * 100}%`;
   return (
     <HStack gap={0} className="relative w-fit">
@@ -113,12 +113,12 @@ export function Reviews() {
         <SectionIntro
           eyebrow="Customer reviews"
           title={`Real feedback from ${siteConfig.shortName} customers`}
-          lead="Individuals and teams use the panel for followers, views and engagement across six platforms — this feedback focuses on what every order shares: setup, clarity, support and tracking."
+          lead="Individuals and teams use the panel for followers, views and engagement across six platforms  this feedback focuses on what every order shares: setup, clarity, support and tracking."
         />
 
         <ScoreCard />
 
-        <Grid columns={{minWidth: 300, max: 3}} gap={3}>
+        <Grid columns={{ minWidth: 300, max: 3 }} gap={3}>
           {REVIEWS.map((review) => (
             <Card key={review.name} padding={3} elevation="low">
               <VStack gap={2}>

@@ -1,16 +1,16 @@
 'use server';
 
-import {randomUUID} from 'node:crypto';
-import {revalidatePath} from 'next/cache';
+import { randomUUID } from 'node:crypto';
+import { revalidatePath } from 'next/cache';
 
-import {collections} from '@/lib/db';
-import type {Transaction, User, UserStatus} from '@/lib/database';
-import {getSession} from '@/actions/auth/session';
+import { collections } from '@/lib/db';
+import type { Transaction, User, UserStatus } from '@/lib/database';
+import { getSession } from '@/actions/auth/session';
 
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 100;
 
-/** Sanitized user row sent to the admin UI — never contains the password hash. */
+/** Sanitized user row sent to the admin UI  never contains the password hash. */
 export interface AdminUserRow extends Record<string, unknown> {
   id: string;
   username: string;
@@ -29,7 +29,7 @@ export interface ListUsersResult {
   totalPages: number;
 }
 
-export type MutationResult = {success: true} | {success: false; error: string};
+export type MutationResult = { success: true } | { success: false; error: string };
 
 async function isAdmin(): Promise<boolean> {
   const session = await getSession();
@@ -46,7 +46,7 @@ function buildFilter(search: string): Record<string, unknown> {
     return {};
   }
   const pattern = new RegExp(escapeRegex(trimmed), 'i');
-  return {$or: [{username: pattern}, {email: pattern}]};
+  return { $or: [{ username: pattern }, { email: pattern }] };
 }
 
 function clampPage(value: number | undefined, totalPages: number): number {
@@ -89,7 +89,7 @@ export async function listUsers(input: {
 
   const users = await collections.users
     .find(filter, {
-      sort: {createdAt: -1, username: 1},
+      sort: { createdAt: -1, username: 1 },
       skip: (page - 1) * pageSize,
       limit: pageSize,
     })
@@ -106,20 +106,20 @@ export async function listUsers(input: {
 
 export async function setUserStatus(userId: string, status: UserStatus): Promise<MutationResult> {
   if (!(await isAdmin())) {
-    return {success: false, error: 'Admin session required.'};
+    return { success: false, error: 'Admin session required.' };
   }
   if (status !== 'active' && status !== 'banned') {
-    return {success: false, error: 'Invalid status.'};
+    return { success: false, error: 'Invalid status.' };
   }
 
-  const result = await collections.users.updateOne({id: userId}, {$set: {status}});
+  const result = await collections.users.updateOne({ id: userId }, { $set: { status } });
   if (result.matchedCount === 0) {
-    return {success: false, error: 'User not found.'};
+    return { success: false, error: 'User not found.' };
   }
 
   revalidatePath('/admin/users');
   revalidatePath('/admin');
-  return {success: true};
+  return { success: true };
 }
 
 const REASON_MAX_LENGTH = 200;
@@ -127,7 +127,7 @@ const REASON_MAX_LENGTH = 200;
 /**
  * Manually credits (positive amount) or debits (negative amount) a user's
  * balance, recording an 'adjustment' transaction with the admin's reason.
- * Debits are atomic — the balance guard makes an overdraw fail cleanly.
+ * Debits are atomic  the balance guard makes an overdraw fail cleanly.
  */
 export async function adjustUserBalance(
   userId: string,
@@ -135,25 +135,25 @@ export async function adjustUserBalance(
   reason: string,
 ): Promise<MutationResult> {
   if (!(await isAdmin())) {
-    return {success: false, error: 'Admin session required.'};
+    return { success: false, error: 'Admin session required.' };
   }
 
   // Round to the paisa, same convention as order pricing.
   const rounded = Math.round(amount * 100) / 100;
   if (!Number.isFinite(rounded) || rounded === 0) {
-    return {success: false, error: 'Enter a non-zero amount.'};
+    return { success: false, error: 'Enter a non-zero amount.' };
   }
   const note = (reason ?? '').trim();
   if (!note) {
-    return {success: false, error: 'A reason is required.'};
+    return { success: false, error: 'A reason is required.' };
   }
   if (note.length > REASON_MAX_LENGTH) {
-    return {success: false, error: `Reason must be ${REASON_MAX_LENGTH} characters or fewer.`};
+    return { success: false, error: `Reason must be ${REASON_MAX_LENGTH} characters or fewer.` };
   }
 
   const updated = await collections.users.findOneAndUpdate(
-    rounded < 0 ? {id: userId, balance: {$gte: -rounded}} : {id: userId},
-    {$inc: {balance: rounded}},
+    rounded < 0 ? { id: userId, balance: { $gte: -rounded } } : { id: userId },
+    { $inc: { balance: rounded } },
   );
   if (!updated) {
     return {
@@ -180,20 +180,20 @@ export async function adjustUserBalance(
 
   revalidatePath('/admin/users');
   revalidatePath('/admin');
-  return {success: true};
+  return { success: true };
 }
 
 export async function deleteUser(userId: string): Promise<MutationResult> {
   if (!(await isAdmin())) {
-    return {success: false, error: 'Admin session required.'};
+    return { success: false, error: 'Admin session required.' };
   }
 
-  const result = await collections.users.deleteOne({id: userId});
+  const result = await collections.users.deleteOne({ id: userId });
   if (result.deletedCount === 0) {
-    return {success: false, error: 'User not found.'};
+    return { success: false, error: 'User not found.' };
   }
 
   revalidatePath('/admin/users');
   revalidatePath('/admin');
-  return {success: true};
+  return { success: true };
 }

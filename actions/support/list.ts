@@ -1,18 +1,18 @@
 'use server';
 
-import {collections} from '@/lib/db';
+import { collections } from '@/lib/db';
 import type {
   SupportTicket,
   SupportTicketCategory,
   SupportTicketPriority,
   SupportTicketStatus,
 } from '@/lib/database';
-import {getCurrentUser} from '@/actions/auth/session';
+import { getCurrentUser } from '@/actions/auth/session';
 
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 100;
 
-/** Sanitized ticket row for the user support UI — never exposes the owner id. */
+/** Sanitized ticket row for the user support UI  never exposes the owner id. */
 export interface SupportTicketRow extends Record<string, unknown> {
   id: string;
   title: string;
@@ -90,10 +90,10 @@ export async function listSupportTickets(input: {
 }): Promise<ListSupportTicketsResult> {
   const user = await getCurrentUser();
   if (!user) {
-    return {tickets: [], total: 0, page: 1, pageSize: DEFAULT_PAGE_SIZE, totalPages: 1};
+    return { tickets: [], total: 0, page: 1, pageSize: DEFAULT_PAGE_SIZE, totalPages: 1 };
   }
 
-  const filter: Record<string, unknown> = {userId: user.id};
+  const filter: Record<string, unknown> = { userId: user.id };
   if (input.status === 'open' || input.status === 'closed') {
     filter.status = input.status;
   }
@@ -103,7 +103,7 @@ export async function listSupportTickets(input: {
   const q = (input.q ?? '').trim();
   if (q) {
     const pattern = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
-    filter.$or = [{title: pattern}, {id: pattern}];
+    filter.$or = [{ title: pattern }, { id: pattern }];
   }
   const pageSize = clampPageSize(input.pageSize);
 
@@ -113,7 +113,7 @@ export async function listSupportTickets(input: {
 
   const tickets = await collections.supportTickets
     .find(filter, {
-      sort: {updatedAt: -1, createdAt: -1},
+      sort: { updatedAt: -1, createdAt: -1 },
       skip: (page - 1) * pageSize,
       limit: pageSize,
     })
@@ -135,19 +135,19 @@ export async function listSupportTickets(input: {
  */
 export async function getSupportTicketDetail(
   ticketId: string,
-  input: {page?: number; pageSize?: number}
+  input: { page?: number; pageSize?: number }
 ): Promise<SupportTicketDetailResult | null> {
   const user = await getCurrentUser();
   if (!user) {
     return null;
   }
 
-  const ticket = await collections.supportTickets.findOne({id: ticketId, userId: user.id});
+  const ticket = await collections.supportTickets.findOne({ id: ticketId, userId: user.id });
   if (!ticket) {
     return null;
   }
 
-  const filter = {ticketId};
+  const filter = { ticketId };
   const pageSize = clampPageSize(input.pageSize);
 
   const totalComments = await collections.supportTicketComments.countDocuments(filter);
@@ -156,7 +156,7 @@ export async function getSupportTicketDetail(
 
   const comments = await collections.supportTicketComments
     .find(filter, {
-      sort: {createdAt: 1, id: 1},
+      sort: { createdAt: 1, id: 1 },
       skip: (page - 1) * pageSize,
       limit: pageSize,
     })

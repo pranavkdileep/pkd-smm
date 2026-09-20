@@ -1,12 +1,12 @@
 'use client';
 
-import {Collapsible, CollapsibleGroup} from '@astryxdesign/core/Collapsible';
-import {VStack} from '@astryxdesign/core/VStack';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Text} from '@astryxdesign/core/Text';
+import { Collapsible, CollapsibleGroup } from '@astryxdesign/core/Collapsible';
+import { VStack } from '@astryxdesign/core/VStack';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Text } from '@astryxdesign/core/Text';
 
-import {FAQS} from './content';
-import {SectionIntro} from './SectionIntro';
+import { FAQS } from './content';
+import { SectionIntro } from './SectionIntro';
 
 export function Faq() {
   return (
@@ -18,7 +18,7 @@ export function Faq() {
           align="center"
         />
 
-        {/* The group owns open state for valued items — first FAQ open by default. */}
+        {/* The group owns open state for valued items  first FAQ open by default. */}
         <CollapsibleGroup type="single" defaultValue="0">
           {FAQS.map((faq, index) => (
             <Collapsible

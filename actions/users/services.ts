@@ -1,23 +1,23 @@
 'use server';
 
-import {collections} from '@/lib/db';
-import type {Service, ServicePlatform, ServiceSortOption} from '@/lib/database';
-import {PLATFORM_TYPES, SERVICE_SORT_OPTIONS} from '@/lib/database';
-import type {PlatformId, PricingRow} from '@/app/components/landing/content';
-import {PRICING} from '@/app/components/landing/content';
+import { collections } from '@/lib/db';
+import type { Service, ServicePlatform, ServiceSortOption } from '@/lib/database';
+import { PLATFORM_TYPES, SERVICE_SORT_OPTIONS } from '@/lib/database';
+import type { PlatformId, PricingRow } from '@/app/components/landing/content';
+import { PRICING } from '@/app/components/landing/content';
 
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 100;
 const DEFAULT_SORT: ServiceSortOption = 'name-asc';
 
 const SORT_SPECS: Record<ServiceSortOption, Record<string, 1 | -1>> = {
-  'name-asc': {name: 1},
-  'name-desc': {name: -1},
-  'price-asc': {price: 1},
-  'price-desc': {price: -1},
+  'name-asc': { name: 1 },
+  'name-desc': { name: -1 },
+  'price-asc': { price: 1 },
+  'price-desc': { price: -1 },
 };
 
-/** Sanitized catalog row for the user dashboard — no upstream linkage or order-form config. */
+/** Sanitized catalog row for the user dashboard  no upstream linkage or order-form config. */
 export interface CatalogServiceRow extends Record<string, unknown> {
   id: string;
   platform: ServicePlatform;
@@ -72,7 +72,7 @@ function toRow(service: Service): CatalogServiceRow {
 }
 
 /**
- * Lists active services for the user dashboard catalog. Public catalog data —
+ * Lists active services for the user dashboard catalog. Public catalog data 
  * the /user layout already redirects unauthenticated visitors.
  */
 export async function listCatalogServices(input: {
@@ -82,12 +82,12 @@ export async function listCatalogServices(input: {
   platform?: string;
   sort?: string;
 }): Promise<ListCatalogServicesResult> {
-  const filter: Record<string, unknown> = {status: 'active'};
+  const filter: Record<string, unknown> = { status: 'active' };
 
   const trimmed = (input.search ?? '').trim();
   if (trimmed) {
     const pattern = new RegExp(escapeRegex(trimmed), 'i');
-    filter.$or = [{name: pattern}, {description: pattern}];
+    filter.$or = [{ name: pattern }, { description: pattern }];
   }
   if ((PLATFORM_TYPES as readonly string[]).includes(input.platform ?? '')) {
     filter.platform = input.platform;
@@ -104,7 +104,7 @@ export async function listCatalogServices(input: {
   const services = await collections.services
     .find(filter, {
       // id tiebreak keeps pages stable when names or prices collide.
-      sort: {...SORT_SPECS[sort], id: 1},
+      sort: { ...SORT_SPECS[sort], id: 1 },
       skip: (page - 1) * pageSize,
       limit: pageSize,
     })
@@ -122,9 +122,9 @@ export async function listCatalogServices(input: {
 const ORDER_SEARCH_LIMIT = 8;
 
 /** Never let upstream linkage leak into client-bound order data. */
-const ORDER_SERVICE_PROJECTION = {upstreamId: 0, upstreamServiceId: 0};
+const ORDER_SERVICE_PROJECTION = { upstreamId: 0, upstreamServiceId: 0 };
 
-/** Sanitized service for the new-order form — includes the order-form field config. */
+/** Sanitized service for the new-order form  includes the order-form field config. */
 export interface OrderServiceDetails extends Record<string, unknown> {
   id: string;
   platform: ServicePlatform;
@@ -159,23 +159,23 @@ function toOrderDetails(service: Service): OrderServiceDetails {
  * Fast typeahead search for the new-order form. An empty query returns the
  * first few active services (dropdown bootstrap); otherwise a case-insensitive
  * substring match on name/description, capped at a handful of rows so the
- * response stays small. Public catalog data — the /user layout already
+ * response stays small. Public catalog data  the /user layout already
  * redirects unauthenticated visitors.
  */
 export async function searchOrderServices(query: string): Promise<OrderServiceDetails[]> {
-  const filter: Record<string, unknown> = {status: 'active'};
+  const filter: Record<string, unknown> = { status: 'active' };
 
   const trimmed = query.trim();
   if (trimmed) {
     const pattern = new RegExp(escapeRegex(trimmed), 'i');
-    filter.$or = [{name: pattern}, {description: pattern}];
+    filter.$or = [{ name: pattern }, { description: pattern }];
   }
 
   const services = await collections.services
     .find(filter, {
       projection: ORDER_SERVICE_PROJECTION,
       // id tiebreak keeps result order stable when names collide.
-      sort: {name: 1, id: 1},
+      sort: { name: 1, id: 1 },
       limit: ORDER_SEARCH_LIMIT,
     })
     .toArray();
@@ -183,11 +183,11 @@ export async function searchOrderServices(query: string): Promise<OrderServiceDe
   return services.map(toOrderDetails);
 }
 
-/** First active service in catalog order — the default selection on the new-order form. */
+/** First active service in catalog order  the default selection on the new-order form. */
 export async function getDefaultOrderService(): Promise<OrderServiceDetails | null> {
   const service = await collections.services.findOne(
-    {status: 'active'},
-    {projection: ORDER_SERVICE_PROJECTION, sort: {name: 1, id: 1}}
+    { status: 'active' },
+    { projection: ORDER_SERVICE_PROJECTION, sort: { name: 1, id: 1 } }
   );
   return service ? toOrderDetails(service) : null;
 }
@@ -203,8 +203,8 @@ export async function getOrderServiceById(id: string): Promise<OrderServiceDetai
     return null;
   }
   const service = await collections.services.findOne(
-    {id: trimmed, status: 'active'},
-    {projection: ORDER_SERVICE_PROJECTION}
+    { id: trimmed, status: 'active' },
+    { projection: ORDER_SERVICE_PROJECTION }
   );
   return service ? toOrderDetails(service) : null;
 }
@@ -216,8 +216,8 @@ export async function getOrderServiceById(id: string): Promise<OrderServiceDetai
 export async function getLandingPricing(): Promise<Record<PlatformId, PricingRow[]>> {
   try {
     const services = await collections.services
-      .find({status: 'active'}, {projection: ORDER_SERVICE_PROJECTION})
-      .sort({price: 1, name: 1})
+      .find({ status: 'active' }, { projection: ORDER_SERVICE_PROJECTION })
+      .sort({ price: 1, name: 1 })
       .toArray();
 
     if (!services || services.length === 0) {
@@ -258,7 +258,7 @@ export async function getLandingPricing(): Promise<Record<PlatformId, PricingRow
       });
     }
 
-    const result: Record<PlatformId, PricingRow[]> = {...PRICING};
+    const result: Record<PlatformId, PricingRow[]> = { ...PRICING };
     for (const key of Object.keys(PRICING) as PlatformId[]) {
       if (grouped[key] && grouped[key]!.length > 0) {
         result[key] = grouped[key]!;

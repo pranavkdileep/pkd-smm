@@ -1,19 +1,19 @@
 'use server';
 
-import {revalidatePath} from 'next/cache';
-import {randomUUID} from 'node:crypto';
+import { revalidatePath } from 'next/cache';
+import { randomUUID } from 'node:crypto';
 
-import {collections} from '@/lib/db';
-import type {Service, ServicePlatform} from '@/lib/database';
-import {PLATFORM_TYPES, SERVICE_MAX_INPUTS} from '@/lib/database';
-import {getSession} from '@/actions/auth/session';
+import { collections } from '@/lib/db';
+import type { Service, ServicePlatform } from '@/lib/database';
+import { PLATFORM_TYPES, SERVICE_MAX_INPUTS } from '@/lib/database';
+import { getSession } from '@/actions/auth/session';
 
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 100;
 
 export type ServiceStatus = 'active' | 'inactive';
 
-export type {ServicePlatform};
+export type { ServicePlatform };
 
 /** Sanitized service row sent to the admin UI. */
 export interface AdminServiceRow extends Record<string, unknown> {
@@ -55,12 +55,12 @@ export interface ServiceInput {
   cancel: boolean;
   /** Order-form fields: key = machine name, value = human label. Max 10 entries. */
   inputs: Record<string, string>;
-  /** Upstream linkage — required by validation. */
+  /** Upstream linkage  required by validation. */
   upstreamId?: string;
   upstreamServiceId?: string;
 }
 
-export type MutationResult = {success: true} | {success: false; error: string};
+export type MutationResult = { success: true } | { success: false; error: string };
 
 async function isAdmin(): Promise<boolean> {
   const session = await getSession();
@@ -77,7 +77,7 @@ function buildFilter(search: string): Record<string, unknown> {
     return {};
   }
   const pattern = new RegExp(escapeRegex(trimmed), 'i');
-  return {$or: [{name: pattern}, {description: pattern}]};
+  return { $or: [{ name: pattern }, { description: pattern }] };
 }
 
 function clampPage(value: number | undefined, totalPages: number): number {
@@ -202,7 +202,7 @@ export async function listServices(input: {
 
   const services = await collections.services
     .find(filter, {
-      sort: {name: 1},
+      sort: { name: 1 },
       skip: (page - 1) * pageSize,
       limit: pageSize,
     })
@@ -210,7 +210,7 @@ export async function listServices(input: {
 
   const upstreamIds = [...new Set(services.map((service) => service.upstreamId).filter(Boolean))];
   const upstreams = upstreamIds.length
-    ? await collections.upstreamProviders.find({id: {$in: upstreamIds}}).toArray()
+    ? await collections.upstreamProviders.find({ id: { $in: upstreamIds } }).toArray()
     : [];
   const nameById = new Map(upstreams.map((upstream) => [upstream.id, upstream.name]));
 
@@ -225,11 +225,11 @@ export async function listServices(input: {
 
 export async function createService(input: ServiceInput): Promise<MutationResult> {
   if (!(await isAdmin())) {
-    return {success: false, error: 'Admin session required.'};
+    return { success: false, error: 'Admin session required.' };
   }
   const validationError = validateServiceInput(input);
   if (validationError) {
-    return {success: false, error: validationError};
+    return { success: false, error: validationError };
   }
 
   const service: Service = {
@@ -252,23 +252,23 @@ export async function createService(input: ServiceInput): Promise<MutationResult
 
   revalidatePath('/admin/services');
   revalidatePath('/admin');
-  return {success: true};
+  return { success: true };
 }
 
 export async function updateService(serviceId: string, input: ServiceInput): Promise<MutationResult> {
   if (!(await isAdmin())) {
-    return {success: false, error: 'Admin session required.'};
+    return { success: false, error: 'Admin session required.' };
   }
   if (!serviceId) {
-    return {success: false, error: 'Service id is required.'};
+    return { success: false, error: 'Service id is required.' };
   }
   const validationError = validateServiceInput(input);
   if (validationError) {
-    return {success: false, error: validationError};
+    return { success: false, error: validationError };
   }
 
   const result = await collections.services.updateOne(
-    {id: serviceId},
+    { id: serviceId },
     {
       $set: {
         platform: input.platform,
@@ -287,12 +287,12 @@ export async function updateService(serviceId: string, input: ServiceInput): Pro
     },
   );
   if (result.matchedCount === 0) {
-    return {success: false, error: 'Service not found.'};
+    return { success: false, error: 'Service not found.' };
   }
 
   revalidatePath('/admin/services');
   revalidatePath('/admin');
-  return {success: true};
+  return { success: true };
 }
 
 export async function setServiceStatus(
@@ -300,33 +300,33 @@ export async function setServiceStatus(
   status: ServiceStatus,
 ): Promise<MutationResult> {
   if (!(await isAdmin())) {
-    return {success: false, error: 'Admin session required.'};
+    return { success: false, error: 'Admin session required.' };
   }
   if (status !== 'active' && status !== 'inactive') {
-    return {success: false, error: 'Invalid status.'};
+    return { success: false, error: 'Invalid status.' };
   }
 
-  const result = await collections.services.updateOne({id: serviceId}, {$set: {status}});
+  const result = await collections.services.updateOne({ id: serviceId }, { $set: { status } });
   if (result.matchedCount === 0) {
-    return {success: false, error: 'Service not found.'};
+    return { success: false, error: 'Service not found.' };
   }
 
   revalidatePath('/admin/services');
   revalidatePath('/admin');
-  return {success: true};
+  return { success: true };
 }
 
 export async function deleteService(serviceId: string): Promise<MutationResult> {
   if (!(await isAdmin())) {
-    return {success: false, error: 'Admin session required.'};
+    return { success: false, error: 'Admin session required.' };
   }
 
-  const result = await collections.services.deleteOne({id: serviceId});
+  const result = await collections.services.deleteOne({ id: serviceId });
   if (result.deletedCount === 0) {
-    return {success: false, error: 'Service not found.'};
+    return { success: false, error: 'Service not found.' };
   }
 
   revalidatePath('/admin/services');
   revalidatePath('/admin');
-  return {success: true};
+  return { success: true };
 }

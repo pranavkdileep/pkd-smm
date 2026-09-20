@@ -1,23 +1,23 @@
 'use client';
 
-import {useEffect, useRef, useState, useTransition} from 'react';
-import {usePathname, useRouter, useSearchParams} from 'next/navigation';
-import {Plus, Search} from 'lucide-react';
-import {Dialog, DialogHeader} from '@astryxdesign/core/Dialog';
-import {Layout, LayoutContent, LayoutFooter} from '@astryxdesign/core/Layout';
-import {VStack} from '@astryxdesign/core/VStack';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Button} from '@astryxdesign/core/Button';
-import {TextInput} from '@astryxdesign/core/TextInput';
-import {TextArea} from '@astryxdesign/core/TextArea';
-import {Selector} from '@astryxdesign/core/Selector';
-import {SegmentedControl, SegmentedControlItem} from '@astryxdesign/core/SegmentedControl';
-import {Banner} from '@astryxdesign/core/Banner';
+import { useEffect, useRef, useState, useTransition } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { Plus, Search } from 'lucide-react';
+import { Dialog, DialogHeader } from '@astryxdesign/core/Dialog';
+import { Layout, LayoutContent, LayoutFooter } from '@astryxdesign/core/Layout';
+import { VStack } from '@astryxdesign/core/VStack';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Button } from '@astryxdesign/core/Button';
+import { TextInput } from '@astryxdesign/core/TextInput';
+import { TextArea } from '@astryxdesign/core/TextArea';
+import { Selector } from '@astryxdesign/core/Selector';
+import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
+import { Banner } from '@astryxdesign/core/Banner';
 
-import {SUPPORT_TICKET_CATEGORIES, SUPPORT_TICKET_PRIORITIES} from '@/lib/database';
-import {createSupportTicket} from '@/actions/support/create';
+import { SUPPORT_TICKET_CATEGORIES, SUPPORT_TICKET_PRIORITIES } from '@/lib/database';
+import { createSupportTicket } from '@/actions/support/create';
 
-import {CATEGORY_LABELS, PRIORITY_LABELS} from '@/app/components/support/ticketMeta';
+import { CATEGORY_LABELS, PRIORITY_LABELS } from '@/app/components/support/ticketMeta';
 
 const TITLE_MIN_LENGTH = 3; // Mirrors the limit enforced in actions/support/create.ts.
 const TITLE_MAX_LENGTH = 120;
@@ -34,7 +34,7 @@ const PRIORITY_OPTIONS = SUPPORT_TICKET_PRIORITIES.map((value) => ({
 }));
 
 const CATEGORY_FILTER_OPTIONS = [
-  {value: '', label: 'All categories'},
+  { value: '', label: 'All categories' },
   ...SUPPORT_TICKET_CATEGORIES.map((value) => ({
     value,
     label: CATEGORY_LABELS[value],
@@ -72,7 +72,7 @@ export function SupportToolbar({
     };
   }, []);
 
-  function navigate(next: {q?: string; status?: string; category?: string}) {
+  function navigate(next: { q?: string; status?: string; category?: string }) {
     const params = new URLSearchParams(searchParams.toString());
     // Fall back to URL props (not local state) so control changes don't echo
     // a stale debounced keystroke.
@@ -108,7 +108,7 @@ export function SupportToolbar({
       clearTimeout(timeoutRef.current);
     }
     timeoutRef.current = setTimeout(() => {
-      navigate({q: next});
+      navigate({ q: next });
     }, SEARCH_DEBOUNCE_MS);
   }
 
@@ -129,7 +129,7 @@ export function SupportToolbar({
       <SegmentedControl
         label="Ticket status"
         value={status}
-        onChange={(next) => navigate({status: next})}
+        onChange={(next) => navigate({ status: next })}
         isDisabled={isPending}
       >
         <SegmentedControlItem value="" label="All" />
@@ -141,7 +141,7 @@ export function SupportToolbar({
         isLabelHidden
         options={CATEGORY_FILTER_OPTIONS}
         value={category}
-        onChange={(next) => navigate({category: next})}
+        onChange={(next) => navigate({ category: next })}
         width={160}
         isDisabled={isPending}
       />
@@ -156,7 +156,7 @@ export function SupportToolbar({
   );
 }
 
-function NewTicketDialog({onClose}: {onClose: () => void}) {
+function NewTicketDialog({ onClose }: { onClose: () => void }) {
   const router = useRouter();
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
@@ -171,7 +171,7 @@ function NewTicketDialog({onClose}: {onClose: () => void}) {
       if (!previous[key]) {
         return previous;
       }
-      const next = {...previous};
+      const next = { ...previous };
       delete next[key];
       return next;
     });
@@ -253,7 +253,7 @@ function NewTicketDialog({onClose}: {onClose: () => void}) {
                 placeholder="e.g. Order #1234 stuck in processing"
                 isRequired
                 isDisabled={isSubmitting}
-                status={fieldErrors.title ? {type: 'error', message: fieldErrors.title} : undefined}
+                status={fieldErrors.title ? { type: 'error', message: fieldErrors.title } : undefined}
               />
 
               <Selector
@@ -268,7 +268,7 @@ function NewTicketDialog({onClose}: {onClose: () => void}) {
                 isRequired
                 isDisabled={isSubmitting}
                 status={
-                  fieldErrors.category ? {type: 'error', message: fieldErrors.category} : undefined
+                  fieldErrors.category ? { type: 'error', message: fieldErrors.category } : undefined
                 }
               />
 
@@ -291,13 +291,13 @@ function NewTicketDialog({onClose}: {onClose: () => void}) {
                   setMessage(next);
                   clearFieldError('message');
                 }}
-                placeholder="Describe the issue in detail — order ids, links, and what you expected."
+                placeholder="Describe the issue in detail  order ids, links, and what you expected."
                 rows={5}
                 maxLength={MESSAGE_MAX_LENGTH}
                 isRequired
                 isDisabled={isSubmitting}
                 status={
-                  fieldErrors.message ? {type: 'error', message: fieldErrors.message} : undefined
+                  fieldErrors.message ? { type: 'error', message: fieldErrors.message } : undefined
                 }
               />
             </VStack>

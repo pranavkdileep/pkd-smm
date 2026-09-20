@@ -1,11 +1,11 @@
 'use client';
 
-import {Grid} from '@astryxdesign/core/Grid';
-import {Card} from '@astryxdesign/core/Card';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Text} from '@astryxdesign/core/Text';
-import {Icon} from '@astryxdesign/core/Icon';
-import {Users, Layers, Ban, IndianRupee, TrendingUp, Wallet, type LucideIcon} from 'lucide-react';
+import { Grid } from '@astryxdesign/core/Grid';
+import { Card } from '@astryxdesign/core/Card';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Text } from '@astryxdesign/core/Text';
+import { Icon } from '@astryxdesign/core/Icon';
+import { Users, Layers, Ban, IndianRupee, TrendingUp, Wallet, type LucideIcon } from 'lucide-react';
 
 const ICONS: Record<string, LucideIcon> = {
   users: Users,
@@ -17,16 +17,16 @@ const ICONS: Record<string, LucideIcon> = {
 };
 
 export interface StatItem {
-  /** Key into the icon registry above — keeps props serializable from server components. */
+  /** Key into the icon registry above  keeps props serializable from server components. */
   iconKey: keyof typeof ICONS | string;
   label: string;
   /** Pre-formatted display value. */
   value: string;
 }
 
-export function StatGrid({stats}: {stats: StatItem[]}) {
+export function StatGrid({ stats }: { stats: StatItem[] }) {
   return (
-    <Grid gap={4} columns={{minWidth: 260}}>
+    <Grid gap={4} columns={{ minWidth: 260 }}>
       {stats.map((stat) => {
         const IconComponent = ICONS[stat.iconKey];
         return (

@@ -1,11 +1,11 @@
 'use server';
 
-import {randomUUID} from 'node:crypto';
-import {revalidatePath} from 'next/cache';
+import { randomUUID } from 'node:crypto';
+import { revalidatePath } from 'next/cache';
 
-import {collections} from '@/lib/db';
-import {DEPOSIT_STATUSES, type Deposit, type DepositStatus, type Transaction} from '@/lib/database';
-import {getSession} from '@/actions/auth/session';
+import { collections } from '@/lib/db';
+import { DEPOSIT_STATUSES, type Deposit, type DepositStatus, type Transaction } from '@/lib/database';
+import { getSession } from '@/actions/auth/session';
 
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 100;
@@ -34,7 +34,7 @@ export interface ListAdminDepositsResult {
   totalPages: number;
 }
 
-export type MutationResult = {success: true} | {success: false; error: string};
+export type MutationResult = { success: true } | { success: false; error: string };
 
 async function isAdmin(): Promise<boolean> {
   const session = await getSession();
@@ -74,12 +74,12 @@ async function buildFilter(input: {
   if (search) {
     const pattern = new RegExp(escapeRegex(search), 'i');
     const matchingUsers = await collections.users
-      .find({username: pattern}, {projection: {id: 1}})
+      .find({ username: pattern }, { projection: { id: 1 } })
       .toArray();
     filter.$or = [
-      {id: pattern},
-      {gatewayTransactionId: pattern},
-      {userId: {$in: matchingUsers.map((user) => user.id)}},
+      { id: pattern },
+      { gatewayTransactionId: pattern },
+      { userId: { $in: matchingUsers.map((user) => user.id) } },
     ];
   }
 
@@ -111,7 +111,7 @@ export async function listAdminDeposits(input: {
   status?: string;
 }): Promise<ListAdminDepositsResult> {
   if (!(await isAdmin())) {
-    return {deposits: [], total: 0, page: 1, pageSize: DEFAULT_PAGE_SIZE, totalPages: 1};
+    return { deposits: [], total: 0, page: 1, pageSize: DEFAULT_PAGE_SIZE, totalPages: 1 };
   }
 
   const filter = await buildFilter(input);
@@ -123,7 +123,7 @@ export async function listAdminDeposits(input: {
 
   const deposits = await collections.deposits
     .find(filter, {
-      sort: {createdAt: -1, id: -1},
+      sort: { createdAt: -1, id: -1 },
       skip: (page - 1) * pageSize,
       limit: pageSize,
     })
@@ -131,32 +131,32 @@ export async function listAdminDeposits(input: {
 
   const userIds = [...new Set(deposits.map((deposit) => deposit.userId))];
   const users = userIds.length
-    ? await collections.users.find({id: {$in: userIds}}, {projection: {id: 1, username: 1}}).toArray()
+    ? await collections.users.find({ id: { $in: userIds } }, { projection: { id: 1, username: 1 } }).toArray()
     : [];
   const usernameById = new Map(users.map((user) => [user.id, user.username]));
 
-  return {deposits: toRows(deposits, usernameById), total, page, pageSize, totalPages};
+  return { deposits: toRows(deposits, usernameById), total, page, pageSize, totalPages };
 }
 
 /**
- * Manually approves a deposit — the support-case path for payments verified
+ * Manually approves a deposit  the support-case path for payments verified
  * outside the gateway. Marks it completed, credits the balance, and writes the
  * 'deposit' ledger entry. The atomic status guard prevents double-crediting.
  */
 export async function approveAdminDeposit(depositId: string): Promise<MutationResult> {
   if (!(await isAdmin())) {
-    return {success: false, error: 'Admin session required.'};
+    return { success: false, error: 'Admin session required.' };
   }
 
   const transactionId = randomUUID();
   const completedAt = new Date().toISOString();
 
   const approved = await collections.deposits.findOneAndUpdate(
-    {id: depositId, status: {$ne: 'completed'}},
-    {$set: {status: 'completed', transactionId, completedAt}},
+    { id: depositId, status: { $ne: 'completed' } },
+    { $set: { status: 'completed', transactionId, completedAt } },
   );
   if (!approved) {
-    return {success: false, error: 'Deposit not found or already completed.'};
+    return { success: false, error: 'Deposit not found or already completed.' };
   }
 
   // ponytail: deposit update + credit are not one Mongo transaction; a crash
@@ -171,8 +171,8 @@ export async function approveAdminDeposit(depositId: string): Promise<MutationRe
     createdAt: completedAt,
   };
   await collections.transactions.insertOne(transaction);
-  await collections.users.updateOne({id: approved.userId}, {$inc: {balance: approved.amount}});
+  await collections.users.updateOne({ id: approved.userId }, { $inc: { balance: approved.amount } });
 
   revalidatePath('/admin/deposits');
-  return {success: true};
+  return { success: true };
 }

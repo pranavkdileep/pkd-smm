@@ -22,7 +22,7 @@ export interface User {
   emailVerificationToken?: string; // jwt token for email verification the experation is in the token itself
   passwordResetToken?: string; // jwt token for password reset the experation is in the token itself
   passwordHash: string;
-  balance : number;
+  balance: number;
   language: Language;
   /** Defaults to 'active' for legacy documents created before this field existed. */
   status?: UserStatus;
@@ -42,7 +42,7 @@ export interface Transaction {
   userId: string;
   type: TransactionType;
   amount: number;
-  /** Admin-supplied reason — only set on manual 'adjustment' records. */
+  /** Admin-supplied reason  only set on manual 'adjustment' records. */
   note?: string;
   /** ISO date string. */
   createdAt: string;
@@ -86,7 +86,7 @@ export interface UpstreamProvider {
   apiKey: string;
 }
 
-export const PLATFORM_TYPES = ['INSTAGRAM', 'TELEGRAM' , 'YOUTUBE', 'TIKTOK', 'FACEBOOK','X'] as const;
+export const PLATFORM_TYPES = ['INSTAGRAM', 'TELEGRAM', 'YOUTUBE', 'TIKTOK', 'FACEBOOK', 'X'] as const;
 
 export type ServicePlatform = (typeof PLATFORM_TYPES)[number];
 
@@ -167,9 +167,9 @@ export interface SupportTicket {
   status: SupportTicketStatus;
   /** ISO date string. */
   createdAt: string;
-  /** ISO date string — bumped on every new comment. */
+  /** ISO date string  bumped on every new comment. */
   updatedAt: string;
-  /** ISO date string — set when the ticket was closed. */
+  /** ISO date string  set when the ticket was closed. */
   closedAt?: string;
   /** Who closed the ticket. */
   closedBy?: 'user' | 'admin';

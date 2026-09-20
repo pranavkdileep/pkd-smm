@@ -1,20 +1,20 @@
 'use client';
 
-import {useState} from 'react';
-import {useRouter} from 'next/navigation';
-import {Table, proportional, pixel, type TableColumn} from '@astryxdesign/core/Table';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Text} from '@astryxdesign/core/Text';
-import {Button} from '@astryxdesign/core/Button';
-import {StatusDot} from '@astryxdesign/core/StatusDot';
-import {Switch} from '@astryxdesign/core/Switch';
-import {Banner} from '@astryxdesign/core/Banner';
-import {AlertDialog} from '@astryxdesign/core/AlertDialog';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Table, proportional, pixel, type TableColumn } from '@astryxdesign/core/Table';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Text } from '@astryxdesign/core/Text';
+import { Button } from '@astryxdesign/core/Button';
+import { StatusDot } from '@astryxdesign/core/StatusDot';
+import { Switch } from '@astryxdesign/core/Switch';
+import { Banner } from '@astryxdesign/core/Banner';
+import { AlertDialog } from '@astryxdesign/core/AlertDialog';
 
-import {deleteService, setServiceStatus, type AdminServiceRow} from '@/actions/admin/services';
+import { deleteService, setServiceStatus, type AdminServiceRow } from '@/actions/admin/services';
 
 function formatPrice(value: number): string {
-  return `₹${value.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+  return `₹${value.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 function formatCount(value: number): string {
@@ -72,7 +72,7 @@ export function ServicesTable({
       key: 'description',
       header: 'Description',
       width: proportional(2.2),
-      renderCell: (service) => <Text color="secondary">{service.description || '—'}</Text>,
+      renderCell: (service) => <Text color="secondary">{service.description || ''}</Text>,
     },
     {
       key: 'price',

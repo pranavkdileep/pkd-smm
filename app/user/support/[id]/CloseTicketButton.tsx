@@ -1,17 +1,17 @@
 'use client';
 
-import {useState} from 'react';
-import {useRouter} from 'next/navigation';
-import {CheckCircle2} from 'lucide-react';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Button} from '@astryxdesign/core/Button';
-import {AlertDialog} from '@astryxdesign/core/AlertDialog';
-import {Banner} from '@astryxdesign/core/Banner';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { CheckCircle2 } from 'lucide-react';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Button } from '@astryxdesign/core/Button';
+import { AlertDialog } from '@astryxdesign/core/AlertDialog';
+import { Banner } from '@astryxdesign/core/Banner';
 
-import {closeSupportTicket} from '@/actions/support/close';
+import { closeSupportTicket } from '@/actions/support/close';
 
 /** Closes one of the user's own tickets after an explicit confirmation. */
-export function CloseTicketButton({ticketId}: {ticketId: string}) {
+export function CloseTicketButton({ ticketId }: { ticketId: string }) {
   const router = useRouter();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -46,7 +46,7 @@ export function CloseTicketButton({ticketId}: {ticketId: string}) {
         isOpen={isConfirmOpen}
         onOpenChange={setIsConfirmOpen}
         title="Close this ticket?"
-        description="The conversation will be locked — no further replies can be added. You can always open a new ticket."
+        description="The conversation will be locked  no further replies can be added. You can always open a new ticket."
         actionLabel="Close ticket"
         isActionLoading={isClosing}
         onAction={() => {

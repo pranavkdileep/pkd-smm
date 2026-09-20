@@ -1,9 +1,9 @@
 'use server';
 
-import {randomUUID} from 'node:crypto';
-import {revalidatePath} from 'next/cache';
+import { randomUUID } from 'node:crypto';
+import { revalidatePath } from 'next/cache';
 
-import {collections} from '@/lib/db';
+import { collections } from '@/lib/db';
 import {
   SUPPORT_TICKET_CATEGORIES,
   SUPPORT_TICKET_PRIORITIES,
@@ -12,8 +12,8 @@ import {
   type SupportTicketPriority,
   type SupportTicketStatus,
 } from '@/lib/database';
-import {getSession} from '@/actions/auth/session';
-import type {SupportMutationResult} from '@/actions/support/comments';
+import { getSession } from '@/actions/auth/session';
+import type { SupportMutationResult } from '@/actions/support/comments';
 
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 100;
@@ -31,7 +31,7 @@ export interface AdminSupportTicketRow extends Record<string, unknown> {
   createdAt: string;
   updatedAt: string;
   closedAt: string | null;
-  /** Who closed the ticket — null while open. */
+  /** Who closed the ticket  null while open. */
   closedBy: 'user' | 'admin' | null;
 }
 
@@ -47,7 +47,7 @@ export interface ListAdminSupportTicketsResult {
 export interface AdminSupportCommentRow {
   id: string;
   authorType: 'user' | 'admin';
-  /** Resolved author name — the customer's or the staff member's username. */
+  /** Resolved author name  the customer's or the staff member's username. */
   authorName: string;
   message: string;
   createdAt: string;
@@ -111,9 +111,9 @@ async function buildTicketFilter(input: {
   if (search) {
     const pattern = new RegExp(escapeRegex(search), 'i');
     const matchingUsers = await collections.users
-      .find({username: pattern}, {projection: {id: 1}})
+      .find({ username: pattern }, { projection: { id: 1 } })
       .toArray();
-    filter.$or = [{title: pattern}, {userId: {$in: matchingUsers.map((user) => user.id)}}];
+    filter.$or = [{ title: pattern }, { userId: { $in: matchingUsers.map((user) => user.id) } }];
   }
 
   return filter;
@@ -124,8 +124,8 @@ async function attachRequesters(tickets: SupportTicket[]): Promise<AdminSupportT
   const userIds = [...new Set(tickets.map((ticket) => ticket.userId))];
   const users = userIds.length
     ? await collections.users
-        .find({id: {$in: userIds}}, {projection: {id: 1, username: 1, email: 1}})
-        .toArray()
+      .find({ id: { $in: userIds } }, { projection: { id: 1, username: 1, email: 1 } })
+      .toArray()
     : [];
   const usersById = new Map(users.map((user) => [user.id, user]));
 
@@ -138,7 +138,7 @@ async function attachRequesters(tickets: SupportTicket[]): Promise<AdminSupportT
       priority: ticket.priority,
       status: ticket.status,
       requesterUsername: requester?.username ?? 'Deleted user',
-      requesterEmail: requester?.email ?? '—',
+      requesterEmail: requester?.email ?? '',
       createdAt: ticket.createdAt,
       updatedAt: ticket.updatedAt,
       closedAt: ticket.closedAt ?? null,
@@ -175,14 +175,14 @@ export async function listAdminSupportTickets(input: {
 
   const [total, openCount] = await Promise.all([
     collections.supportTickets.countDocuments(filter),
-    collections.supportTickets.countDocuments({...filter, status: 'open'}),
+    collections.supportTickets.countDocuments({ ...filter, status: 'open' }),
   ]);
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const page = clampPage(input.page, totalPages);
 
   const tickets = await collections.supportTickets
     .find(filter, {
-      sort: {updatedAt: -1, createdAt: -1},
+      sort: { updatedAt: -1, createdAt: -1 },
       skip: (page - 1) * pageSize,
       limit: pageSize,
     })
@@ -205,18 +205,18 @@ export async function listAdminSupportTickets(input: {
  */
 export async function getAdminSupportTicketDetail(
   ticketId: string,
-  input: {page?: number; pageSize?: number}
+  input: { page?: number; pageSize?: number }
 ): Promise<AdminSupportTicketDetailResult | null> {
   if (!(await isAdmin())) {
     return null;
   }
 
-  const ticket = await collections.supportTickets.findOne({id: ticketId});
+  const ticket = await collections.supportTickets.findOne({ id: ticketId });
   if (!ticket) {
     return null;
   }
 
-  const filter = {ticketId};
+  const filter = { ticketId };
   const pageSize = clampPageSize(input.pageSize);
 
   const totalComments = await collections.supportTicketComments.countDocuments(filter);
@@ -225,7 +225,7 @@ export async function getAdminSupportTicketDetail(
 
   const comments = await collections.supportTicketComments
     .find(filter, {
-      sort: {createdAt: 1, id: 1},
+      sort: { createdAt: 1, id: 1 },
       skip: (page - 1) * pageSize,
       limit: pageSize,
     })
@@ -237,8 +237,8 @@ export async function getAdminSupportTicketDetail(
   ];
   const admins = adminAuthorIds.length
     ? await collections.adminUsers
-        .find({id: {$in: adminAuthorIds}}, {projection: {id: 1, username: 1}})
-        .toArray()
+      .find({ id: { $in: adminAuthorIds } }, { projection: { id: 1, username: 1 } })
+      .toArray()
     : [];
   const adminsById = new Map(admins.map((admin) => [admin.id, admin]));
 
@@ -274,23 +274,23 @@ export async function addAdminSupportTicketComment(
 ): Promise<SupportMutationResult> {
   const session = await getSession();
   if (session?.role !== 'admin') {
-    return {success: false, error: 'Admin session required.'};
+    return { success: false, error: 'Admin session required.' };
   }
 
   const trimmed = (message ?? '').trim();
   if (!trimmed) {
-    return {success: false, error: 'Write a message before sending.'};
+    return { success: false, error: 'Write a message before sending.' };
   }
   if (trimmed.length > MESSAGE_MAX_LENGTH) {
-    return {success: false, error: `Replies must be ${MESSAGE_MAX_LENGTH} characters or fewer.`};
+    return { success: false, error: `Replies must be ${MESSAGE_MAX_LENGTH} characters or fewer.` };
   }
 
-  const ticket = await collections.supportTickets.findOne({id: ticketId});
+  const ticket = await collections.supportTickets.findOne({ id: ticketId });
   if (!ticket) {
-    return {success: false, error: 'Ticket not found.'};
+    return { success: false, error: 'Ticket not found.' };
   }
   if (ticket.status === 'closed') {
-    return {success: false, error: 'This ticket is closed and locked.'};
+    return { success: false, error: 'This ticket is closed and locked.' };
   }
 
   const now = new Date().toISOString();
@@ -303,14 +303,14 @@ export async function addAdminSupportTicketComment(
     message: trimmed,
     createdAt: now,
   });
-  await collections.supportTickets.updateOne({id: ticketId}, {$set: {updatedAt: now}});
+  await collections.supportTickets.updateOne({ id: ticketId }, { $set: { updatedAt: now } });
 
   revalidatePath('/admin/support');
   revalidatePath(`/admin/support/${ticketId}`);
   revalidatePath('/user/support');
   revalidatePath(`/user/support/${ticketId}`);
 
-  return {success: true};
+  return { success: true };
 }
 
 /**
@@ -319,21 +319,21 @@ export async function addAdminSupportTicketComment(
  */
 export async function closeAdminSupportTicket(ticketId: string): Promise<SupportMutationResult> {
   if (!(await isAdmin())) {
-    return {success: false, error: 'Admin session required.'};
+    return { success: false, error: 'Admin session required.' };
   }
 
-  const ticket = await collections.supportTickets.findOne({id: ticketId});
+  const ticket = await collections.supportTickets.findOne({ id: ticketId });
   if (!ticket) {
-    return {success: false, error: 'Ticket not found.'};
+    return { success: false, error: 'Ticket not found.' };
   }
   if (ticket.status === 'closed') {
-    return {success: true};
+    return { success: true };
   }
 
   const now = new Date().toISOString();
   await collections.supportTickets.updateOne(
-    {id: ticketId},
-    {$set: {status: 'closed', closedAt: now, closedBy: 'admin', updatedAt: now}}
+    { id: ticketId },
+    { $set: { status: 'closed', closedAt: now, closedBy: 'admin', updatedAt: now } }
   );
 
   revalidatePath('/admin/support');
@@ -341,6 +341,6 @@ export async function closeAdminSupportTicket(ticketId: string): Promise<Support
   revalidatePath('/user/support');
   revalidatePath(`/user/support/${ticketId}`);
 
-  return {success: true};
+  return { success: true };
 }
 

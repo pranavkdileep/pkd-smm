@@ -1,19 +1,19 @@
-import {redirect} from 'next/navigation';
-import {VStack} from '@astryxdesign/core/VStack';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Heading} from '@astryxdesign/core/Heading';
-import {Text} from '@astryxdesign/core/Text';
-import {Grid} from '@astryxdesign/core/Grid';
-import {Divider} from '@astryxdesign/core/Divider';
-import {MetadataList, MetadataListItem} from '@astryxdesign/core/MetadataList';
-import {Badge} from '@astryxdesign/core/Badge';
-import type {Language} from '@/lib/database';
+import { redirect } from 'next/navigation';
+import { VStack } from '@astryxdesign/core/VStack';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Heading } from '@astryxdesign/core/Heading';
+import { Text } from '@astryxdesign/core/Text';
+import { Grid } from '@astryxdesign/core/Grid';
+import { Divider } from '@astryxdesign/core/Divider';
+import { MetadataList, MetadataListItem } from '@astryxdesign/core/MetadataList';
+import { Badge } from '@astryxdesign/core/Badge';
+import type { Language } from '@/lib/database';
 
-import {getUserDetails} from '@/actions/users/details';
+import { getUserDetails } from '@/actions/users/details';
 
-import {ChangePasswordForm} from './ChangePasswordForm';
-import {EmailVerification} from './EmailVerification';
-import {siteConfig} from '@/lib/config';
+import { ChangePasswordForm } from './ChangePasswordForm';
+import { EmailVerification } from './EmailVerification';
+import { siteConfig } from '@/lib/config';
 
 export const metadata = {
   title: `Settings · ${siteConfig.name}`,
@@ -50,16 +50,16 @@ export default async function SettingsPage() {
 
   return (
     // Settings archetype per Astryx: two-column sections (heading column +
-    // content column) separated by dividers — no cards, one containment layer.
+    // content column) separated by dividers  no cards, one containment layer.
     <VStack gap={8} className="w-full pt-6 px-6 pb-10">
       <VStack gap={1}>
         <Heading level={1}>Settings</Heading>
         <Text color="secondary">
-          Your account details, email verification, and password — all in one place.
+          Your account details, email verification, and password  all in one place.
         </Text>
       </VStack>
 
-      <Grid gap={10} columns={{minWidth: 320}}>
+      <Grid gap={10} columns={{ minWidth: 320 }}>
         <VStack gap={1}>
           <Heading level={2}>Account</Heading>
           <Text size="sm" color="secondary">How your profile looks on the panel.</Text>
@@ -84,7 +84,7 @@ export default async function SettingsPage() {
 
       <Divider />
 
-      <Grid gap={10} columns={{minWidth: 320}}>
+      <Grid gap={10} columns={{ minWidth: 320 }}>
         <VStack gap={1}>
           <Heading level={2}>Email verification</Heading>
           <Text size="sm" color="secondary">
@@ -103,7 +103,7 @@ export default async function SettingsPage() {
 
       <Divider />
 
-      <Grid gap={10} columns={{minWidth: 320}}>
+      <Grid gap={10} columns={{ minWidth: 320 }}>
         <VStack gap={1}>
           <Heading level={2}>Password</Heading>
           <Text size="sm" color="secondary">

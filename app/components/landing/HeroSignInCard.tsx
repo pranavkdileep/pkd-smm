@@ -28,8 +28,8 @@ export function HeroSignInCard() {
   }
 
   return (
-    <Card padding={4} elevation="low" maxWidth={460}>
-      <VStack gap={3}>
+    <Card padding={6} elevation="med" maxWidth={540} width="100%">
+      <VStack gap={4}>
         <Heading level={2}>Account Access</Heading>
 
         <Grid columns={2} gap={2}>

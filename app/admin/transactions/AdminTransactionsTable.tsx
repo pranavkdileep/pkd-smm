@@ -1,13 +1,13 @@
 'use client';
 
-import {Table, proportional, pixel, type TableColumn} from '@astryxdesign/core/Table';
-import {VStack} from '@astryxdesign/core/VStack';
-import {Text} from '@astryxdesign/core/Text';
+import { Table, proportional, pixel, type TableColumn } from '@astryxdesign/core/Table';
+import { VStack } from '@astryxdesign/core/VStack';
+import { Text } from '@astryxdesign/core/Text';
 
-import type {AdminTransactionRow} from '@/actions/admin/transactions';
-import type {TransactionType} from '@/lib/database';
-import {formatAmount, formatDateTime} from '@/app/user/add-funds/format';
-import {ticketRef} from '@/app/components/support/ticketMeta';
+import type { AdminTransactionRow } from '@/actions/admin/transactions';
+import type { TransactionType } from '@/lib/database';
+import { formatAmount, formatDateTime } from '@/app/user/add-funds/format';
+import { ticketRef } from '@/app/components/support/ticketMeta';
 
 const TYPE_LABELS: Record<TransactionType, string> = {
   deposit: 'Deposit',
@@ -17,7 +17,7 @@ const TYPE_LABELS: Record<TransactionType, string> = {
   adjustment: 'Adjustment',
 };
 
-/** Read-only ledger rows — an audit trail has no row actions. */
+/** Read-only ledger rows  an audit trail has no row actions. */
 export function AdminTransactionsTable({
   transactions,
   rowIndexStart,
@@ -75,7 +75,7 @@ export function AdminTransactionsTable({
       width: proportional(2),
       renderCell: (tx) => (
         <Text size="sm" color={tx.note ? undefined : 'secondary'}>
-          {tx.note ?? '—'}
+          {tx.note ?? ''}
         </Text>
       ),
     },

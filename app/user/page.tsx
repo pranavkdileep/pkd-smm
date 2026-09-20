@@ -1,26 +1,26 @@
-import {Layers} from 'lucide-react';
-import {EmptyState} from '@astryxdesign/core/EmptyState';
-import {Heading} from '@astryxdesign/core/Heading';
-import {Text} from '@astryxdesign/core/Text';
-import {VStack} from '@astryxdesign/core/VStack';
+import { Layers } from 'lucide-react';
+import { EmptyState } from '@astryxdesign/core/EmptyState';
+import { Heading } from '@astryxdesign/core/Heading';
+import { Text } from '@astryxdesign/core/Text';
+import { VStack } from '@astryxdesign/core/VStack';
 
-import {getCurrentUser} from '@/actions/auth/session';
-import {getDefaultOrderService, getOrderServiceById} from '@/actions/users/services';
+import { getCurrentUser } from '@/actions/auth/session';
+import { getDefaultOrderService, getOrderServiceById } from '@/actions/users/services';
 
-import {OrderForm} from './OrderForm';
-import {siteConfig} from '@/lib/config';
+import { OrderForm } from './OrderForm';
+import { siteConfig } from '@/lib/config';
 
 export const metadata = {
   title: `New Order · ${siteConfig.name}`,
 };
 
-type SearchParams = Promise<{[key: string]: string | string[] | undefined}>;
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
 function firstParam(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
 }
 
-export default async function NewOrderPage({searchParams}: {searchParams: SearchParams}) {
+export default async function NewOrderPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
   // Deep link from the services catalog (?service=<id>) pre-selects that service.
   const serviceId = firstParam(params.service)?.trim() ?? '';
@@ -39,7 +39,7 @@ export default async function NewOrderPage({searchParams}: {searchParams: Search
       <VStack gap={1}>
         <Heading level={1}>New Order</Heading>
         <Text color="secondary">
-          Search the catalog, fill in the service details, and place your order — rates are per 1K.
+          Search the catalog, fill in the service details, and place your order  rates are per 1K.
         </Text>
       </VStack>
       {defaultService ? (

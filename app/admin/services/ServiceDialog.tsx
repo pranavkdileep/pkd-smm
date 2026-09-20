@@ -1,20 +1,20 @@
 'use client';
 
-import {useState} from 'react';
-import {useRouter} from 'next/navigation';
-import {Dialog, DialogHeader} from '@astryxdesign/core/Dialog';
-import {Layout, LayoutContent, LayoutFooter} from '@astryxdesign/core/Layout';
-import {VStack} from '@astryxdesign/core/VStack';
-import {HStack} from '@astryxdesign/core/HStack';
-import {Text} from '@astryxdesign/core/Text';
-import {Button} from '@astryxdesign/core/Button';
-import {TextInput} from '@astryxdesign/core/TextInput';
-import {TextArea} from '@astryxdesign/core/TextArea';
-import {CheckboxInput} from '@astryxdesign/core/CheckboxInput';
-import {Banner} from '@astryxdesign/core/Banner';
-import {Typeahead} from '@astryxdesign/core/Typeahead';
-import {Selector} from '@astryxdesign/core/Selector';
-import {Plus, X} from 'lucide-react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Dialog, DialogHeader } from '@astryxdesign/core/Dialog';
+import { Layout, LayoutContent, LayoutFooter } from '@astryxdesign/core/Layout';
+import { VStack } from '@astryxdesign/core/VStack';
+import { HStack } from '@astryxdesign/core/HStack';
+import { Text } from '@astryxdesign/core/Text';
+import { Button } from '@astryxdesign/core/Button';
+import { TextInput } from '@astryxdesign/core/TextInput';
+import { TextArea } from '@astryxdesign/core/TextArea';
+import { CheckboxInput } from '@astryxdesign/core/CheckboxInput';
+import { Banner } from '@astryxdesign/core/Banner';
+import { Typeahead } from '@astryxdesign/core/Typeahead';
+import { Selector } from '@astryxdesign/core/Selector';
+import { Plus, X } from 'lucide-react';
 
 import {
   createService,
@@ -23,8 +23,8 @@ import {
   type ServiceInput,
   type ServicePlatform,
 } from '@/actions/admin/services';
-import {searchUpstreams, type UpstreamOption} from '@/actions/admin/upstreams';
-import {PLATFORM_TYPES, SERVICE_MAX_INPUTS} from '@/lib/database';
+import { searchUpstreams, type UpstreamOption } from '@/actions/admin/upstreams';
+import { PLATFORM_TYPES, SERVICE_MAX_INPUTS } from '@/lib/database';
 
 /** One order-form input row in the dialog: key = machine name, label = customer text. */
 interface InputFieldRow {
@@ -33,11 +33,11 @@ interface InputFieldRow {
 }
 
 function cloneDefaultRows(): InputFieldRow[] {
-  return [{key: 'link', label: 'Link to page'}];
+  return [{ key: 'link', label: 'Link to page' }];
 }
 
 function toInputRows(inputs: Record<string, string>): InputFieldRow[] {
-  const rows = Object.entries(inputs).map(([key, label]) => ({key, label}));
+  const rows = Object.entries(inputs).map(([key, label]) => ({ key, label }));
   return rows.length > 0 ? rows : cloneDefaultRows();
 }
 
@@ -59,7 +59,7 @@ export function ServiceDialog({
   const [refill, setRefill] = useState(service?.refill ?? false);
   const [cancel, setCancel] = useState(service?.cancel ?? false);
   const [selectedUpstream, setSelectedUpstream] = useState<UpstreamOption | null>(
-    service?.upstreamId ? {id: service.upstreamId, label: service.upstreamName} : null,
+    service?.upstreamId ? { id: service.upstreamId, label: service.upstreamName } : null,
   );
   const [upstreamServiceId, setUpstreamServiceId] = useState(service?.upstreamServiceId ?? '');
   const [inputRows, setInputRows] = useState<InputFieldRow[]>(
@@ -74,14 +74,14 @@ export function ServiceDialog({
       if (!previous[key]) {
         return previous;
       }
-      const next = {...previous};
+      const next = { ...previous };
       delete next[key];
       return next;
     });
   }
 
   function updateInputRow(index: number, patch: Partial<InputFieldRow>) {
-    setInputRows((rows) => rows.map((row, i) => (i === index ? {...row, ...patch} : row)));
+    setInputRows((rows) => rows.map((row, i) => (i === index ? { ...row, ...patch } : row)));
     clearFieldError(`key-${index}`);
     clearFieldError(`label-${index}`);
   }
@@ -90,7 +90,7 @@ export function ServiceDialog({
     if (inputRows.length >= SERVICE_MAX_INPUTS) {
       return;
     }
-    setInputRows((rows) => [...rows, {key: '', label: ''}]);
+    setInputRows((rows) => [...rows, { key: '', label: '' }]);
   }
 
   function removeInputRow(index: number) {
@@ -226,10 +226,10 @@ export function ServiceDialog({
                   setName(next);
                   clearFieldError('name');
                 }}
-                placeholder="Instagram followers — premium"
+                placeholder="Instagram followers  premium"
                 isRequired
                 isDisabled={isSaving}
-                status={fieldErrors.name ? {type: 'error', message: fieldErrors.name} : undefined}
+                status={fieldErrors.name ? { type: 'error', message: fieldErrors.name } : undefined}
               />
 
               <TextArea
@@ -254,7 +254,7 @@ export function ServiceDialog({
                   width={140}
                   isRequired
                   isDisabled={isSaving}
-                  status={fieldErrors.price ? {type: 'error', message: fieldErrors.price} : undefined}
+                  status={fieldErrors.price ? { type: 'error', message: fieldErrors.price } : undefined}
                 />
                 <TextInput
                   label="Min order"
@@ -268,7 +268,7 @@ export function ServiceDialog({
                   isRequired
                   isDisabled={isSaving}
                   status={
-                    fieldErrors.minOrder ? {type: 'error', message: fieldErrors.minOrder} : undefined
+                    fieldErrors.minOrder ? { type: 'error', message: fieldErrors.minOrder } : undefined
                   }
                 />
                 <TextInput
@@ -283,7 +283,7 @@ export function ServiceDialog({
                   isRequired
                   isDisabled={isSaving}
                   status={
-                    fieldErrors.maxOrder ? {type: 'error', message: fieldErrors.maxOrder} : undefined
+                    fieldErrors.maxOrder ? { type: 'error', message: fieldErrors.maxOrder } : undefined
                   }
                 />
               </HStack>
@@ -318,7 +318,7 @@ export function ServiceDialog({
                   isRequired
                   isDisabled={isSaving}
                   hasEntriesOnFocus
-                  status={fieldErrors.upstream ? {type: 'error', message: fieldErrors.upstream} : undefined}
+                  status={fieldErrors.upstream ? { type: 'error', message: fieldErrors.upstream } : undefined}
                   searchSource={{
                     search: (query) => searchUpstreams(query),
                     bootstrap: () => searchUpstreams(''),
@@ -337,7 +337,7 @@ export function ServiceDialog({
                   isDisabled={isSaving}
                   status={
                     fieldErrors.upstreamServiceId
-                      ? {type: 'error', message: fieldErrors.upstreamServiceId}
+                      ? { type: 'error', message: fieldErrors.upstreamServiceId }
                       : undefined
                   }
                 />
@@ -354,13 +354,13 @@ export function ServiceDialog({
                       label={`Input ${index + 1} key`}
                       isLabelHidden
                       value={row.key}
-                      onChange={(next) => updateInputRow(index, {key: next})}
+                      onChange={(next) => updateInputRow(index, { key: next })}
                       placeholder="link"
                       width={150}
                       isDisabled={isSaving}
                       status={
                         fieldErrors[`key-${index}`]
-                          ? {type: 'error', message: fieldErrors[`key-${index}`]}
+                          ? { type: 'error', message: fieldErrors[`key-${index}`] }
                           : undefined
                       }
                     />
@@ -368,13 +368,13 @@ export function ServiceDialog({
                       label={`Input ${index + 1} label`}
                       isLabelHidden
                       value={row.label}
-                      onChange={(next) => updateInputRow(index, {label: next})}
+                      onChange={(next) => updateInputRow(index, { label: next })}
                       placeholder="Link to page"
                       width={250}
                       isDisabled={isSaving}
                       status={
                         fieldErrors[`label-${index}`]
-                          ? {type: 'error', message: fieldErrors[`label-${index}`]}
+                          ? { type: 'error', message: fieldErrors[`label-${index}`] }
                           : undefined
                       }
                     />

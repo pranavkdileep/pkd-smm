@@ -1,6 +1,6 @@
 # ⚡ PKD-SMM
 
-> A modern SMM panel — social media services storefront with user dashboards, admin back-office, payments, and background order sync.
+> A modern SMM panel  social media services storefront with user dashboards, admin back-office, payments, and background order sync.
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
 ![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
@@ -50,7 +50,7 @@ npm install
 ```bash
 cp .env.example .env.local
 ```
-Fill in the values — see [Environment Variables](#-environment-variables).
+Fill in the values  see [Environment Variables](#-environment-variables).
 
 ### 3. Run
 ```bash
@@ -105,7 +105,7 @@ See [.env.example](.env.example) for a ready-to-copy template.
 │   ├── api/          # Payment webhooks & email verification endpoints
 │   └── login/ signup/# Auth pages
 ├── lib/              # DB client, models, payments, email helpers
-├── scripts/          # admin-users.mjs — admin account TUI
+├── scripts/          # admin-users.mjs  admin account TUI
 └── workflows/        # Background jobs (signup, upstream order, status sync)
 ```
 
@@ -119,7 +119,7 @@ Deposits run through Dodo Payments. Set `DODO_PAYMENTS_ENVIRONMENT=test_mode` wh
 
 ## 📦 Deployment
 
-Any Node.js host that supports Next.js 16 works. The easiest path is [Vercel](https://vercel.com/new) — just add the environment variables from `.env.example` in the project settings.
+Any Node.js host that supports Next.js 16 works. The easiest path is [Vercel](https://vercel.com/new)  just add the environment variables from `.env.example` in the project settings.
 
 ---
 
