@@ -39,6 +39,25 @@ export interface UpstreamInput {
   apiKey: string;
 }
 
+/** Service linked to an upstream provider. */
+export interface UpstreamLinkedServiceRow extends Record<string, unknown> {
+  id: string;
+  platform: string;
+  name: string;
+  price: number;
+  status: string;
+  minOrder: number;
+  maxOrder: number;
+}
+
+export interface ListUpstreamServicesResult {
+  services: UpstreamLinkedServiceRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
 export type MutationResult = { success: true } | { success: false; error: string };
 
 async function isAdmin(): Promise<boolean> {
@@ -186,9 +205,80 @@ export async function updateUpstream(upstreamId: string, input: UpstreamInput): 
   return { success: true };
 }
 
+export async function listServicesForUpstream(
+  upstreamId: string,
+  page: number = 1,
+  pageSize: number = 5,
+): Promise<ListUpstreamServicesResult> {
+  if (!(await isAdmin())) {
+    return { services: [], total: 0, page: 1, pageSize: 5, totalPages: 1 };
+  }
+  if (!upstreamId) {
+    return { services: [], total: 0, page: 1, pageSize: 5, totalPages: 1 };
+  }
+
+  const filter = { upstreamId };
+  const total = await collections.services.countDocuments(filter);
+  const validPageSize = Math.max(1, Math.min(pageSize, 50));
+  const totalPages = Math.max(1, Math.ceil(total / validPageSize));
+  const validPage = Math.max(1, Math.min(page, totalPages));
+
+  const services = await collections.services
+    .find(filter, {
+      sort: { name: 1 },
+      skip: (validPage - 1) * validPageSize,
+      limit: validPageSize,
+    })
+    .toArray();
+
+  return {
+    services: services.map((s) => ({
+      id: s.id,
+      platform: s.platform,
+      name: s.name,
+      price: s.price,
+      status: s.status,
+      minOrder: s.minOrder,
+      maxOrder: s.maxOrder,
+    })),
+    total,
+    page: validPage,
+    pageSize: validPageSize,
+    totalPages,
+  };
+}
+
+export async function deleteAllServicesForUpstream(upstreamId: string): Promise<MutationResult> {
+  if (!(await isAdmin())) {
+    return { success: false, error: 'Admin session required.' };
+  }
+  if (!upstreamId) {
+    return { success: false, error: 'Provider id is required.' };
+  }
+
+  await collections.services.deleteMany({ upstreamId });
+
+  revalidatePath('/admin/services');
+  revalidatePath('/admin/upstreams');
+  revalidatePath('/admin');
+  return { success: true };
+}
+
 export async function deleteUpstream(upstreamId: string): Promise<MutationResult> {
   if (!(await isAdmin())) {
     return { success: false, error: 'Admin session required.' };
+  }
+  if (!upstreamId) {
+    return { success: false, error: 'Provider id is required.' };
+  }
+
+  // Backend verification: Deletion only succeeds if there are no services using it
+  const linkedServicesCount = await collections.services.countDocuments({ upstreamId });
+  if (linkedServicesCount > 0) {
+    return {
+      success: false,
+      error: `Cannot delete provider: ${linkedServicesCount} service${linkedServicesCount === 1 ? '' : 's'} are still using this upstream provider. All linked services must be deleted first.`,
+    };
   }
 
   const result = await collections.upstreamProviders.deleteOne({ id: upstreamId });
