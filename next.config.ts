@@ -1,5 +1,6 @@
 import { withWorkflow } from "workflow/next";
 import type { NextConfig } from "next";
+import "./scripts/generate-favicon.mjs";
 
 const securityHeaders = [
   {
