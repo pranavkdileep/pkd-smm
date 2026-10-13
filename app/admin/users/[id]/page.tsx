@@ -47,7 +47,7 @@ function SectionCard({
   children?: React.ReactNode;
 }) {
   return (
-    <Card padding={5} elevation="low">
+    <Card padding={5}>
       <VStack gap={3}>
         <HStack justify="between" vAlign="center" width="100%">
           <Text weight="semibold">
@@ -131,13 +131,13 @@ export default async function AdminUserDetailPage({
   const q = encodeURIComponent(user.username);
 
   return (
-    <VStack gap={5} className="w-full pt-6 px-6">
+    <VStack gap={5} className="w-full px-4 pb-8 pt-6 md:px-8 md:pt-8">
       <VStack gap={1}>
         <Heading level={1}>{user.username}</Heading>
         <Text color="secondary">{user.email}</Text>
       </VStack>
 
-      <Card padding={5} elevation="low">
+      <Card padding={5}>
         <HStack gap={6} wrap="wrap" vAlign="center">
           <VStack gap={1}>
             <Text size="sm" color="secondary">Balance</Text>

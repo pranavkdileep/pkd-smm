@@ -13,6 +13,7 @@ import {Banner} from '@astryxdesign/core/Banner';
 import {PasswordInput} from '@/app/components/forms/PasswordInput';
 import Link from 'next/link';
 import {siteConfig} from '@/lib/config';
+import {BrandMark} from '@/app/components/shell/BrandMark';
 
 import {useLogin} from './useLogin';
 
@@ -33,10 +34,11 @@ export function LoginForm() {
   }
 
   return (
-    <Card padding={6} elevation="low" maxWidth={420}>
+    <Card padding={6} maxWidth={420} width="100%">
       <VStack gap={4}>
-        <VStack gap={1} align="center">
-          <Heading level={2}>Sign in</Heading>
+        <VStack gap={2} align="center">
+          <BrandMark size="lg" />
+          <Heading level={1}>Sign in</Heading>
           <Text color="secondary">Access your {siteConfig.name} account.</Text>
         </VStack>
 
@@ -75,7 +77,7 @@ export function LoginForm() {
           <Text size="sm" color="secondary">
             New here?
           </Text>
-          <Link href="/signup" className="text-sm font-medium text-blue-vivid hover:underline">
+          <Link href="/signup" className="text-sm font-medium text-primary underline underline-offset-4">
             Create a free account
           </Link>
         </HStack>

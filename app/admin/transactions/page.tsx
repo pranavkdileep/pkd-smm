@@ -47,7 +47,7 @@ export default async function AdminTransactionsPage({searchParams}: {searchParam
   const isFiltered = Boolean(search.trim() || type);
 
   return (
-    <VStack gap={5} className="w-full pt-6 px-6">
+    <VStack gap={5} className="w-full px-4 pb-8 pt-6 md:px-8 md:pt-8">
       <VStack gap={1}>
         <Heading level={1}>Transactions</Heading>
         <Text color="secondary">

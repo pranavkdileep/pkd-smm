@@ -35,9 +35,9 @@ export default async function NewOrderPage({ searchParams }: { searchParams: Sea
   const defaultService = requested ?? fallback;
 
   return (
-    <VStack gap={5} className="w-full pt-6 px-6">
+    <VStack gap={5} className="w-full px-4 pb-8 pt-6 md:px-8 md:pt-8">
       <VStack gap={1}>
-        <Heading level={1}>New Order</Heading>
+        <Heading level={1}>New order</Heading>
         <Text color="secondary">
           Search the catalog, fill in the service details, and place your order  rates are per 1K.
         </Text>

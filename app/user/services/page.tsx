@@ -14,8 +14,8 @@ import {
 } from '@/lib/database';
 import {UrlPagination} from '@/app/components/support/UrlPagination';
 
-import {ServicesTable} from './ServicesTable';
-import {ServicesToolbar} from './ServicesToolbar';
+import {ServicesListing} from './ServicesListing';
+import {ServicesPlatformTabs, ServicesSearch, ServicesSort} from './ServicesToolbar';
 import {siteConfig} from '@/lib/config';
 
 export const metadata = {
@@ -56,50 +56,61 @@ export default async function ServicesPage({searchParams}: {searchParams: Search
   const isFiltered = Boolean(search || platform);
 
   return (
-    <VStack gap={5} className="w-full pt-6 px-6">
-      <VStack gap={1}>
-        <Heading level={1}>Services</Heading>
-        <Text color="secondary">
-          {result.total === 0
-            ? 'Every active service on the panel, with live pricing.'
-            : `${result.total.toLocaleString()} ${result.total === 1 ? 'service' : 'services'} · rates per 1K.`}
+    <VStack gap={6} maxWidth={1040} className="mx-auto w-full px-4 py-8 md:px-8 md:py-10">
+      <VStack gap={2} align="center">
+        <Heading level={1} justify="center">
+          Browse services
+        </Heading>
+        <Text color="secondary" justify="center">
+          Every active service on the panel, with live pricing per 1,000.
         </Text>
       </VStack>
 
-      <ServicesToolbar search={search} platform={platform} sort={sort} />
+      <VStack maxWidth={640} className="mx-auto w-full">
+        <ServicesSearch search={search} platform={platform} sort={sort} />
+      </VStack>
 
-      {result.services.length === 0 ? (
-        <EmptyState
-          headingLevel={2}
-          icon={<Layers size={28} className="text-secondary" aria-hidden="true" />}
-          title={isFiltered ? 'No services match your filters' : 'No services yet'}
-          description={
-            isFiltered
-              ? 'Try a different search term or platform.'
-              : 'Active services will appear here as soon as one is added.'
-          }
-        />
-      ) : (
-        <>
-          <ServicesTable
-            services={result.services}
-            rowIndexStart={(result.page - 1) * result.pageSize + 1}
-            rowCount={result.total}
+      <ServicesPlatformTabs search={search} platform={platform} sort={sort} />
+
+      <VStack gap={3}>
+        <HStack justify="between" vAlign="center" wrap="wrap" gap={2}>
+          <Text color="secondary">
+            <Text weight="semibold" color="primary" hasTabularNumbers>
+              {result.total.toLocaleString()}
+            </Text>{' '}
+            {result.total === 1 ? 'service' : 'services'}
+          </Text>
+          <ServicesSort search={search} platform={platform} sort={sort} />
+        </HStack>
+
+        {result.services.length === 0 ? (
+          <EmptyState
+            headingLevel={2}
+            icon={<Layers size={28} className="text-secondary" aria-hidden="true" />}
+            title={isFiltered ? 'No services match your filters' : 'No services yet'}
+            description={
+              isFiltered
+                ? 'Try a different search term or platform.'
+                : 'Active services will appear here as soon as one is added.'
+            }
           />
-          {result.totalPages > 1 ? (
-            <HStack justify="end" wrap="wrap">
-              <UrlPagination
-                label="Services pagination"
-                page={result.page}
-                pageSize={result.pageSize}
-                total={result.total}
-                totalPages={result.totalPages}
-                pageSizes={SERVICE_PAGE_SIZES}
-              />
-            </HStack>
-          ) : null}
-        </>
-      )}
+        ) : (
+          <ServicesListing services={result.services} />
+        )}
+      </VStack>
+
+      {result.totalPages > 1 ? (
+        <HStack justify="end" wrap="wrap">
+          <UrlPagination
+            label="Services pagination"
+            page={result.page}
+            pageSize={result.pageSize}
+            total={result.total}
+            totalPages={result.totalPages}
+            pageSizes={SERVICE_PAGE_SIZES}
+          />
+        </HStack>
+      ) : null}
     </VStack>
   );
 }

@@ -21,13 +21,11 @@ function StarRating({ value }: { value: number }) {
         {[1, 2, 3, 4, 5].map((star) => (
           <HStack
             key={star}
-            width={6}
-            height={6}
             hAlign="center"
             vAlign="center"
-            className="rounded-sm bg-body text-secondary"
+            className="size-6 text-disabled"
           >
-            <Text size="2xs">★</Text>
+            <Text size="lg" color="inherit">★</Text>
           </HStack>
         ))}
       </HStack>
@@ -39,13 +37,11 @@ function StarRating({ value }: { value: number }) {
         {[1, 2, 3, 4, 5].map((star) => (
           <HStack
             key={star}
-            width={6}
-            height={6}
             hAlign="center"
             vAlign="center"
-            className="shrink-0 rounded-sm bg-green-vivid text-on-accent"
+            className="size-6 shrink-0 text-primary"
           >
-            <Text size="2xs">★</Text>
+            <Text size="lg" color="inherit">★</Text>
           </HStack>
         ))}
       </HStack>
@@ -71,7 +67,7 @@ const SCORE_PROOFS = [
 /** Full-width summary banner above the review grid. */
 function ScoreCard() {
   return (
-    <Card padding={4} elevation="low" className="w-full">
+    <Card padding={5} className="w-full">
       <VStack gap={3}>
         <HStack gap={6} wrap="wrap" vAlign="center" justify="between">
           <HStack gap={4} vAlign="center">
@@ -96,7 +92,7 @@ function ScoreCard() {
               vAlign="center"
               className="w-full rounded-lg border border-border bg-surface px-3 py-2 sm:w-auto"
             >
-              <NamedIcon name={proof.icon} size="sm" className="shrink-0 text-blue-vivid" />
+              <NamedIcon name={proof.icon} size="sm" className="shrink-0 text-secondary" />
               <Text size="xsm">{proof.text}</Text>
             </HStack>
           ))}
@@ -108,7 +104,7 @@ function ScoreCard() {
 
 export function Reviews() {
   return (
-    <section id="reviews" aria-label="Customer reviews" className="scroll-mt-24 bg-body py-16 md:py-24">
+    <section id="reviews" aria-label="Customer reviews" className="scroll-mt-24 border-t border-border bg-body py-14 md:py-20">
       <VStack maxWidth={1280} gap={8} className="mx-auto w-full px-6">
         <SectionIntro
           eyebrow="Customer reviews"
@@ -120,7 +116,7 @@ export function Reviews() {
 
         <Grid columns={{ minWidth: 300, max: 3 }} gap={3}>
           {REVIEWS.map((review) => (
-            <Card key={review.name} padding={3} elevation="low">
+            <Card key={review.name} padding={4}>
               <VStack gap={2}>
                 <HStack gap={2} vAlign="center">
                   <Avatar name={review.name} size="sm" tooltip={false} />
@@ -133,7 +129,7 @@ export function Reviews() {
                     </Text>
                   </VStack>
                   <HStack className="ml-auto">
-                    <Badge variant="success" label="★ 5.0" />
+                    <Badge variant="neutral" label="★ 5.0" />
                   </HStack>
                 </HStack>
                 <Text as="p" size="sm" color="secondary">

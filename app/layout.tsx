@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { siteConfig } from "@/lib/config";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -15,8 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const viewport: Viewport = {
-  themeColor: '#0b0f19',
-  colorScheme: 'dark light',
+  // Matches --color-background-body in app/theme/source.ts.
+  themeColor: '#f5f4f0',
+  colorScheme: 'light',
   width: 'device-width',
   initialScale: 1,
 };
@@ -76,9 +77,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      // Server-render the theme scope so the warm canvas paints before
+      // <Theme> hydrates and syncs these same attributes.
+      data-astryx-theme="social-geeks"
+      data-theme="light"
+      className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-body text-primary">
         <Providers>{children}</Providers>
       </body>
     </html>

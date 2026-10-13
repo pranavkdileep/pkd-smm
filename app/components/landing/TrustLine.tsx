@@ -6,14 +6,6 @@ import {Text} from '@astryxdesign/core/Text';
 import {STATS} from './content';
 import {NamedIcon} from './NamedIcon';
 
-const STAT_TINTS: Record<string, string> = {
-  blue: 'bg-blue-subtle text-blue-vivid',
-  purple: 'bg-purple-subtle text-purple-vivid',
-  green: 'bg-green-subtle text-green-vivid',
-  orange: 'bg-orange-subtle text-orange-vivid',
-  yellow: 'bg-yellow-subtle text-yellow-vivid',
-};
-
 /** Full-width trust strip with the five headline stats. */
 export function TrustLine() {
   return (
@@ -27,22 +19,16 @@ export function TrustLine() {
         {STATS.map((stat) => (
           <HStack key={stat.label} gap={3} vAlign="center" className="px-4 py-6">
             <HStack
-              width={10}
-              height={10}
               hAlign="center"
               vAlign="center"
-              className={`shrink-0 rounded-lg ${STAT_TINTS[stat.tint]}`}
+              className="size-10 shrink-0 rounded-lg border border-border bg-body text-primary"
             >
-              <NamedIcon name={stat.icon} size="md" />
+              <NamedIcon name={stat.icon} size="sm" />
             </HStack>
-            <VStack gap={0.5} align="start">
-              <Text size="2xs" weight="bold" color="secondary">
-                {stat.label.toUpperCase()}
-              </Text>
-              <Text weight="bold">{stat.value}</Text>
-              <Text size="3xs" color="secondary">
-                {stat.note}
-              </Text>
+            <VStack gap={0} align="start">
+              <Text type="supporting">{stat.label}</Text>
+              <Text weight="semibold">{stat.value}</Text>
+              <Text type="supporting">{stat.note}</Text>
             </VStack>
           </HStack>
         ))}

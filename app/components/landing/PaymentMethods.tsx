@@ -17,18 +17,9 @@ const PAYMENT_ICONS: NamedIconName[] = [
   'coins',
 ];
 
-const PAYMENT_TINTS = [
-  'bg-blue-subtle text-blue-vivid',
-  'bg-orange-subtle text-orange-vivid',
-  'bg-purple-subtle text-purple-vivid',
-  'bg-cyan-subtle text-cyan-vivid',
-  'bg-yellow-subtle text-yellow-vivid',
-  'bg-green-subtle text-green-vivid',
-];
-
 export function PaymentMethods() {
   return (
-    <section aria-label="Payment methods" className="border-y border-border bg-surface py-16 md:py-20">
+    <section aria-label="Payment methods" className="border-t border-border bg-surface py-14 md:py-20">
       <VStack maxWidth={1280} gap={8} className="mx-auto w-full px-6">
         <SectionIntro
           eyebrow="Add funds"
@@ -39,16 +30,14 @@ export function PaymentMethods() {
 
         <Grid columns={{ minWidth: 190, max: 6 }} gap={3}>
           {PAYMENTS.map((payment, index) => (
-            <Card key={payment.name} padding={3} elevation="low">
+            <Card key={payment.name} padding={4}>
               <VStack gap={2} align="start">
                 <HStack
-                  width={10}
-                  height={10}
                   hAlign="center"
                   vAlign="center"
-                  className={`rounded-lg ${PAYMENT_TINTS[index]}`}
+                  className="size-10 rounded-lg border border-border bg-body text-primary"
                 >
-                  <NamedIcon name={PAYMENT_ICONS[index]} size="md" />
+                  <NamedIcon name={PAYMENT_ICONS[index]} size="sm" />
                 </HStack>
                 <VStack gap={0.5} align="start">
                   <Text weight="bold">{payment.name}</Text>

@@ -96,10 +96,10 @@ export default async function SupportTicketPage({
     : 'Open a new ticket if you still need help.';
 
   return (
-    <VStack gap={5} className="w-full pt-6 px-6">
+    <VStack gap={5} className="w-full px-4 pb-8 pt-6 md:px-8 md:pt-8">
       <HStack justify="between" vAlign="start" wrap="wrap" gap={3} width="100%">
         <VStack gap={2}>
-          <Link href="/user/support" className="text-sm text-secondary hover:text-blue-vivid">
+          <Link href="/user/support" className="text-sm text-secondary hover:text-primary">
             <HStack gap={1} vAlign="center">
               <ArrowLeft size={14} aria-hidden="true" />
               All tickets

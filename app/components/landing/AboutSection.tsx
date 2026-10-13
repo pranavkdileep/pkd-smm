@@ -35,7 +35,7 @@ const PANEL_ROWS = [
 
 export function AboutSection() {
   return (
-    <section id="about" aria-label="About SMM panels" className="scroll-mt-24 bg-surface py-16 md:py-24">
+    <section id="about" aria-label="About SMM panels" className="scroll-mt-24 border-t border-border bg-body py-14 md:py-20">
       <Grid columns={{minWidth: 380, max: 2}} gap={8} maxWidth={1280} className="mx-auto items-start px-6">
         <VStack gap={4} align="start">
           <Heading level={2}>What is an SMM panel?</Heading>
@@ -52,17 +52,10 @@ export function AboutSection() {
           </Text>
         </VStack>
 
-        <VStack gap={3} className="rounded-lg border border-border bg-card p-5 shadow-md">
-          <HStack justify="between" vAlign="center">
-            <HStack gap={1}>
-              <HStack width={2.5} height={2.5} className="rounded-full bg-blue-vivid" />
-              <HStack width={2.5} height={2.5} className="rounded-full bg-blue-subtle" />
-              <HStack width={2.5} height={2.5} className="rounded-full bg-border" />
-            </HStack>
-            <Text size="3xs" weight="bold" color="secondary" className="uppercase">
-              One balance · six platforms
-            </Text>
-          </HStack>
+        <VStack gap={3} className="rounded-lg border border-border bg-card p-5">
+          <Text type="label" color="secondary">
+            One balance · six platforms
+          </Text>
 
           <VStack gap={2}>
             {PANEL_ROWS.map((row) => (
@@ -73,11 +66,9 @@ export function AboutSection() {
                 className="w-full rounded-md border border-border bg-body px-3 py-2.5"
               >
                 <HStack
-                  width={8}
-                  height={8}
                   hAlign="center"
                   vAlign="center"
-                  className="shrink-0 rounded-md bg-blue-subtle text-blue-vivid"
+                  className="size-8 shrink-0 rounded-md border border-border bg-surface text-primary"
                 >
                   <NamedIcon name={row.icon} size="sm" />
                 </HStack>
@@ -101,11 +92,10 @@ export function AboutSection() {
 
           <HStack gap={2} wrap="wrap">
             {PROOF_POINTS.map((point) => (
-              <HStack
-                key={point}
-                className="rounded-full border border-blue-ring bg-blue-subtle px-3 py-1 text-xs font-semibold text-blue-vivid"
-              >
-                {point}
+              <HStack key={point} className="rounded-full border border-border bg-surface px-3 py-1">
+                <Text size="xsm" weight="medium">
+                  {point}
+                </Text>
               </HStack>
             ))}
           </HStack>

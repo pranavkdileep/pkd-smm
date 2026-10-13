@@ -65,7 +65,7 @@ export default function PrivacyPage() {
           <VStack gap={3} className="w-full">
             <VStack gap={1} className="rounded-lg border border-border bg-card p-4" align="start">
               <HStack gap={2} vAlign="center">
-                <Badge variant="blue" label="Account Identifiers" />
+                <Badge variant="neutral" label="Account Identifiers" />
                 <Text size="sm" weight="bold">User Credentials & Registration</Text>
               </HStack>
               <Text size="sm" color="secondary">

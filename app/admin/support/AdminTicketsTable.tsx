@@ -32,7 +32,7 @@ export function AdminTicketsTable({ tickets }: { tickets: AdminSupportTicketRow[
         <VStack gap={0.5}>
           <Link
             href={`/admin/support/${ticket.id}`}
-            className="text-sm font-medium text-primary hover:text-blue-vivid"
+            className="text-sm font-medium text-primary hover:text-primary"
           >
             {ticket.title}
           </Link>

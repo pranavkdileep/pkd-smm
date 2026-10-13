@@ -91,13 +91,13 @@ export function CookieConsent() {
       {!hasConsent && !isModalOpen && (
         <aside
           aria-label="Cookie consent banner"
-          className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-surface p-4 shadow-2xl md:p-6"
+          className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-surface p-4 shadow-lg md:p-6"
         >
           <VStack maxWidth={1280} gap={4} className="mx-auto">
             <HStack justify="between" vAlign="center" wrap="wrap" gap={3}>
               <VStack gap={1} align="start" className="max-w-3xl">
                 <HStack gap={2} vAlign="center">
-                  <Badge variant="blue" label="Privacy & Cookies" />
+                  <Badge variant="neutral" label="Privacy & Cookies" />
                   <Text size="sm" weight="bold" color="primary">
                     Your choice regarding cookies and tracking on {siteConfig.name}
                   </Text>
@@ -106,7 +106,7 @@ export function CookieConsent() {
                   We use cookies to maintain your login session, prevent fraud, and ensure platform
                   reliability. With your permission, we also use optional analytics and marketing cookies
                   to improve service delivery and track referral commissions. You can change your choice anytime in{' '}
-                  <Link href="/cookies" className="underline hover:text-blue-vivid">
+                  <Link href="/cookies" className="underline hover:text-primary">
                     Cookie Policy
                   </Link>
                   .
@@ -142,12 +142,12 @@ export function CookieConsent() {
       {isModalOpen && (
         <aside
           aria-label="Cookie preferences modal"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-overlay p-4 backdrop-blur-xs"
         >
           <VStack
             maxWidth={640}
             gap={6}
-            className="w-full rounded-2xl border border-border bg-surface p-6 shadow-2xl md:p-8"
+            className="w-full rounded-lg border border-border bg-surface p-6 shadow-lg md:p-8"
           >
             <HStack justify="between" vAlign="center">
               <VStack gap={1} align="start">
@@ -168,7 +168,7 @@ export function CookieConsent() {
 
             <VStack gap={4} className="w-full">
               {/* Essential Cookies */}
-              <VStack gap={2} className="rounded-xl border border-border bg-card p-4">
+              <VStack gap={2} className="rounded-lg border border-border bg-card p-4">
                 <HStack justify="between" vAlign="center">
                   <VStack gap={0} align="start">
                     <HStack gap={2} vAlign="center">
@@ -193,14 +193,14 @@ export function CookieConsent() {
               </VStack>
 
               {/* Analytics Cookies */}
-              <VStack gap={2} className="rounded-xl border border-border bg-card p-4">
+              <VStack gap={2} className="rounded-lg border border-border bg-card p-4">
                 <HStack justify="between" vAlign="center">
                   <VStack gap={0} align="start">
                     <HStack gap={2} vAlign="center">
                       <Text size="sm" weight="bold">
                         Performance & Analytics Cookies
                       </Text>
-                      <Badge variant="blue" label="Optional" />
+                      <Badge variant="neutral" label="Optional" />
                     </HStack>
                     <Text size="xsm" color="secondary">
                       Helps us count page visits, analyze user flow, and identify order processing
@@ -219,14 +219,14 @@ export function CookieConsent() {
               </VStack>
 
               {/* Marketing & Affiliate Cookies */}
-              <VStack gap={2} className="rounded-xl border border-border bg-card p-4">
+              <VStack gap={2} className="rounded-lg border border-border bg-card p-4">
                 <HStack justify="between" vAlign="center">
                   <VStack gap={0} align="start">
                     <HStack gap={2} vAlign="center">
                       <Text size="sm" weight="bold">
                         Marketing & Referral Tracking
                       </Text>
-                      <Badge variant="blue" label="Optional" />
+                      <Badge variant="neutral" label="Optional" />
                     </HStack>
                     <Text size="xsm" color="secondary">
                       Attributes referral registrations to affiliate partners and measures promotional

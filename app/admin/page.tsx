@@ -91,7 +91,7 @@ export default async function AdminDashboardPage() {
   const usernameById = new Map(topUsers.map((user) => [user.id, user.username]));
 
   return (
-    <VStack gap={6} className="w-full pt-6 px-6">
+    <VStack gap={6} className="w-full px-4 pb-8 pt-6 md:px-8 md:pt-8">
       <VStack gap={1}>
         <Heading level={1}>Dashboard</Heading>
         <Text color="secondary">
@@ -115,7 +115,7 @@ export default async function AdminDashboardPage() {
       />
 
       <Grid gap={4} columns={{ minWidth: 320 }}>
-        <Card padding={5} elevation="low">
+        <Card padding={5}>
           <VStack gap={3}>
             <Text weight="semibold">Orders by status</Text>
             {ORDER_STATUSES.map((status) => (
@@ -132,7 +132,7 @@ export default async function AdminDashboardPage() {
           </VStack>
         </Card>
 
-        <Card padding={5} elevation="low">
+        <Card padding={5}>
           <VStack gap={3}>
             <Text weight="semibold">Top users by spend</Text>
             {topSpendersAgg.length === 0 ? (

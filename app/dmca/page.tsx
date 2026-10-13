@@ -44,7 +44,7 @@ export default function DmcaPage() {
 
           <VStack gap={2} className="w-full rounded-lg border border-border bg-card p-4">
             <HStack gap={2} vAlign="center">
-              <Badge variant="blue" label="Official Agent" />
+              <Badge variant="neutral" label="Official Agent" />
               <Text size="sm" weight="bold">DMCA Legal & Copyright Compliance Department</Text>
             </HStack>
             <Text size="sm" color="secondary">

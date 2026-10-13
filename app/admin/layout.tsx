@@ -1,18 +1,17 @@
 import type {ReactNode} from 'react';
-import {AppShell} from '@astryxdesign/core/AppShell';
 
-import {AdminSideNav} from './AdminSideNav';
+import {getSession} from '@/actions/auth/session';
+
+import {AdminShell} from './AdminShell';
 import {siteConfig} from '@/lib/config';
 
 export const metadata = {
   title: `Admin · ${siteConfig.name}`,
 };
 
-export default function AdminLayout({children}: {children: ReactNode}) {
-  return (
-    // Dense admin data area: content padding 0, pages own their own padding.
-    <AppShell sideNav={<AdminSideNav />} contentPadding={0}>
-      {children}
-    </AppShell>
-  );
+export default async function AdminLayout({children}: {children: ReactNode}) {
+  // proxy.ts already gates /admin to admin sessions; this only reads the name.
+  const session = await getSession();
+
+  return <AdminShell adminName={session?.username ?? 'Admin'}>{children}</AdminShell>;
 }

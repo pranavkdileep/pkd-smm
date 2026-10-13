@@ -136,15 +136,13 @@ export default async function PlatformServicesPage({ params }: PageProps) {
           <VStack gap={4} align="start" maxWidth={960}>
             <HStack gap={2} vAlign="center">
               <HStack
-                width={10}
-                height={10}
                 hAlign="center"
                 vAlign="center"
-                className="rounded-xl bg-accent-bg text-accent"
+                className="size-10 rounded-lg border border-border bg-surface text-primary"
               >
                 <BrandIcon platform={platform as PlatformId} size="md" />
               </HStack>
-              <Badge variant="blue" label={pConfig.heroBadge} />
+              <Badge variant="neutral" label={pConfig.heroBadge} />
             </HStack>
 
             <Heading level={1} type="display-2" textWrap="balance">
@@ -189,7 +187,7 @@ export default async function PlatformServicesPage({ params }: PageProps) {
                 <VStack
                   key={service.name}
                   gap={3}
-                  className="rounded-xl border border-border bg-surface p-6 shadow-sm"
+                  className="rounded-lg border border-border bg-surface p-6"
                 >
                   <HStack justify="between" vAlign="center">
                     <Heading level={4}>{service.name}</Heading>
@@ -223,7 +221,7 @@ export default async function PlatformServicesPage({ params }: PageProps) {
               </Text>
             </VStack>
 
-            <VStack className="overflow-x-auto rounded-2xl border border-border bg-surface p-6 shadow-sm">
+            <VStack className="overflow-x-auto rounded-lg border border-border bg-surface p-6">
               <Table aria-label={`${pConfig.name} pricing table`}>
                 <thead>
                   <TableRow>
@@ -283,7 +281,7 @@ export default async function PlatformServicesPage({ params }: PageProps) {
           </VStack>
 
           <Grid columns={{ minWidth: 320, max: 3 }} gap={6} className="w-full">
-            <VStack gap={2} align="start" className="rounded-xl border border-border bg-surface p-6">
+            <VStack gap={2} align="start" className="rounded-lg border border-border bg-surface p-6">
               <Heading level={4}>1. Select Your Target Service</Heading>
               <Text as="p" size="sm" color="secondary">
                 Choose the exact engagement type your campaign needs — whether establishing base
@@ -292,7 +290,7 @@ export default async function PlatformServicesPage({ params }: PageProps) {
               </Text>
             </VStack>
 
-            <VStack gap={2} align="start" className="rounded-xl border border-border bg-surface p-6">
+            <VStack gap={2} align="start" className="rounded-lg border border-border bg-surface p-6">
               <Heading level={4}>2. Submit Public Link Only</Heading>
               <Text as="p" size="sm" color="secondary">
                 Enter your public handle, post URL, or video link. We never ask for administrative
@@ -301,7 +299,7 @@ export default async function PlatformServicesPage({ params }: PageProps) {
               </Text>
             </VStack>
 
-            <VStack gap={2} align="start" className="rounded-xl border border-border bg-surface p-6">
+            <VStack gap={2} align="start" className="rounded-lg border border-border bg-surface p-6">
               <Heading level={4}>3. Automatic Delivery & Live Tracking</Heading>
               <Text as="p" size="sm" color="secondary">
                 Orders dispatch through high-speed automation. Follow the progress on your live order
@@ -329,7 +327,7 @@ export default async function PlatformServicesPage({ params }: PageProps) {
                 key={faq.q}
                 gap={2}
                 align="start"
-                className="rounded-xl border border-border bg-surface p-5"
+                className="rounded-lg border border-border bg-surface p-5"
               >
                 <Heading level={4}>{faq.q}</Heading>
                 <Text as="p" size="sm" color="secondary">
@@ -344,7 +342,7 @@ export default async function PlatformServicesPage({ params }: PageProps) {
         <VStack
           gap={4}
           maxWidth={1280}
-          className="mx-auto mb-16 w-full rounded-2xl border border-border bg-accent-bg p-8 text-center md:p-12"
+          className="mx-auto mb-16 w-full rounded-lg border border-border bg-surface p-8 text-center md:p-12"
         >
           <Heading level={2} justify="center">
             Ready to scale your {pConfig.name} account?

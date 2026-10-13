@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { FOOTER_COLUMNS, PLATFORMS, SITE } from './content';
 import { BrandIcon } from './BrandIcon';
 import { siteConfig } from '@/lib/config';
+import { BrandMark } from '@/app/components/shell/BrandMark';
 
 export function SiteFooter() {
   const openCookieSettings = () => {
@@ -20,21 +21,13 @@ export function SiteFooter() {
   };
 
   return (
-    <footer className="border-t border-border bg-surface">
+    <footer className="border-t border-border bg-body">
       <VStack maxWidth={1280} gap={6} className="mx-auto w-full px-6 py-12">
-        <Grid columns={{ minWidth: 200, max: 4 }} gap={6}>
+        <Grid columns={{ minWidth: 180, max: 5 }} gap={6}>
           <VStack gap={3} align="start">
             <HStack gap={2} vAlign="center">
-              <HStack
-                width={9}
-                height={9}
-                hAlign="center"
-                vAlign="center"
-                className="rounded-lg bg-accent-bg text-xs font-bold text-blue-vivid"
-              >
-                {siteConfig.brandInitials}
-              </HStack>
-              <Text weight="bold">{SITE.name}</Text>
+              <BrandMark />
+              <Text weight="semibold">{SITE.name}</Text>
             </HStack>
             <Text size="sm" color="secondary">
               {SITE.tagline}. Six platforms, one balance, live order tracking and support around the
@@ -57,7 +50,7 @@ export function SiteFooter() {
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="text-sm text-secondary hover:text-blue-vivid"
+                  className="text-sm text-secondary hover:text-primary"
                 >
                   {link.label}
                 </Link>
@@ -73,7 +66,7 @@ export function SiteFooter() {
               <Link
                 key={platform.id}
                 href={`/services/${platform.id}`}
-                className="text-sm text-secondary hover:text-blue-vivid"
+                className="text-sm text-secondary hover:text-primary"
               >
                 {platform.name} services
               </Link>

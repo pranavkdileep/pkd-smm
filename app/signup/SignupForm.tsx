@@ -14,6 +14,7 @@ import { PasswordInput } from '@/app/components/forms/PasswordInput';
 import { siteConfig } from '@/lib/config';
 
 import { signupUser } from '@/actions/auth/signup';
+import { BrandMark } from '@/app/components/shell/BrandMark';
 
 export function SignupForm() {
   const [username, setUsername] = useState('');
@@ -43,9 +44,10 @@ export function SignupForm() {
 
   if (success) {
     return (
-      <Card padding={6} elevation="low" maxWidth={420}>
+      <Card padding={6} maxWidth={420} width="100%">
         <VStack gap={4} align="center">
-          <Heading level={2}>Account created</Heading>
+          <BrandMark size="lg" />
+          <Heading level={1}>Account created</Heading>
           <Banner
             status="success"
             title={`Welcome to ${siteConfig.name}`}
@@ -57,10 +59,11 @@ export function SignupForm() {
   }
 
   return (
-    <Card padding={6} elevation="low" maxWidth={420}>
+    <Card padding={6} maxWidth={420} width="100%">
       <VStack gap={4}>
-        <VStack gap={1} align="center">
-          <Heading level={2}>Create your free account</Heading>
+        <VStack gap={2} align="center">
+          <BrandMark size="lg" />
+          <Heading level={1}>Create your free account</Heading>
           <Text color="secondary">No contracts, no minimum deposits.</Text>
         </VStack>
 
@@ -108,7 +111,7 @@ export function SignupForm() {
           <Text size="sm" color="secondary">
             Already have an account?
           </Text>
-          <Link href="/login" className="text-sm font-medium text-blue-vivid hover:underline">
+          <Link href="/login" className="text-sm font-medium text-primary underline underline-offset-4">
             Sign in
           </Link>
         </HStack>

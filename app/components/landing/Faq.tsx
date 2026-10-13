@@ -10,7 +10,7 @@ import { SectionIntro } from './SectionIntro';
 
 export function Faq() {
   return (
-    <section id="faq" aria-label="Frequently asked questions" className="scroll-mt-24 bg-body py-16 md:py-24">
+    <section id="faq" aria-label="Frequently asked questions" className="scroll-mt-24 border-t border-border bg-body py-14 md:py-20">
       <VStack maxWidth={900} gap={8} className="mx-auto w-full px-6">
         <SectionIntro
           eyebrow="FAQ"
@@ -27,15 +27,15 @@ export function Faq() {
               trigger={
                 <HStack gap={3} vAlign="center">
                   <HStack
-                    width={7}
-                    height={7}
                     hAlign="center"
                     vAlign="center"
-                    className="shrink-0 rounded-md bg-blue-subtle text-xs font-bold text-blue-vivid"
+                    className="size-7 shrink-0 rounded-md border border-border bg-surface"
                   >
-                    {String(index + 1).padStart(2, '0')}
+                    <Text size="xsm" weight="semibold" hasTabularNumbers>
+                      {String(index + 1).padStart(2, '0')}
+                    </Text>
                   </HStack>
-                  <span className="text-sm font-semibold text-primary">{faq.q}</span>
+                  <Text weight="semibold">{faq.q}</Text>
                 </HStack>
               }
             >

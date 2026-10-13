@@ -59,7 +59,7 @@ export function LegalPageShell({
         <section aria-label="Legal document header" className="border-b border-border bg-surface py-12 md:py-16">
           <VStack maxWidth={1280} gap={4} className="mx-auto px-6">
             <HStack gap={2} wrap="wrap" vAlign="center">
-              <Link href="/" className="text-xs font-medium text-secondary hover:text-blue-vivid">
+              <Link href="/" className="text-xs font-medium text-secondary hover:text-primary">
                 Home
               </Link>
               <Text size="xsm" color="secondary">
@@ -78,7 +78,7 @@ export function LegalPageShell({
 
             <VStack gap={2} align="start">
               <HStack gap={2} vAlign="center" wrap="wrap">
-                <Badge variant="blue" label="Official Compliance" />
+                <Badge variant="neutral" label="Official Compliance" />
                 <Badge variant="neutral" label={`Effective: ${effectiveDate}`} />
               </HStack>
               <Heading level={1}>{title}</Heading>
@@ -109,7 +109,7 @@ export function LegalPageShell({
             <Grid columns={{ minWidth: 260, max: 4 }} gap={8} className="items-start">
               {/* Sidebar Navigation */}
               <aside className="sticky top-24">
-                <VStack gap={4} className="rounded-xl border border-border bg-surface p-5 shadow-sm">
+                <VStack gap={4} className="rounded-lg border border-border bg-surface p-5">
                   <VStack gap={1} align="start">
                     <Text size="xsm" weight="bold" color="secondary" className="uppercase tracking-wider">
                       Legal Navigation
@@ -130,7 +130,7 @@ export function LegalPageShell({
                           href={item.href}
                           className={`w-full rounded-lg px-3 py-2 text-sm transition-colors ${
                             isActive
-                              ? 'bg-blue-subtle font-semibold text-blue-vivid'
+                              ? 'bg-neutral font-semibold text-primary'
                               : 'text-secondary hover:bg-card hover:text-primary'
                           }`}
                         >
@@ -180,7 +180,7 @@ export function LegalPageShell({
 
               {/* Main Content Article */}
               <article className="md:col-span-3">
-                <VStack gap={8} className="rounded-xl border border-border bg-surface p-6 md:p-10 shadow-sm">
+                <VStack gap={8} className="rounded-lg border border-border bg-surface p-6 md:p-10">
                   {children}
                 </VStack>
               </article>

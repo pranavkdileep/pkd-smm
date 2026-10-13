@@ -62,7 +62,7 @@ export default async function SupportPage({searchParams}: {searchParams: SearchP
   const isFiltered = Boolean(search || status || category);
 
   return (
-    <VStack gap={5} className="w-full pt-6 px-6">
+    <VStack gap={5} className="w-full px-4 pb-8 pt-6 md:px-8 md:pt-8">
       <HStack justify="between" vAlign="center" wrap="wrap" gap={3} width="100%">
         <VStack gap={1}>
           <Heading level={1}>Support</Heading>

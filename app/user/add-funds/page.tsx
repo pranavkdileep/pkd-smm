@@ -34,9 +34,9 @@ export default async function AddFundsPage({ searchParams }: AddFundsPageProps) 
     // Deposit page per the Astryx settings/forms archetype: one self-contained
     // Add Funds card (the only Card on the page) above a dense, edge-to-edge
     // history table  no card soup, one containment layer for the form.
-    <VStack gap={8} className="w-full pt-6 px-6 pb-10">
+    <VStack gap={8} className="w-full px-4 pb-10 pt-6 md:px-8 md:pt-8">
       <VStack gap={1}>
-        <Heading level={1}>Add Funds</Heading>
+        <Heading level={1}>Add funds</Heading>
         <Text color="secondary">
           Top up your balance via Dodo Payments  cards, net banking, UPI, and global
           wallets.

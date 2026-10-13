@@ -51,7 +51,7 @@ export default async function OrdersPage({searchParams}: {searchParams: SearchPa
   const result = await listOrders({page, pageSize, status, q: search});
 
   return (
-    <VStack gap={5} className="w-full pt-6 px-6">
+    <VStack gap={5} className="w-full px-4 pb-8 pt-6 md:px-8 md:pt-8">
       <HStack justify="between" vAlign="center" wrap="wrap" gap={3} width="100%">
         <VStack gap={1}>
           <Heading level={1}>Orders</Heading>

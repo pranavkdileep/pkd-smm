@@ -2,37 +2,87 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { SideNav, SideNavHeading, SideNavSection, SideNavItem } from '@astryxdesign/core/SideNav';
-import { LayoutDashboard, Users, Layers, Server, ShieldCheck, LifeBuoy, ClipboardList, Wallet, Receipt } from 'lucide-react';
+import {
+  SideNav,
+  SideNavHeading,
+  SideNavSection,
+  SideNavItem,
+  type SideNavControlledCollapsible,
+} from '@astryxdesign/core/SideNav';
+import { ListItem } from '@astryxdesign/core/List';
+import { VStack } from '@astryxdesign/core/VStack';
+import { LayoutDashboard, Users, Layers, Server, LifeBuoy, ClipboardList, Wallet, Receipt } from 'lucide-react';
 
-import { LogoutButton } from './LogoutButton';
 import { siteConfig } from '@/lib/config';
+import { BrandMark } from '@/app/components/shell/BrandMark';
+import { NavSearch, type NavSearchItem } from '@/app/components/shell/NavSearch';
+import { SidebarAccount } from '@/app/components/shell/SidebarAccount';
+
+const SEARCH_ITEMS: NavSearchItem[] = [
+  { href: '/admin', label: 'Dashboard', group: 'Overview' },
+  { href: '/admin/users', label: 'Users', group: 'Manage' },
+  { href: '/admin/orders', label: 'Orders', group: 'Manage' },
+  { href: '/admin/services', label: 'Services', group: 'Catalog' },
+  { href: '/admin/upstreams', label: 'Upstream providers', group: 'Catalog' },
+  { href: '/admin/deposits', label: 'Deposits', group: 'Money' },
+  { href: '/admin/transactions', label: 'Transactions', group: 'Money' },
+  { href: '/admin/support', label: 'Support tickets', group: 'Help' },
+];
 
 // Responsive contract: handled by AppShell  the side nav collapses into the
-// mobile drawer below the md breakpoint and supports inline collapse above it.
-export function AdminSideNav() {
+// mobile drawer below the md breakpoint; above it the top bar toggles the rail.
+export function AdminSideNav({
+  adminName,
+  collapsible,
+}: {
+  adminName: string;
+  collapsible: SideNavControlledCollapsible;
+}) {
   const pathname = usePathname();
 
   return (
     <SideNav
       aria-label="Admin navigation"
+      collapsible={collapsible}
       header={
         <SideNavHeading
           heading={siteConfig.shortName}
           subheading="Admin panel"
-          icon={<ShieldCheck size={18} aria-hidden="true" />}
+          icon={<BrandMark />}
+          menu={
+            <>
+              <ListItem label="Admin dashboard" href="/admin" />
+              <ListItem label="Public website" href="/" />
+            </>
+          }
         />
       }
-      footer={<LogoutButton />}
-      collapsible
+      topContent={<NavSearch items={SEARCH_ITEMS} />}
+      footer={
+        <VStack gap={1}>
+          <SideNavSection title="Help" isHeaderHidden>
+            <SideNavItem
+              as={Link}
+              href="/admin/support"
+              label="Support"
+              icon={LifeBuoy}
+              isSelected={pathname.startsWith('/admin/support')}
+            />
+          </SideNavSection>
+          <SidebarAccount
+            name={adminName}
+            detail="Administrator"
+            links={[{ label: 'Public website', href: '/' }]}
+          />
+        </VStack>
+      }
     >
-      <SideNavSection title="Overview">
+      <SideNavSection title="Overview" isHeaderHidden>
         <SideNavItem
           as={Link}
           href="/admin"
           label="Dashboard"
           icon={LayoutDashboard}
-          selectedIcon={LayoutDashboard}
           isSelected={pathname === '/admin'}
         />
       </SideNavSection>
@@ -42,7 +92,6 @@ export function AdminSideNav() {
           href="/admin/users"
           label="Users"
           icon={Users}
-          selectedIcon={Users}
           isSelected={pathname.startsWith('/admin/users')}
         />
         <SideNavItem
@@ -50,15 +99,15 @@ export function AdminSideNav() {
           href="/admin/orders"
           label="Orders"
           icon={ClipboardList}
-          selectedIcon={ClipboardList}
           isSelected={pathname.startsWith('/admin/orders')}
         />
+      </SideNavSection>
+      <SideNavSection title="Catalog">
         <SideNavItem
           as={Link}
           href="/admin/services"
           label="Services"
           icon={Layers}
-          selectedIcon={Layers}
           isSelected={pathname.startsWith('/admin/services')}
         />
         <SideNavItem
@@ -66,15 +115,15 @@ export function AdminSideNav() {
           href="/admin/upstreams"
           label="Upstreams"
           icon={Server}
-          selectedIcon={Server}
           isSelected={pathname.startsWith('/admin/upstreams')}
         />
+      </SideNavSection>
+      <SideNavSection title="Money">
         <SideNavItem
           as={Link}
           href="/admin/deposits"
           label="Deposits"
           icon={Wallet}
-          selectedIcon={Wallet}
           isSelected={pathname.startsWith('/admin/deposits')}
         />
         <SideNavItem
@@ -82,16 +131,7 @@ export function AdminSideNav() {
           href="/admin/transactions"
           label="Transactions"
           icon={Receipt}
-          selectedIcon={Receipt}
           isSelected={pathname.startsWith('/admin/transactions')}
-        />
-        <SideNavItem
-          as={Link}
-          href="/admin/support"
-          label="Support"
-          icon={LifeBuoy}
-          selectedIcon={LifeBuoy}
-          isSelected={pathname.startsWith('/admin/support')}
         />
       </SideNavSection>
     </SideNav>

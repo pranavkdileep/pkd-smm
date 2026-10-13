@@ -58,7 +58,7 @@ export default function AffiliateDisclosurePage() {
 
             <VStack gap={1} className="rounded-lg border border-border bg-card p-4" align="start">
               <HStack gap={2} vAlign="center">
-                <Badge variant="blue" label="Pricing Guarantee" />
+                <Badge variant="neutral" label="Pricing Guarantee" />
                 <Text size="sm" weight="bold">Zero Extra Cost to the Customer</Text>
               </HStack>
               <Text size="sm" color="secondary">

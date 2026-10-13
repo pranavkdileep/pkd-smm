@@ -51,7 +51,7 @@ export default async function SettingsPage() {
   return (
     // Settings archetype per Astryx: two-column sections (heading column +
     // content column) separated by dividers  no cards, one containment layer.
-    <VStack gap={8} className="w-full pt-6 px-6 pb-10">
+    <VStack gap={8} className="w-full px-4 pb-10 pt-6 md:px-8 md:pt-8">
       <VStack gap={1}>
         <Heading level={1}>Settings</Heading>
         <Text color="secondary">

@@ -38,11 +38,9 @@ export function ServicesCatalog() {
             >
               <VStack gap={2} align="start">
                 <HStack
-                  width={10}
-                  height={10}
                   hAlign="center"
                   vAlign="center"
-                  className={`rounded-lg ${PLATFORM_TINTS[service.platform]}`}
+                  className={`size-10 rounded-lg ${PLATFORM_TINTS[service.platform]}`}
                 >
                   <BrandIcon platform={service.platform} size="md" />
                 </HStack>
@@ -53,11 +51,9 @@ export function ServicesCatalog() {
                 <HStack justify="between" vAlign="center" className="pt-3">
                   <Badge variant="neutral" label={service.fromPrice} />
                   <HStack
-                    width={7}
-                    height={7}
                     hAlign="center"
                     vAlign="center"
-                    className="rounded-md bg-card text-primary"
+                    className="size-7 rounded-md bg-card text-primary"
                   >
                     <NamedIcon name="chevron-right" size="sm" />
                   </HStack>

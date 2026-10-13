@@ -71,7 +71,7 @@ export default function ServicesPage() {
 
           <VStack gap={3} align="start" maxWidth={900}>
             <Badge
-              variant="blue"
+              variant="neutral"
               icon={<NamedIcon name="shield-check" size="sm" />}
               label="Instant Start · Refill Guarantee · 24/7 Tracking"
             />
@@ -95,20 +95,18 @@ export default function ServicesPage() {
                 <Link
                   key={platform.id}
                   href={`/services/${platform.id}`}
-                  className="group rounded-xl border border-border bg-surface p-4 transition-all hover:border-accent hover:shadow-md"
+                  className="group rounded-lg border border-border bg-surface p-4 transition-all hover:border-strong"
                 >
                   <HStack gap={3} vAlign="center">
                     <HStack
-                      width={9}
-                      height={9}
                       hAlign="center"
                       vAlign="center"
-                      className="rounded-lg bg-accent-bg text-accent"
+                      className="size-9 rounded-lg border border-border bg-surface text-primary"
                     >
                       <BrandIcon platform={platform.id} size="sm" />
                     </HStack>
                     <VStack gap={0.5} align="start">
-                      <Text weight="bold" size="sm" color="primary" className="group-hover:text-blue-vivid">
+                      <Text weight="bold" size="sm" color="primary" className="group-hover:underline">
                         {platform.name}
                       </Text>
                       <Text size="xsm" color="secondary">
@@ -143,16 +141,14 @@ export default function ServicesPage() {
                 <VStack
                   key={platform.id}
                   gap={4}
-                  className="rounded-2xl border border-border bg-surface p-6 shadow-sm"
+                  className="rounded-lg border border-border bg-surface p-6"
                 >
                   <HStack justify="between" vAlign="center" wrap="wrap" gap={3}>
                     <HStack gap={3} vAlign="center">
                       <HStack
-                        width={10}
-                        height={10}
                         hAlign="center"
                         vAlign="center"
-                        className="rounded-xl bg-accent-bg text-accent"
+                        className="size-10 rounded-lg border border-border bg-surface text-primary"
                       >
                         <BrandIcon platform={platform.id} size="md" />
                       </HStack>
@@ -238,13 +234,11 @@ export default function ServicesPage() {
           </VStack>
 
           <Grid columns={{ minWidth: 320, max: 3 }} gap={6} className="w-full">
-            <VStack gap={2} align="start" className="rounded-xl border border-border bg-surface p-6">
+            <VStack gap={2} align="start" className="rounded-lg border border-border bg-surface p-6">
               <HStack
-                width={10}
-                height={10}
                 hAlign="center"
                 vAlign="center"
-                className="rounded-lg bg-blue-subtle text-blue-vivid"
+                className="size-10 rounded-lg border border-border bg-surface text-primary"
               >
                 <NamedIcon name="lock" size="md" />
               </HStack>
@@ -256,13 +250,11 @@ export default function ServicesPage() {
               </Text>
             </VStack>
 
-            <VStack gap={2} align="start" className="rounded-xl border border-border bg-surface p-6">
+            <VStack gap={2} align="start" className="rounded-lg border border-border bg-surface p-6">
               <HStack
-                width={10}
-                height={10}
                 hAlign="center"
                 vAlign="center"
-                className="rounded-lg bg-green-subtle text-green-vivid"
+                className="size-10 rounded-lg bg-green-subtle text-green-vivid"
               >
                 <NamedIcon name="shield-check" size="md" />
               </HStack>
@@ -274,13 +266,11 @@ export default function ServicesPage() {
               </Text>
             </VStack>
 
-            <VStack gap={2} align="start" className="rounded-xl border border-border bg-surface p-6">
+            <VStack gap={2} align="start" className="rounded-lg border border-border bg-surface p-6">
               <HStack
-                width={10}
-                height={10}
                 hAlign="center"
                 vAlign="center"
-                className="rounded-lg bg-purple-subtle text-purple-vivid"
+                className="size-10 rounded-lg bg-purple-subtle text-purple-vivid"
               >
                 <NamedIcon name="headphones" size="md" />
               </HStack>

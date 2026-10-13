@@ -17,19 +17,12 @@ import {SectionIntro} from './SectionIntro';
 
 const TAB_ICONS = [Users, Wallet, Smartphone, ShieldCheck] as const;
 
-const TAB_TINTS: Record<string, string> = {
-  teams: 'bg-blue-subtle text-blue-vivid',
-  payments: 'bg-green-subtle text-green-vivid',
-  mobile: 'bg-purple-subtle text-purple-vivid',
-  security: 'bg-orange-subtle text-orange-vivid',
-};
-
 export function FeatureTabs() {
   const [active, setActive] = useState<string>(FEATURE_TABS[0].id);
   const current = FEATURE_TABS.find((tab) => tab.id === active) ?? FEATURE_TABS[0];
 
   return (
-    <section aria-label="Platform features" className="bg-body py-16 md:py-24">
+    <section aria-label="Platform features" className="border-t border-border bg-body py-14 md:py-20">
       <VStack maxWidth={1280} gap={8} className="mx-auto w-full px-6">
         <SectionIntro
           eyebrow="More than a service list"
@@ -61,15 +54,13 @@ export function FeatureTabs() {
           />
         </HStack>
 
-        <Card padding={5} elevation="low" key={current.id}>
+        <Card padding={6} key={current.id}>
           <Grid columns={{minWidth: 240, max: 2}} gap={6} align="center">
             <VStack gap={3} align="start">
               <HStack
-                width={12}
-                height={12}
                 hAlign="center"
                 vAlign="center"
-                className={`rounded-lg ${TAB_TINTS[current.id]}`}
+                className="size-10 rounded-lg border border-border bg-body text-primary"
               >
                 <Icon icon={TAB_ICONS[FEATURE_TABS.findIndex((t) => t.id === current.id)]} size="md" />
               </HStack>

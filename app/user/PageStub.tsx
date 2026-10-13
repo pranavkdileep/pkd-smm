@@ -22,7 +22,7 @@ export function PageStub({
   icon: IconComponent,
 }: PageStubProps) {
   return (
-    <VStack gap={6} className="w-full pt-6 px-6">
+    <VStack gap={6} className="w-full px-4 pb-8 pt-6 md:px-8 md:pt-8">
       <VStack gap={1}>
         <Heading level={1}>{title}</Heading>
         <Text color="secondary">{description}</Text>

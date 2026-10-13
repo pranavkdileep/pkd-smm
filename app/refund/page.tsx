@@ -44,7 +44,7 @@ export default function RefundPolicyPage() {
           </Text>
           <VStack gap={2} className="w-full rounded-lg border border-border bg-card p-4">
             <HStack gap={2} vAlign="center">
-              <Badge variant="blue" label="Statutory Exception" />
+              <Badge variant="neutral" label="Statutory Exception" />
               <Text size="sm" weight="bold">Waiver of Withdrawal upon Service Execution</Text>
             </HStack>
             <Text size="sm" color="secondary">

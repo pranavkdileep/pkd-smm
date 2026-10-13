@@ -3,8 +3,6 @@ import {VStack} from '@astryxdesign/core/VStack';
 import {SiteHeader} from './components/landing/SiteHeader';
 import {Hero} from './components/landing/Hero';
 import {TrustLine} from './components/landing/TrustLine';
-import {PlatformsStrip} from './components/landing/PlatformsStrip';
-import {ServicesCatalog} from './components/landing/ServicesCatalog';
 import {PricingTables} from './components/landing/PricingTables';
 import {HowItWorks} from './components/landing/HowItWorks';
 import {PaymentMethods} from './components/landing/PaymentMethods';
@@ -45,8 +43,6 @@ export default async function Home() {
       <main>
         <Hero />
         <TrustLine />
-        <PlatformsStrip />
-        <ServicesCatalog />
         <PricingTables initialPricing={initialPricing} />
         <HowItWorks />
         <PaymentMethods />

@@ -11,6 +11,7 @@ import Link from 'next/link';
 import {Text} from '@astryxdesign/core/Text';
 import {Button} from '@astryxdesign/core/Button';
 import {siteConfig} from '@/lib/config';
+import {BrandMark} from '@/app/components/shell/BrandMark';
 
 export function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -40,21 +41,13 @@ export function SiteHeader() {
         hasAutoToggle: false,
       }}
     >
-      <HStack className="sticky top-0 z-50 bg-surface shadow-sm">
+      <HStack className="sticky top-0 z-50 border-b border-border bg-body">
         <TopNav
           label={siteConfig.nav.mainAriaLabel}
           heading={
             <Link href="/" className="inline-flex items-center gap-2 transition-opacity hover:opacity-90">
-              <HStack
-                width={34}
-                height={34}
-                className="rounded-lg bg-accent-bg text-xs font-bold text-blue-vivid"
-                hAlign="center"
-                vAlign="center"
-              >
-                {siteConfig.brandInitials}
-              </HStack>
-              <Text weight="bold">{siteConfig.name}</Text>
+              <BrandMark />
+              <Text weight="semibold">{siteConfig.name}</Text>
             </Link>
           }
           startContent={
@@ -66,14 +59,14 @@ export function SiteHeader() {
           }
           endContent={
             <HStack gap={2}>
-              <span className="md:hidden">
+              <HStack className="md:hidden">
                 <MobileNavToggle label="Open menu" />
-              </span>
+              </HStack>
               {isLogin ? null : (
-                <Button label="Sign in" variant="ghost" href="/login" size="sm" className="max-sm:hidden" />
+                <Button label="Sign in" variant="ghost" href="/login" className="max-sm:hidden" />
               )}
               {isSignup ? null : (
-                <Button label="Sign up" variant="primary" href="/signup" size="sm" />
+                <Button label="Sign up" variant="primary" href="/signup" />
               )}
             </HStack>
           }

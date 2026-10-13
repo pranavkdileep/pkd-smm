@@ -9,25 +9,23 @@ import type { ReactNode } from 'react';
 import { HOW_IT_WORKS } from './content';
 import { NamedIcon } from './NamedIcon';
 import { SectionIntro } from './SectionIntro';
-import { siteConfig } from '@/lib/config';
 
 function StepCopy({ step, title, body }: { step: string; title: string; body: string }) {
   return (
     <VStack gap={3} align="start">
       <HStack
-        width={12}
-        height={12}
         hAlign="center"
         vAlign="center"
-        className="rounded-lg bg-blue-subtle text-sm font-bold text-blue-vivid"
+        className="size-10 rounded-lg border border-border bg-surface"
       >
-        {step}
+        <Text weight="semibold" hasTabularNumbers>
+          {step}
+        </Text>
       </HStack>
       <Heading level={3}>{title}</Heading>
       <Text as="p" color="secondary">
         {body}
       </Text>
-      <HStack width={16} height={1} className="rounded-full bg-accent" />
     </VStack>
   );
 }
@@ -88,13 +86,12 @@ function MockPayment() {
             key={option.name}
             gap={1.5}
             vAlign="center"
-            className={`rounded-md border px-3 py-2 ${index === 0 ? 'border-blue-ring bg-blue-subtle' : 'border-border bg-card'
-              }`}
+            className={`rounded-md border px-3 py-2 ${index === 0 ? 'border-accent bg-accent-muted' : 'border-border bg-card'}`}
           >
             <NamedIcon
               name={option.icon}
               size="sm"
-              className={index === 0 ? 'text-blue-vivid' : 'text-secondary'}
+              className={index === 0 ? 'text-primary' : 'text-secondary'}
             />
             <Text size="xsm" weight="semibold">
               {option.name}
@@ -166,7 +163,7 @@ function MockTracking() {
         </HStack>
       </HStack>
       <HStack gap={1.5} vAlign="center">
-        <NamedIcon name="shield-check" size="sm" className="text-blue-vivid" />
+        <NamedIcon name="shield-check" size="sm" className="text-secondary" />
         <Text size="xsm">30-day refill window active</Text>
       </HStack>
     </VStack>
@@ -180,28 +177,23 @@ const STEP_MOCKS: Record<string, ReactNode> = {
   '04': <MockTracking />,
 };
 
-/** Mock browser chrome built from components  no external screenshots. */
-function MockWindow({ step, className }: { step: string; className?: string }) {
-  return (
-    <VStack className={`overflow-hidden rounded-lg border border-border bg-card shadow-md ${className ?? ''}`}>
-      <HStack gap={2} vAlign="center" className="border-b border-border bg-surface px-4 py-3">
-        <HStack gap={1}>
-          <HStack width={3} height={3} className="rounded-full bg-red-vivid" />
-          <HStack width={3} height={3} className="rounded-full bg-yellow-vivid" />
-          <HStack width={3} height={3} className="rounded-full bg-green-vivid" />
-        </HStack>
-        <HStack
-          gap={1.5}
-          vAlign="center"
-          className="flex-1 justify-center rounded-full bg-body px-4 py-1.5"
-        >
-          <NamedIcon name="lock" size="sm" className="text-secondary" />
-          <Text size="3xs" weight="semibold" color="secondary">
-            {siteConfig.domain}/dashboard/step-{step.toLowerCase()}
-          </Text>
-        </HStack>
-      </HStack>
+const STEP_CAPTIONS: Record<string, string> = {
+  '01': 'Sign up',
+  '02': 'Add funds',
+  '03': 'Place an order',
+  '04': 'Track delivery',
+};
 
+/** Illustrative dashboard panel for a step, built from components. */
+function StepPanel({ step, className }: { step: string; className?: string }) {
+  return (
+    <VStack className={`overflow-hidden rounded-lg border border-border bg-card ${className ?? ''}`}>
+      <HStack justify="between" vAlign="center" className="border-b border-border px-4 py-3">
+        <Text type="label">{STEP_CAPTIONS[step]}</Text>
+        <Text type="supporting" hasTabularNumbers>
+          Step {step}
+        </Text>
+      </HStack>
       <VStack padding={4} className="bg-body">
         {STEP_MOCKS[step]}
       </VStack>
@@ -211,7 +203,7 @@ function MockWindow({ step, className }: { step: string; className?: string }) {
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" aria-label="How it works" className="scroll-mt-24 bg-body py-16 md:py-24">
+    <section id="how-it-works" aria-label="How it works" className="scroll-mt-24 border-t border-border bg-body py-14 md:py-20">
       <VStack maxWidth={1280} gap={10} className="mx-auto w-full px-6">
         <SectionIntro eyebrow="How it works" title="Four steps to your first boost" />
 
@@ -229,7 +221,7 @@ export function HowItWorks() {
               aria-label={`Step ${item.step}: ${item.title}`}
             >
               {copy}
-              <MockWindow step={item.step} className={reversed ? 'md:order-first' : undefined} />
+              <StepPanel step={item.step} className={reversed ? 'md:order-first' : undefined} />
             </Grid>
           );
         })}

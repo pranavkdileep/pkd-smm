@@ -64,11 +64,9 @@ function ServiceDetails({ service }: { service: OrderServiceDetails }) {
     <VStack gap={3}>
       <HStack gap={2} vAlign="center">
         <HStack
-          width={9}
-          height={9}
           hAlign="center"
           vAlign="center"
-          className={`rounded-lg ${PLATFORM_TINTS[platformKey]}`}
+          className={`size-9 rounded-lg ${PLATFORM_TINTS[platformKey]}`}
         >
           <BrandIcon platform={platformKey} size="md" />
         </HStack>
@@ -239,7 +237,7 @@ export function OrderForm({
 
   return (
     <Grid columns={{ minWidth: 320, max: 2 }} gap={4} className="items-stretch">
-      <Card padding={4} elevation="low" className="h-full">
+      <Card padding={4} className="h-full">
         <VStack gap={4}>
           <Heading level={3}>Service</Heading>
           <Typeahead
@@ -282,7 +280,7 @@ export function OrderForm({
         </VStack>
       </Card>
 
-      <Card padding={4} elevation="low" className="h-full">
+      <Card padding={4} className="h-full">
         <VStack gap={4}>
           <Heading level={3}>Order details</Heading>
 

@@ -9,7 +9,6 @@ import { Text } from '@astryxdesign/core/Text';
 import { Button } from '@astryxdesign/core/Button';
 import { Card } from '@astryxdesign/core/Card';
 import { Icon } from '@astryxdesign/core/Icon';
-import { Badge } from '@astryxdesign/core/Badge';
 import { ShieldCheck } from 'lucide-react';
 
 import type { PlatformId, PricingRow } from './content';
@@ -42,7 +41,7 @@ function MobilePricingRows({ rows }: { rows: PricingRow[] }) {
             <Text size="sm" weight="bold">
               {row.service}
             </Text>
-            <Badge variant="blue" label={row.rate} />
+            <Text size="sm" weight="semibold" hasTabularNumbers>{row.rate}</Text>
           </HStack>
           <HStack gap={2} wrap="wrap" vAlign="center">
             <HStack
@@ -75,7 +74,7 @@ function MobilePricingRows({ rows }: { rows: PricingRow[] }) {
 function PricingPanel({ rows }: { rows: PricingRow[] }) {
   const data: PricingRecord[] = rows.map((row) => ({ ...row }));
   return (
-    <Card padding={0} elevation="low" className="overflow-x-auto">
+    <Card padding={0} className="overflow-x-auto">
       <HStack className="hidden sm:block">
         <Table data={data} columns={COLUMNS as never} density="balanced" isStriped hasHover />
       </HStack>
@@ -125,7 +124,7 @@ export function PricingTables({ initialPricing }: PricingTablesProps = {}) {
   const currentRows = pricing[active] ?? PRICING[active] ?? [];
 
   return (
-    <section id="pricing" aria-label="Popular rates" className="scroll-mt-24 bg-surface py-16 md:py-24">
+    <section id="pricing" aria-label="Popular rates" className="scroll-mt-24 border-t border-border bg-body py-14 md:py-20">
       <VStack maxWidth={1280} gap={6} className="mx-auto w-full px-6">
         <SectionIntro
           eyebrow="Live rates"
@@ -152,11 +151,11 @@ export function PricingTables({ initialPricing }: PricingTablesProps = {}) {
             </TabList>
             <HStack
               aria-hidden
-              className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-surface to-transparent sm:hidden"
+              className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-body to-transparent sm:hidden"
             />
             <HStack
               aria-hidden
-              className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-surface to-transparent sm:hidden"
+              className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-body to-transparent sm:hidden"
             />
           </HStack>
 

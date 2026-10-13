@@ -49,7 +49,7 @@ export default function AccessibilityPage() {
           <VStack gap={3} className="w-full">
             <VStack gap={1} className="rounded-lg border border-border bg-card p-4" align="start">
               <HStack gap={2} vAlign="center">
-                <Badge variant="blue" label="Keyboard" />
+                <Badge variant="neutral" label="Keyboard" />
                 <Text size="sm" weight="bold">Full Keyboard Navigability</Text>
               </HStack>
               <Text size="sm" color="secondary">

@@ -104,7 +104,7 @@ export default function CookiePolicyPage() {
 
             <VStack gap={2} className="rounded-lg border border-border bg-card p-4" align="start">
               <HStack gap={2} vAlign="center">
-                <Badge variant="blue" label="Optional" />
+                <Badge variant="neutral" label="Optional" />
                 <Text size="sm" weight="bold">B. Performance & Analytics Cookies</Text>
               </HStack>
               <Text size="sm" color="secondary">
@@ -175,9 +175,9 @@ export default function CookiePolicyPage() {
             ways to control your tracking preferences:
           </Text>
 
-          <VStack gap={3} className="w-full rounded-xl border border-blue-ring bg-blue-subtle p-5">
+          <VStack gap={3} className="w-full rounded-lg border border-border bg-surface p-5">
             <HStack gap={2} vAlign="center">
-              <Badge variant="blue" label="Interactive Control" />
+              <Badge variant="neutral" label="Interactive Control" />
               <Text size="base" weight="bold" color="primary">
                 Manage Cookie Preferences Directly
               </Text>

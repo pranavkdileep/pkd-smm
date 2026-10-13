@@ -30,7 +30,7 @@ export function StatGrid({ stats }: { stats: StatItem[] }) {
       {stats.map((stat) => {
         const IconComponent = ICONS[stat.iconKey];
         return (
-          <Card key={stat.label} padding={5} elevation="low">
+          <Card key={stat.label} padding={5}>
             <HStack gap={3} vAlign="center" wrap="wrap">
               <HStack gap={2} vAlign="center">
                 {IconComponent ? <Icon icon={IconComponent} size="sm" className="text-secondary" /> : null}
